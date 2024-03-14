@@ -14,7 +14,7 @@ export const {
     verifyRequest: "/auth/verify-request", // (used for check email message)
     signIn: "/login",
     signOut: "/logout",
-    // newUser: '/auth/new-user' // New users will be directed here on first sign in (leave the property out if not of interest)
+    newUser: "/auth/new-user", // New users will be directed here on first sign in (leave the property out if not of interest)
   },
   adapter: PrismaAdapter(prisma),
   providers: [

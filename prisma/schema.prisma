@@ -36,13 +36,19 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
+  id               String     @id @default(cuid())
+  email            String?    @unique
+  firstName        String?
+  lastName         String?
+  emailVerified    DateTime?
+  avatar           String?
+  type             String?    // team-member | client
+
+  accounts         Account[]
+  sessions         Session[]
+
+  teamMembers      TeamMember[]
+  clients          Client[]
 }
 
 model VerificationToken {
@@ -51,4 +57,109 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model TeamMember {
+  id          String     @id @default(cuid())
+  createdAt   DateTime   @default(now())
+  type        String    // internal | external
+  companyName String?   // if type is external
+  phone       String
+  role        String    // admin | project-master | employer
+
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+}
+
+model Client {
+  id             String    @id @default(cuid())
+  createdAt      DateTime  @default(now())
+  companyEmail   String    @unique
+  phone          String?
+  address        String?
+  country        String
+  companyName    String
+  logo           String?
+  sector         String?    // Business sector
+  size           String?    // Company size
+  website        String?
+  internalNotes  String?
+
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String
+
+  projects       Project[]
+}
+
+model Project {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @default(now())
+  cover         String?    // Link to project cover image
+  title         String
+  description   String?
+  startedDate   DateTime?
+  endedDate     DateTime?
+  status        String?
+  budget        Float?
+
+  client        Client    @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  clientId      String
+
+  feedbacks     Feedback[]
+  documents     Document[]
+  invoices      Invoice[]
+  accesses      Access[]
+}
+
+model Feedback {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @default(now())
+  title         String
+  usepastelLink String    // Link to usepastel feedback
+  note          String?
+
+  project       Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId     String
+}
+
+model Document {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @default(now())
+  title         String
+  description   String?
+  type          String    // External | Internal
+  service       String?   // Document, Spreadsheet, Notion, etc.
+  link          String?   // Link to the document
+  file          String?   // File to upload
+  
+  project       Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId     String
+}
+
+model Invoice {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @default(now())
+  invoiceNumber String
+  issueDate     DateTime
+  amount        Float
+  description   String?
+  type          String    // Link or File
+  link          String?    // Link to the invoice or file upload
+  file          String?   // File to upload
+  
+  project       Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId     String
+}
+
+model Access {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @default(now())
+  service       String    // Website, Hosting, Domain, etc.
+  username      String
+  password      String
+  adminUrl      String
+  expiryDate    DateTime
+  
+  project       Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId     String
 }
