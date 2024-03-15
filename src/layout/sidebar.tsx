@@ -13,7 +13,7 @@ export default async function SidebarGlobal(props: PropsWithChildren) {
 
   return (
     <>
-      <div className="flex flex-col justify-between p-2 --border border-r">
+      <div className="flex flex-col justify-between p-2 --border border-r sticky top-0 h-screen">
         <div>
           <MainLogo />
         </div>

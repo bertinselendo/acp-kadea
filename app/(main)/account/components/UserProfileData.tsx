@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { getUserData } from "../my-action.action";
+import { getUserData } from "../account.action";
 import { userAuth } from "@/lib/auth/auth-utils";
 
 export default async function UserProfileData() {

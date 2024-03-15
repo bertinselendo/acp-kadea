@@ -19,7 +19,7 @@ export default function SidebarUser(props: sidebarUserProps) {
         </Link>
       </li>
       <li className={cn(navigationMenuTriggerStyle(), "h-14 w-14 p-0")}>
-        <Link href="#">
+        <Link href="/account">
           <UserAvatar src={props.src} />
         </Link>
       </li>

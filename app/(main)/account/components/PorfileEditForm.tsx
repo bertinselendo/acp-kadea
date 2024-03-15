@@ -17,7 +17,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { SkeletonCard } from "@/components/skeleton/SkeletonCard";
 import { toast } from "sonner";
-import { updateEditForm } from "../my-action.action";
+import { updateEditForm } from "../account.action";
 
 const formSchema = z.object({
   name: z.string().min(2).max(12),
