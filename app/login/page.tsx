@@ -18,7 +18,7 @@ export default async function LoginPage(props: PageParams<{}>) {
   const user = await auth();
 
   if (user) {
-    redirect("/account");
+    redirect("/admin");
   }
 
   return (
