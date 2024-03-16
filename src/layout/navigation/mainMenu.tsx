@@ -25,6 +25,7 @@ import {
   IoNotificationsOutline,
 } from "react-icons/io5";
 import { mainMenu } from "./main-menu";
+import { useSession } from "next-auth/react";
 
 type menuType = {
   title: string;
@@ -36,11 +37,21 @@ const menus: menuType[] = mainMenu;
 export default function MainMenu() {
   const iconSize = "2.2em";
   const pathname = usePathname();
+  const session = useSession();
+
+  const user = session.data?.user;
+
+  if (!user) {
+    return;
+  }
 
   const baseUrl = () => {
-    let baseUrl = "/admin";
-    if (!pathname.includes("/admin")) {
-      baseUrl = "/";
+    const role = user?.role;
+
+    let baseUrl = "/";
+
+    if (role == "ADMIN" || role == "MANAGER" || role == "WORKER") {
+      baseUrl = "/admin";
     }
     return baseUrl;
   };
