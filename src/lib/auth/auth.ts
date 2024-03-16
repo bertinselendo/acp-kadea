@@ -34,5 +34,8 @@ export const {
     async redirect({ url, baseUrl }) {
       return baseUrl;
     },
+    async session({ session, user }) {
+      return session;
+    },
   },
 });
