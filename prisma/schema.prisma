@@ -89,10 +89,10 @@ model Client {
   country        String
   companyName    String
   logo           String?
-  sector         String?    // Business sector
+  categorie      String?    // Business sector
   size           String?    // Company size
   website        String?
-  internalNotes  String?
+  internalNote  String?
 
   user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId         String

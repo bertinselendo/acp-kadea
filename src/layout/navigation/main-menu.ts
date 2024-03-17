@@ -5,7 +5,7 @@ export const mainMenu = [
   },
   {
     title: "clients",
-    href: "#",
+    href: "/clients",
   },
   {
     title: "messages",
