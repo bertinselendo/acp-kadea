@@ -16,7 +16,7 @@ export default async function RouteLayout(props: LayoutParams<{}>) {
       <SidebarGlobal />
       <div className="w-full">
         <Header user={user} />
-        <div className="p-3">{props.children}</div>
+        <div>{props.children}</div>
       </div>
     </main>
   );

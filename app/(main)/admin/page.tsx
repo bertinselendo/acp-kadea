@@ -18,7 +18,7 @@ export default async function AdminHomePage(props: PageParams) {
   }
 
   return (
-    <div>
+    <div className="p-3">
       <div className="w-full px-24 border-b pb-4">
         <AdminHomeCarousel />
       </div>
