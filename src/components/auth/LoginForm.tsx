@@ -41,7 +41,7 @@ export function LoginForm() {
 
   const { mutateAsync, status } = useMutation({
     mutationFn: async (email: string) => {
-      await signIn("nodemailer", {
+      await signIn("resend", {
         callbackUrl: searchParams.get("callbackUrl") ?? `${getServerUrl()}/`,
         redirect: true,
         email,
@@ -50,7 +50,7 @@ export function LoginForm() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>, event: any) {
-    event.preventDefault();
+    // event.preventDefault();
     await mutateAsync(values.email);
   }
 
