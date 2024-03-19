@@ -26,6 +26,7 @@ import {
 } from "react-icons/io5";
 import { mainMenu } from "./main-menu";
 import { useSession } from "next-auth/react";
+import { Role, User } from "@prisma/client";
 
 type menuType = {
   title: string;
@@ -46,7 +47,7 @@ export default function MainMenu() {
   }
 
   const baseUrl = () => {
-    const role = user?.role;
+    const role = (user as User & { role: string })?.role;
 
     let baseUrl = "/";
 
