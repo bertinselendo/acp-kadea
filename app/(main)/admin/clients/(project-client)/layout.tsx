@@ -1,6 +1,9 @@
+import ListClients from "@/components/admin/clients/listClients";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { LayoutParams } from "@/types/next";
 import { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Clients",
@@ -9,15 +12,14 @@ export const metadata: Metadata = {
 export default async function RouteLayout(props: LayoutParams<{}>) {
   return (
     <div className="flex h-[90vh] overflow-scroll">
-      <div className="sticky top-0 overflow-scroll w-3/12 p-3 border-r">
-        sdebar
-        <Skeleton className="h-screen" />
+      <div className="sticky top-0 overflow-scroll scroll custom-scrollbar xl:w-3/12 md:w-4/12 p-3 border-r">
+        <ListClients />
+        <Button className="w-full mt-4">
+          <Link href="/admin/clients/create">Create new client</Link>
+        </Button>
       </div>
-      <div className="p-3 w-9/12 flex justify-center">
-        <div className="w-1/2">
-          {props.children}
-          <Skeleton className="h-screen" />
-        </div>
+      <div className="p-3 xl:w-9/12 md:w-7/12 flex justify-center">
+        <div className="w-1/2">{props.children}</div>
       </div>
     </div>
   );
