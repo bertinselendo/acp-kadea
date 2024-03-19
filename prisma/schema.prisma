@@ -47,9 +47,10 @@ model User {
   accounts         Account[]
   sessions         Session[]
 
+  client           Client?      @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  clientId         String?
+
   teamMembers      TeamMember[]
-  clients          Client[]
-  projects         Project[]
 }
 
 enum Role {
@@ -92,10 +93,10 @@ model Client {
   categorie      String?    // Business sector
   size           String?    // Company size
   website        String?
-  internalNote  String?
+  internalNote   String?
 
-  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId         String
+  users          User[]
+  projects       Project[]
 }
 
 model Project {
@@ -109,8 +110,8 @@ model Project {
   status        String?
   budget        Float?
 
-  user           User      @relation(fields: [userId], references: [id])
-  userId      String
+  client        Client      @relation(fields: [clientID], references: [id])
+  clientID      String
 
   feedbacks     Feedback[]
   documents     Document[]

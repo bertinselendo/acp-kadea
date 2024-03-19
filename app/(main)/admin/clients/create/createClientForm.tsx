@@ -86,13 +86,13 @@ export default function CreateClientForm() {
 
   const creationMutation = useMutation({
     mutationFn: async (values) => {
-      // add user first
-      const user = await userCreationAction(values as any);
-      if (user) {
+      // add client first
+      const client = await clientCreationAction(values as any);
+      if (client) {
         toast.loading("Setup project...");
-        // then add client
-        const client = await clientCreationAction(values as any, user.id);
-        return client;
+        // then add user
+        const user = await userCreationAction(values as any, client.id);
+        return user;
       }
 
       // error if nothing perform

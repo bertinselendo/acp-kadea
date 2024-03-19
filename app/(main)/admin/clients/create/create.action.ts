@@ -24,7 +24,10 @@ type newClientActionType = {
   internalNote: string;
 };
 
-export async function userCreationAction(values: newUserActionType) {
+export async function userCreationAction(
+  values: newUserActionType,
+  clientID: string
+) {
   const user = await auth();
 
   if (!user) {
@@ -46,6 +49,7 @@ export async function userCreationAction(values: newUserActionType) {
           firstName: values.contactFistName,
           email: values.contactEmail,
           role: values.role as Role,
+          clientId: clientID,
         },
       });
 
@@ -59,10 +63,7 @@ export async function userCreationAction(values: newUserActionType) {
   }
 }
 
-export async function clientCreationAction(
-  values: newClientActionType,
-  userID: string
-) {
+export async function clientCreationAction(values: newClientActionType) {
   const user = await auth();
 
   if (!user) {
@@ -70,7 +71,6 @@ export async function clientCreationAction(
   }
 
   const data = {
-    userId: userID,
     companyName: values.companyName,
     companyEmail: values.companyEmail,
     phone: values.companyPhone,
