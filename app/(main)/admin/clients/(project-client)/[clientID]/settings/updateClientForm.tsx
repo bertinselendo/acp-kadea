@@ -15,7 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import useUpload from "@/hooks/useUpload";
 import { useMutation } from "@tanstack/react-query";
@@ -73,8 +73,20 @@ export default function UpdateClientForm({ clientID, client }: any) {
   const { onUpload, progresspercent, uploadImage } = useUpload();
   const [logo, setFile] = useState<File>();
   const [logoPreview, setLogoPreview] = useState("");
-  const router = useRouter();
+  const [currentData, setCurrentData] = useState({
+    companyName: client.companyName,
+    companyEmail: client.companyEmail,
+    companyPhone: client.phone,
+    companyAdress: client.address,
+    companyCountry: client.country,
+    companyLogo: client.logo,
+    companyCategorie: client.categorie,
+    companySize: client.size,
+    companyWebsite: client.website,
+    internalNote: client.internalNote,
+  });
   const [generatedColor, setgeneratedColor] = useState(randomColor());
+  const router = useRouter();
 
   const updateMutation = useMutation({
     mutationFn: async (values) => {
@@ -92,18 +104,13 @@ export default function UpdateClientForm({ clientID, client }: any) {
     },
     onSuccess(data) {
       if (data) {
-        console.log(data);
-
         toast.dismiss();
         toast.success("Saved", {
-          description: "contact email will recieve email to access resources",
-          action: {
-            label: "Go to client",
-            onClick() {
-              router.push(`/admin/clients/${data.id}`);
-            },
-          },
+          description: "You will be redirect...",
         });
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
       }
     },
   });
@@ -124,6 +131,11 @@ export default function UpdateClientForm({ clientID, client }: any) {
     },
   });
 
+  useEffect(() => {
+    form.reset(currentData);
+    setLogoPreview(client.logo);
+  }, [form, currentData, client.logo]);
+
   if (logo) {
     const reader = new FileReader();
     reader.onloadend = () => {
@@ -134,6 +146,14 @@ export default function UpdateClientForm({ clientID, client }: any) {
 
   async function onSubmit(values: z.infer<typeof formSchema>, event: any) {
     event.preventDefault();
+
+    if (
+      JSON.stringify(currentData) === JSON.stringify(values) &&
+      client.logo == logoPreview
+    ) {
+      toast("You made no changes");
+      return;
+    }
 
     toast.loading("Updatiing...");
     if (logo) {
@@ -253,7 +273,7 @@ export default function UpdateClientForm({ clientID, client }: any) {
                 <FormItem>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    defaultValue={client.country}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -277,7 +297,7 @@ export default function UpdateClientForm({ clientID, client }: any) {
                 <FormItem>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    defaultValue={client.categorie}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -315,7 +335,7 @@ export default function UpdateClientForm({ clientID, client }: any) {
                 <FormItem>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    defaultValue={client.size}
                   >
                     <FormControl>
                       <SelectTrigger>
