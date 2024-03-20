@@ -15,4 +15,8 @@ export const mainMenu = [
     title: "activity",
     href: "/activity",
   },
+  {
+    title: "team",
+    href: "/team",
+  },
 ];

@@ -3,6 +3,7 @@ import MainMenu from "./navigation/mainMenu";
 import { auth } from "@/lib/auth/helper";
 import MainLogo from "./navigation/mainLogo";
 import SidebarUser from "./navigation/sidebarUser";
+import { mainMenu } from "./navigation/main-menu";
 
 export default async function SidebarGlobal(props: PropsWithChildren) {
   const user = await auth();
@@ -11,6 +12,13 @@ export default async function SidebarGlobal(props: PropsWithChildren) {
     return;
   }
 
+  type menuType = {
+    title: string;
+    href: string;
+  };
+
+  const menus: menuType[] = mainMenu;
+
   return (
     <>
       <div className="flex flex-col justify-between p-2 --border border-r sticky top-0 h-screen">
@@ -18,7 +26,7 @@ export default async function SidebarGlobal(props: PropsWithChildren) {
           <MainLogo />
         </div>
         <div>
-          <MainMenu />
+          <MainMenu menus={menus} />
         </div>
         <div>
           <SidebarUser src={user.avatar as string} />

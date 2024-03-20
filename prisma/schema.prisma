@@ -74,8 +74,7 @@ model TeamMember {
   createdAt   DateTime   @default(now())
   type        String    // internal | external
   companyName String?   // if type is external
-  phone       String
-  role        String    // admin | project-master | employer
+  phone       String?
 
   user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String

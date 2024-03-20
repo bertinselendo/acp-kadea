@@ -17,6 +17,8 @@ import { usePathname } from "next/navigation";
 import {
   IoBriefcase,
   IoBriefcaseOutline,
+  IoExtensionPuzzle,
+  IoExtensionPuzzleOutline,
   IoGrid,
   IoGridOutline,
   IoMailUnread,
@@ -28,14 +30,7 @@ import { mainMenu } from "./main-menu";
 import { useSession } from "next-auth/react";
 import { Role, User } from "@prisma/client";
 
-type menuType = {
-  title: string;
-  href: string;
-};
-
-const menus: menuType[] = mainMenu;
-
-export default function MainMenu() {
+export default function MainMenu({ menus }: any) {
   const iconSize = "2.2em";
   const pathname = usePathname();
   const session = useSession();
@@ -63,6 +58,11 @@ export default function MainMenu() {
     }
     return false;
   }
+
+  type menuType = {
+    title: string;
+    href: string;
+  };
 
   return (
     <NavigationMenu>
@@ -98,6 +98,12 @@ export default function MainMenu() {
                         <IoNotifications size={iconSize} />
                       ) : (
                         <IoNotificationsOutline size={iconSize} />
+                      );
+                    case "team":
+                      return isMenuPage("/team") ? (
+                        <IoExtensionPuzzle size={iconSize} />
+                      ) : (
+                        <IoExtensionPuzzleOutline size={iconSize} />
                       );
                     default:
                       return <IoBriefcaseOutline size={iconSize} />;
