@@ -22,11 +22,11 @@ type updateMemberActionType = {
 };
 
 export async function getTeamMembers() {
-  // const user = await auth();
+  const user = await auth();
 
-  // if (!user) {
-  //   return;
-  // }
+  if (!user) {
+    return;
+  }
 
   try {
     const client = await prisma.user.findMany({
@@ -53,6 +53,10 @@ export async function teamUpdateAction(
   const user = await auth();
 
   if (!user) {
+    return;
+  }
+
+  if (user.role != "ADMIN") {
     return;
   }
 
@@ -96,6 +100,10 @@ export async function teamDeleteAction(userID: string) {
   const user = await auth();
 
   if (!user) {
+    return;
+  }
+
+  if (user.role != "ADMIN") {
     return;
   }
 

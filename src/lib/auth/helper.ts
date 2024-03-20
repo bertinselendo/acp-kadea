@@ -27,3 +27,13 @@ export const requiredAuth = async () => {
 
   return user;
 };
+
+export const userRole = async () => {
+  const user = await auth();
+
+  if (user?.role) {
+    return user.role;
+  }
+
+  return false;
+};
