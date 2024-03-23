@@ -21,8 +21,15 @@ import {
 import { clickAnimation } from "@/components/ui/click-animation";
 import EditMemberModal from "./editMemberForm";
 import { DeleteMemberAlert } from "./deleteMemberAlert";
+import { useSession } from "next-auth/react";
+import { Role } from "@prisma/client";
+import Image from "next/image";
+import { dicebearAvatar } from "@/lib/auth/auth-utils";
 
 export function TeamListSingleMember(props: any) {
+  const { data } = useSession();
+  const currentRole = data?.user.role;
+
   return (
     <div className="flex flex-col gap-4">
       {props.members.map((member: any) => (
@@ -31,8 +38,17 @@ export function TeamListSingleMember(props: any) {
             <div className="flex gap-4 justify-between items-start">
               <div className="w-4/5 flex gap-4">
                 <Avatar>
-                  <AvatarImage src={member.avatar} alt="@shadcn" />
-                  <AvatarFallback>CN</AvatarFallback>
+                  {member.avatar ? (
+                    <AvatarImage src={member.avatar} alt={member.email} />
+                  ) : (
+                    <Image
+                      src={dicebearAvatar(member.email)}
+                      alt={member.email}
+                      width="40"
+                      height="40"
+                    />
+                  )}
+                  <AvatarFallback></AvatarFallback>
                 </Avatar>
                 <div>
                   <div className="flex gap-2 items-center">
@@ -49,18 +65,30 @@ export function TeamListSingleMember(props: any) {
                 </div>
               </div>
               <div className="w-1/5 flex justify-end text-right">
-                <DropdownMenu>
-                  <DropdownMenuTrigger className="focus:hidden">
-                    <IoEllipsisHorizontal onClick={clickAnimation} />
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    {/* <DropdownMenuLabel>Filter by</DropdownMenuLabel> */}
-                    <EditMemberModal member={member} />
-                    <DropdownMenuItem>Make a call</DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DeleteMemberAlert member={member} />
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                {member.id != data?.user.id ? (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger className="focus:hidden">
+                      <IoEllipsisHorizontal onClick={clickAnimation} />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      {/* <DropdownMenuLabel>Filter by</DropdownMenuLabel> */}
+                      {(currentRole == "ADMIN" || currentRole == "MANAGER") && (
+                        <EditMemberModal member={member} />
+                      )}
+
+                      <DropdownMenuItem>Make a call</DropdownMenuItem>
+
+                      {currentRole == "ADMIN" && (
+                        <>
+                          <DropdownMenuSeparator />
+                          <DeleteMemberAlert member={member} />
+                        </>
+                      )}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                ) : (
+                  <Badge>Me</Badge>
+                )}
               </div>
             </div>
           </CardHeader>
