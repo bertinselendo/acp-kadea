@@ -1,3 +1,5 @@
+import { getSingleClient } from "@/components/admin/clients/clients.action";
+import ListProjects from "@/components/admin/projects/listProjects";
 import { PageParams } from "@/types/next";
 import { Metadata } from "next";
 
@@ -5,10 +7,21 @@ export const metadata: Metadata = {
   title: "Clients",
 };
 
-export default function ProjectPage({
+export default async function ProjectPage({
   params,
 }: {
   params: { clientID: string };
 }) {
-  return <div>Project of {params.clientID}</div>;
+  const client: { companyName: string } | null = await getSingleClient(
+    params.clientID
+  );
+
+  return (
+    <div>
+      <div>Projects of {client?.companyName}</div>
+      <div>
+        <ListProjects clientID={params.clientID} />
+      </div>
+    </div>
+  );
 }

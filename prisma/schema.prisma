@@ -50,7 +50,7 @@ model User {
   client           Client?      @relation(fields: [clientId], references: [id], onDelete: SetNull)
   clientId         String?
 
-  teamMembers      TeamMember[]
+  teamMembers      TeamMember?
 }
 
 enum Role {
@@ -77,7 +77,9 @@ model TeamMember {
   phone       String?
 
   user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      String
+  userId      String     @unique
+
+  projects    Project[]  @relation("TeamMemberProjects")
 }
 
 model Client {
@@ -104,13 +106,16 @@ model Project {
   cover         String?    // Link to project cover image
   title         String
   description   String?
-  startedDate   DateTime?
-  endedDate     DateTime?
+  priority      String?
+  startDate     DateTime?
+  endDate       DateTime?
   status        String?
-  budget        Float?
+  tags          String?
 
   client        Client      @relation(fields: [clientID], references: [id])
   clientID      String
+
+  teamMembers   TeamMember[] @relation("TeamMemberProjects")
 
   feedbacks     Feedback[]
   documents     Document[]
