@@ -29,7 +29,7 @@ export async function getTeamMembers() {
   // }
 
   try {
-    const client = await prisma.user.findMany({
+    const members = await prisma.user.findMany({
       where: {
         role: {
           in: ["ADMIN", "MANAGER", "WORKER"],
@@ -40,7 +40,7 @@ export async function getTeamMembers() {
       },
     });
 
-    return client;
+    return members;
   } catch (error) {
     throw new Error("Error databse");
   }
@@ -75,7 +75,7 @@ export async function teamUpdateAction(
     if (userUpdate) {
       const teamUpdate = await prisma.teamMember.update({
         where: {
-          id: userUpdate.teamMembers[0].id,
+          id: userUpdate.teamMembers?.id,
         },
         data: {
           type: values.type,
