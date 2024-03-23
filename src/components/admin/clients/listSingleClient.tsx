@@ -3,7 +3,15 @@ import Image from "next/image";
 import Link from "next/link";
 import ListClientUsers from "./listClientUsers";
 import { Badge } from "@/components/ui/badge";
-import { IoSettingsOutline } from "react-icons/io5";
+import { IoEllipse, IoSettingsOutline } from "react-icons/io5";
+
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { usePathname } from "next/navigation";
 
 export type ListSingleClientProps = {
   clients:
@@ -28,7 +36,15 @@ export type ListSingleClientProps = {
 };
 
 export default function ListSingleClient(props: ListSingleClientProps) {
+  const pathname = usePathname();
   const clients = props.clients;
+
+  function isCurrentClient(clientID: string) {
+    if (pathname.includes(clientID)) {
+      return true;
+    }
+    return false;
+  }
 
   if (!clients?.length) {
     return (
@@ -43,7 +59,8 @@ export default function ListSingleClient(props: ListSingleClientProps) {
       {clients?.map((client) => (
         <li
           key={client.id}
-          className="relative mb-4 hover:bg-secondary p-2 rounded transition-all"
+          className="relative mb-4 hover:bg-secondary p-2 rounded-lg transition-all"
+          style={isCurrentClient(client.id) ? { background: "#d5f6ee" } : {}}
           onClick={clickAnimation}
         >
           <Link
@@ -61,7 +78,7 @@ export default function ListSingleClient(props: ListSingleClientProps) {
                     alt=""
                     width={300}
                     height={300}
-                    className="aspect-square rounded bg-secondary w-full"
+                    className="aspect-square rounded-lg bg-secondary w-full"
                   />
                 ) : (
                   <div className="aspect-square rounded bg-secondary w-full"></div>
@@ -83,14 +100,31 @@ export default function ListSingleClient(props: ListSingleClientProps) {
                 </div>
                 <div className="flex justify-between gap-2 items-center">
                   <div className="flex gap-2">
-                    <Badge className="bg-green-600 text-secondary">
+                    <Badge
+                      variant="outline"
+                      className="bg-light-orange border-none"
+                    >
                       {client.country}
                     </Badge>
-                    <Badge className="bg-blue-600 text-secondary">
+                    <Badge
+                      variant="outline"
+                      className="bg-light-red border-none"
+                    >
                       {client.categorie}
                     </Badge>
                   </div>
-                  <div>status</div>
+                  <div>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <IoEllipse className="fill-green-600" />
+                        </TooltipTrigger>
+                        <TooltipContent className="shadow-none">
+                          Last activity ...
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
                 </div>
               </div>
             </div>
