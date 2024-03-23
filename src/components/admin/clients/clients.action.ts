@@ -22,3 +22,26 @@ export async function getClients() {
     throw new Error("Error databse");
   }
 }
+
+export async function getSingleClient(clientID: string) {
+  // const user = await auth();
+
+  // if (!user) {
+  //   return;
+  // }
+
+  try {
+    const client = await prisma.client.findFirst({
+      where: {
+        id: clientID,
+      },
+      include: {
+        users: true, // Inclure les posts associés
+      },
+    });
+
+    return client;
+  } catch (error) {
+    throw new Error("Error databse");
+  }
+}
