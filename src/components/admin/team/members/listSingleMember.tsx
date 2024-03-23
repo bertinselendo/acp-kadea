@@ -10,7 +10,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
-import { IoEllipsisHorizontal, IoTimeOutline } from "react-icons/io5";
+import { IoEllipse, IoEllipsisHorizontal } from "react-icons/io5";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,19 +22,19 @@ import { clickAnimation } from "@/components/ui/click-animation";
 import EditMemberModal from "./editMemberForm";
 import { DeleteMemberAlert } from "./deleteMemberAlert";
 import { useSession } from "next-auth/react";
-import { Role } from "@prisma/client";
+import { User } from "@prisma/client";
 import Image from "next/image";
 import { dicebearAvatar } from "@/lib/auth/auth-utils";
 
 export function TeamListSingleMember(props: any) {
   const { data } = useSession();
-  const currentRole = data?.user.role;
+  const currentRole = (data?.user as User & { role: string }).role;
 
   return (
     <div className="flex flex-col gap-4">
       {props.members.map((member: any) => (
         <Card key={member.id} className="w-full flex flex-col p-2 gap-0">
-          <CardHeader className="p-2">
+          <CardHeader className="p-2 pb-0">
             <div className="flex gap-4 justify-between items-start">
               <div className="w-4/5 flex gap-4">
                 <Avatar>
@@ -57,7 +57,7 @@ export function TeamListSingleMember(props: any) {
                       {member.lastName && member.lastName}
                     </CardTitle>
                     <div className="text-sm flex gap-1 items-center">
-                      <IoTimeOutline color="#ffd335" />
+                      <IoEllipse className="fill-green-700" />
                       <span>last online</span>
                     </div>
                   </div>
@@ -93,21 +93,30 @@ export function TeamListSingleMember(props: any) {
             </div>
           </CardHeader>
           <CardContent className="p-2 pl-16 text-sm">
-            <div>
-              {member.teamMembers.map((team: any) => (
-                <div key={team.id} className="flex gap-2 uppercase">
+            {member.teamMembers && (
+              <div
+                key={member.teamMembers?.id}
+                className="flex gap-2 uppercase mb-2"
+              >
+                <Badge variant="outline" className="bg-light-blue border-none">
+                  <Link href={`tel:${member.teamMembers?.phone}`}>
+                    {member.teamMembers?.phone}
+                  </Link>
+                </Badge>
+                <Badge variant="outline" className="bg-light-red border-none">
+                  {member.teamMembers?.type}
+                </Badge>
+                <Badge variant="outline" className="bg-light-green border-none">
+                  {member.role}
+                </Badge>
+                {member.teamMembers?.companyName && (
                   <Badge variant="outline">
-                    <Link href={`tel:${team.phone}`}>{team.phone}</Link>
+                    {member.teamMembers?.companyName}
                   </Badge>
-                  <Badge variant="outline">{team.type}</Badge>
-                  <Badge variant="outline">{member.role}</Badge>
-                  {team.companyName && (
-                    <Badge variant="outline">{team.companyName}</Badge>
-                  )}
-                </div>
-              ))}
-            </div>
-            <div className="mt-2">
+                )}
+              </div>
+            )}
+            <div>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
               eiusmod tempor incididunt ut labore et dolore magna aliqua.
             </div>
