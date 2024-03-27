@@ -4,14 +4,14 @@ import { auth } from "@/lib/auth/helper";
 import { prisma } from "@/lib/prisma";
 
 export async function getClientProjects(clientID: string) {
-  // const user = await auth();
+  const user = await auth();
 
-  // if (!user) {
-  //   return;
-  // }
+  if (!user) {
+    return;
+  }
 
   try {
-    const client = await prisma.project.findMany({
+    const projects = await prisma.project.findMany({
       where: {
         clientID: clientID,
       },
@@ -20,7 +20,30 @@ export async function getClientProjects(clientID: string) {
       },
     });
 
-    return client;
+    return projects;
+  } catch (error) {
+    throw new Error("Error databse");
+  }
+}
+
+export async function getClientSingleProject(projectID: string) {
+  const user = await auth();
+
+  if (!user) {
+    return;
+  }
+
+  try {
+    const project = await prisma.project.findUnique({
+      where: {
+        id: projectID,
+      },
+      include: {
+        teamMembers: true,
+      },
+    });
+
+    return project;
   } catch (error) {
     throw new Error("Error databse");
   }
