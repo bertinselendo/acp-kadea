@@ -82,7 +82,7 @@ export default function MainMenu({ menus }: any) {
                         <IoGridOutline size={iconSize} />
                       );
                     case "clients":
-                      return isMenuPage("/client") ? (
+                      return isMenuPage("/clients") ? (
                         <IoBriefcase size={iconSize} />
                       ) : (
                         <IoBriefcaseOutline size={iconSize} />
