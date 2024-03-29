@@ -46,6 +46,26 @@ export async function getTeamMembers() {
   }
 }
 
+export async function getUser(userID: string) {
+  const user = await auth();
+
+  if (!user) {
+    return;
+  }
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userID,
+      },
+    });
+
+    return user;
+  } catch (error) {
+    throw new Error("Error databse");
+  }
+}
+
 export async function teamUpdateAction(
   values: updateMemberActionType,
   userID: string

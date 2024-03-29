@@ -11,21 +11,21 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
   NavigationMenuViewport,
+  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
-import Link from "next/link";
 import { Settings } from "lucide-react";
+import AddProjectForm from "../addProjectForm";
+import Link from "next/link";
+import EditProjectForm from "../editProjectForm";
 
 const menus = [
   {
@@ -67,26 +67,19 @@ export default function ProjectNavMenu(props: ProjectNavMenuProps) {
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
-            <AlertDialog>
-              <AlertDialogTrigger>
+            <Dialog>
+              <DialogTrigger asChild>
                 <Button variant="secondary" onClick={clickAnimation}>
                   <Settings className="mr-2 h-4 w-4" /> Settings
                 </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This action cannot be undone. This will permanently delete
-                    your account and remove your data from our servers.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction>Continue</AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+              </DialogTrigger>
+              <DialogContent className="max-w-[60vw] max-h-[80vh] overflow-scroll">
+                <DialogHeader>
+                  <DialogTitle className="text-xl">Edit project</DialogTitle>
+                </DialogHeader>
+                <EditProjectForm />
+              </DialogContent>
+            </Dialog>
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>

@@ -4,14 +4,41 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { parseDate, relativeDate } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Project } from "@prisma/client";
+import { Project, TeamMember, User } from "@prisma/client";
+import { getTeamMembers, getUser } from "../../team/members/members.action";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { UserDiceAvater } from "@/components/auth/userDiceAvater";
 
-export type ProjectHeaderProps = {
+type ProjectHeaderProps = {
   project: Project;
 };
 
+type ProjectTypes = Project & {
+  teamMembers: [TeamMember];
+};
+
 export default function ProjectHeader(props: ProjectHeaderProps) {
-  const project = props.project;
+  const [teams, setTeams] = useState<[User]>([] as any);
+  const project = props.project as ProjectTypes;
+
+  useQuery({
+    queryKey: ["members"],
+    queryFn: async () => {
+      const members = await getTeamMembers();
+      if (members) {
+        const teamArray: any = [];
+        project.teamMembers.map((team) => {
+          const sme = members.find((member) => member.id == team.userId);
+          teamArray.push(sme);
+          setTeams(teamArray);
+        });
+
+        return members;
+      }
+    },
+  });
+
   return (
     <Card
       className="border-none h-80"
@@ -27,11 +54,15 @@ export default function ProjectHeader(props: ProjectHeaderProps) {
           </Badge>
         </div>
         <div className="flex flex-col gap-4">
-          <div className="flex justify-end px-2">
-            <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
+          <div className="flex justify-end px-2 gap-2">
+            {teams.map((team, index) => (
+              <Avatar key={index}>
+                <AvatarImage src={team.avatar as string} />
+                <AvatarFallback>
+                  <UserDiceAvater email={team.email} />
+                </AvatarFallback>
+              </Avatar>
+            ))}
           </div>
           <div className="w-full flex justify-between">
             <div className="w-4/5">
