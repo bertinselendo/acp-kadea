@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -23,31 +23,39 @@ import { Card, CardContent } from "@/components/ui/card";
 
 import { Textarea } from "@/components/ui/textarea";
 
-import { feedbackCreationAction } from "./feedback.action";
+import {
+  feedbackCreationAction,
+  feedbackUpdatetAction,
+} from "./feedback.action";
+import { Feedback } from "@prisma/client";
 
 const formSchema = z.object({
   title: z.string().min(2, {
     message: "Must be at least 2 characters.",
   }),
   link: z.string().url(),
-  note: z.string().min(2, {
-    message: "Must be at least 2 characters.",
-  }),
+  note: z.string().optional(),
 });
 
-export type AddFeedbackFormProps = {
-  projectID: string;
+export type FeedbackFormProps = {
+  projectID?: string;
+  feedback?: Feedback;
 };
 
-export default function AddFeedbackForm(props: AddFeedbackFormProps) {
+export default function FeedbackForm(props: FeedbackFormProps) {
   const router = useRouter();
+  console.log(router);
 
-  const creationMutation = useMutation({
+  const feedbackMutation = useMutation({
     mutationFn: async (values) => {
-      const feedback = await feedbackCreationAction(
-        values as any,
-        props.projectID
-      );
+      if (props.projectID) {
+      }
+
+      const feedback = props.projectID
+        ? await feedbackCreationAction(values as any, props.projectID)
+        : props.feedback
+        ? await feedbackUpdatetAction(values as any, props.feedback.id)
+        : false;
 
       if (!feedback) {
         toast.dismiss();
@@ -62,14 +70,17 @@ export default function AddFeedbackForm(props: AddFeedbackFormProps) {
     onSuccess(data) {
       if (data) {
         toast.dismiss();
-        toast.success("Feedback was add successuff", {
+        toast.success("Action successuff", {
           description: "You will be redirect ",
         });
       }
 
       setTimeout(() => {
-        // window.location.reload();
-        router.push(`/p/${props.projectID}/feedbacks`);
+        if (props.projectID) {
+          router.push(`/p/${props.projectID}/feedbacks`);
+        } else {
+          window.location.reload();
+        }
       }, 3000);
     },
   });
@@ -83,12 +94,23 @@ export default function AddFeedbackForm(props: AddFeedbackFormProps) {
     },
   });
 
+  useEffect(() => {
+    if (props.feedback) {
+      const data = props.feedback;
+      form.reset({
+        title: data.title,
+        link: data.link,
+        note: data.note as string,
+      });
+    }
+  }, [form, props.feedback]);
+
   async function onSubmit(values: z.infer<typeof formSchema>, event: any) {
     event.preventDefault();
 
-    toast.loading("Creating...");
+    toast.loading("PLease wait...");
 
-    creationMutation.mutateAsync(values as any);
+    feedbackMutation.mutateAsync(values as any);
   }
 
   return (
@@ -96,7 +118,7 @@ export default function AddFeedbackForm(props: AddFeedbackFormProps) {
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className={
-          creationMutation.isPending
+          feedbackMutation.isPending
             ? "space-y-8 animate-pulse cursor-wait pointer-events-none"
             : "space-y-8"
         }
@@ -150,7 +172,7 @@ export default function AddFeedbackForm(props: AddFeedbackFormProps) {
           </Card>
         </div>
         <Button type="submit" className="w-full mt-4">
-          Create feedback
+          {props.projectID ? "Create feedback" : "Update details"}
         </Button>
       </form>
     </Form>

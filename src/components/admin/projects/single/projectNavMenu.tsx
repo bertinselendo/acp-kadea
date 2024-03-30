@@ -26,10 +26,11 @@ import { Settings } from "lucide-react";
 import AddProjectForm from "../addProjectForm";
 import Link from "next/link";
 import EditProjectForm from "../editProjectForm";
+import { useParams } from "next/navigation";
 
 const menus = [
   {
-    link: "#",
+    link: "/feedbacks",
     text: "Feedbacks",
   },
   {
@@ -49,14 +50,17 @@ const menus = [
 export type ProjectNavMenuProps = {};
 
 export default function ProjectNavMenu(props: ProjectNavMenuProps) {
+  const { projectID } = useParams();
+  const urlBase = `/p/${projectID}`;
+
   return (
     <div className="flex items-center h-full justify-between">
       <NavigationMenu>
         <NavigationMenuList>
           {menus.map((menu, key) => (
             <NavigationMenuItem key={key}>
-              <Button variant="secondary" asChild>
-                <Link href={menu.link} onClick={clickAnimation}>
+              <Button variant="secondary" className="hover:bg-primary" asChild>
+                <Link href={urlBase + menu.link} onClick={clickAnimation}>
                   {menu.text}
                 </Link>
               </Button>

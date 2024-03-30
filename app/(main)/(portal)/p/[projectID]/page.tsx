@@ -49,7 +49,7 @@ export default async function ProjectSinglePage({ params }: Props) {
           <CardContent className="flex flex-col h-full gap-4 p-4">
             <div className="flex justify-between items-center">
               <CardTitle>Feedbacks</CardTitle>
-              <AddFeedbackModal projectID={params.projectID} />
+              <AddFeedbackModal projectID={params.projectID} variant="icon" />
             </div>
             <DashFeedbacks projectID={params.projectID} />
           </CardContent>

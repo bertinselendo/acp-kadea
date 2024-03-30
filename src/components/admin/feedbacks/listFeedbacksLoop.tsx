@@ -1,3 +1,5 @@
+"use client";
+
 import { clickAnimation } from "@/components/ui/click-animation";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,6 +12,20 @@ import { parseDate, relativeDate } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Feedback, User } from "@prisma/client";
 import { UserDiceAvater } from "@/components/auth/userDiceAvater";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { IoEllipsisHorizontal, IoEllipsisVertical } from "react-icons/io5";
+import { useSession } from "next-auth/react";
+import EditMemberModal from "../team/members/editMemberForm";
+import { DeleteMemberAlert } from "../team/members/deleteMemberAlert";
+import { DeleteFeedbackAlert } from "./deleteFeedbackAlert";
+import DeleteFeedbackModal from "./editFeedbackModal";
+import EditFeedbackModal from "./editFeedbackModal";
 
 export type ListFeedbacksLoopProps = {
   feedbacks: [
@@ -21,6 +37,10 @@ export type ListFeedbacksLoopProps = {
 
 export default function ListFeedbacksLoop(props: ListFeedbacksLoopProps) {
   const feedbacks = props.feedbacks;
+
+  const { data } = useSession();
+  const user = data?.user as User;
+  const currentRole = user?.role;
 
   if (!feedbacks) {
     return (
@@ -56,6 +76,23 @@ export default function ListFeedbacksLoop(props: ListFeedbacksLoopProps) {
                 <Badge variant="outline" className="bg-white py-1">
                   {parseDate(feedback.createdAt)}
                 </Badge>
+                <DropdownMenu>
+                  <DropdownMenuTrigger className="focus:hidden">
+                    <IoEllipsisVertical onClick={clickAnimation} />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <EditFeedbackModal feedback={feedback} />
+
+                    {/* <DropdownMenuItem>Make a call</DropdownMenuItem> */}
+
+                    {(currentRole == "ADMIN" || currentRole == "MANAGER") && (
+                      <>
+                        <DropdownMenuSeparator />
+                        <DeleteFeedbackAlert feedback={feedback} />
+                      </>
+                    )}
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
               <div>
                 <h3 className="font-semibold text-xl w-1/2">

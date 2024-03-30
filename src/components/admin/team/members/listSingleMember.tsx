@@ -28,7 +28,8 @@ import { dicebearAvatar } from "@/lib/auth/auth-utils";
 
 export function TeamListSingleMember(props: any) {
   const { data } = useSession();
-  const currentRole = (data?.user as User & { role: string }).role;
+  const user = data?.user as User;
+  const currentRole = user?.role;
 
   return (
     <div className="flex flex-col gap-4">

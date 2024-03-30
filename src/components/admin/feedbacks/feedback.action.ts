@@ -4,6 +4,33 @@ import { auth } from "@/lib/auth/helper";
 import { prisma } from "@/lib/prisma";
 import { Feedback } from "@prisma/client";
 
+export async function feedbackCreationAction(
+  values: Feedback,
+  projectID: string
+) {
+  const user = await auth();
+
+  if (!user) {
+    return;
+  }
+
+  try {
+    const newFeedback = await prisma.feedback.create({
+      data: {
+        createdBy: user.id,
+        title: values.title,
+        link: values.link,
+        note: values.note,
+        projectId: projectID,
+      },
+    });
+    return newFeedback;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Error Will Create Entries");
+  }
+}
+
 export async function getProjectFeedbacks(projectID: string) {
   const user = await auth();
 
@@ -27,9 +54,9 @@ export async function getProjectFeedbacks(projectID: string) {
   }
 }
 
-export async function feedbackCreationAction(
+export async function feedbackUpdatetAction(
   values: Feedback,
-  projectID: string
+  feedbackID: string
 ) {
   const user = await auth();
 
@@ -38,16 +65,37 @@ export async function feedbackCreationAction(
   }
 
   try {
-    const newFeedback = await prisma.feedback.create({
+    const feedback = await prisma.feedback.update({
+      where: {
+        id: feedbackID,
+      },
       data: {
-        createdBy: user.id,
         title: values.title,
         link: values.link,
         note: values.note,
-        projectId: projectID,
       },
     });
-    return newFeedback;
+    return feedback;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Error Will Create Entries");
+  }
+}
+
+export async function feedbackDeleteAction(feedbackID: string) {
+  const user = await auth();
+
+  if (!user) {
+    return;
+  }
+
+  try {
+    const feedback = await prisma.feedback.delete({
+      where: {
+        id: feedbackID,
+      },
+    });
+    return feedback;
   } catch (error) {
     console.log(error);
     throw new Error("Error Will Create Entries");
