@@ -16,6 +16,8 @@ import { parseDate, relativeDate } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ProjectHeader from "@/components/admin/projects/single/projectHeader";
 import { Project } from "@prisma/client";
+import DashFeedbacks from "@/components/admin/projects/single/dashboard/feedbacks";
+import AddFeedbackModal from "@/components/admin/feedbacks/addFeedbackModal";
 
 type Props = {
   params: { projectID: string };
@@ -39,14 +41,17 @@ export default async function ProjectSinglePage({ params }: Props) {
   const project = await getClientSingleProject(params.projectID);
 
   return (
-    <div className="p-4 flex flex-col gap-6">
+    <div className="w-full p-4 flex flex-col gap-6">
       <ProjectHeader project={project as Project} />
 
       <div className="flex gap-6">
         <Card className="h-80 w-1/2">
           <CardContent className="flex flex-col h-full gap-4 p-4">
-            <CardTitle>Feedbacks</CardTitle>
-            <Skeleton className="w-full h-60" />
+            <div className="flex justify-between items-center">
+              <CardTitle>Feedbacks</CardTitle>
+              <AddFeedbackModal projectID={params.projectID} />
+            </div>
+            <DashFeedbacks projectID={params.projectID} />
           </CardContent>
         </Card>
         <Card className="h-80 w-1/2">

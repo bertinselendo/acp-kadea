@@ -18,7 +18,9 @@ export default async function RouteLayout(props: LayoutParams<{}>) {
       </div>
       <div className="flex">
         <div className="py-3 px-6 2xl:w-9/12 md:w-8/12 flex justify-center h-[85vh] overflow-scroll">
-          <div className="w-full">{props.children}</div>
+          <div className="w-full flex flex-col items-center">
+            {props.children}
+          </div>
         </div>
         <div className="p-3 2xl:w-3/12 md:w-4/12 border-l">
           <div className="flex flex-col justify-between h-full">
