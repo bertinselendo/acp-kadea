@@ -13,14 +13,19 @@ export default async function RouteLayout(props: LayoutParams<{}>) {
 
   return (
     <main className="bg-gradient-to-r from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90%">
-      <div className="flex min-h-screen relative bg-blend-overlay bg-noise bg-white/80">
+      <div className="flex h-vh relative bg-blend-overlay bg-noise bg-white/80">
         <SidebarGlobal />
         <div className="w-full ">
-          <div className="flex justify-between items-center p-3 h-[6vh] --border border-b sticky top-0 z-50 overflow-hidden">
+          <div
+            id="main-header"
+            className="flex justify-between items-center p-3 h-14 --border border-b sticky top-0 z-50 overflow-hidden"
+          >
             <Header user={user} />
           </div>
-          <div className="bg-background/80 h-[94vh] overflow-y-scroll">
-            {props.children}
+          <div className="h-[100vh] -mt-14 pt-14">
+            <div className="bg-background/80 h-full overflow-y-scroll">
+              {props.children}
+            </div>
           </div>
         </div>
       </div>
