@@ -12,12 +12,12 @@ export const metadata: Metadata = {
 
 export default async function RouteLayout(props: LayoutParams<{}>) {
   return (
-    <div>
-      <div className="px-4 border-b h-14">
+    <div className="h-full relative">
+      <div className="px-4 border-b h-14 sticky top-0">
         <ProjectNavMenu />
       </div>
-      <div className="flex">
-        <div className="py-3 px-6 2xl:w-9/12 md:w-8/12 flex justify-center h-[85vh] overflow-scroll">
+      <div className="flex h-full -mt-14 pt-14 overflow-hidden">
+        <div className="py-3 px-6 2xl:w-9/12 md:w-8/12 flex justify-center overflow-y-scroll">
           <div className="w-full flex flex-col items-center">
             {props.children}
           </div>

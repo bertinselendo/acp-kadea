@@ -21,7 +21,7 @@ export default function Header(props: HeaderProps) {
   }, [url]);
 
   return (
-    <div className="flex justify-between items-center p-3 bg-background dark:bg-black --border border-b sticky top-0 z-50">
+    <>
       <div className="w-4/12">
         <h1 className="text-2xl font-bold">{pageTitle}</h1>
       </div>
@@ -38,6 +38,6 @@ export default function Header(props: HeaderProps) {
           </li>
         </ul>
       </div>
-    </div>
+    </>
   );
 }

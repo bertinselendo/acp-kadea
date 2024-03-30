@@ -7,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default async function RouteLayout(props: LayoutParams<{}>) {
-  return <div>{props.children}</div>;
+  return <div className="h-full">{props.children}</div>;
 }

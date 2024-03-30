@@ -58,6 +58,9 @@ module.exports = {
         "light-red": "#fbe2f4",
         "ice-blue": "#eceff4",
       },
+      backgroundImage: {
+        noise: "url('/noise.svg')",
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",

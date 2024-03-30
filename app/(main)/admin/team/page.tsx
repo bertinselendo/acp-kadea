@@ -20,7 +20,7 @@ export default async function TeamPage(props: TeamPageProps) {
   }
 
   return (
-    <div className="flex min-h-[90vh]">
+    <div className="flex h-full">
       <div className="md:w-2/3 p-4">
         <Skeleton className="w-full h-80" />
       </div>
