@@ -18,6 +18,8 @@ import ProjectHeader from "@/components/admin/projects/single/projectHeader";
 import { Project } from "@prisma/client";
 import DashFeedbacks from "@/components/admin/projects/single/dashboard/feedbacks";
 import AddFeedbackModal from "@/components/admin/feedbacks/addFeedbackModal";
+import DashCredentials from "@/components/admin/projects/single/dashboard/credentials";
+import AddcredentialsModal from "@/components/admin/credentials/addcredentialsModal";
 
 type Props = {
   params: { projectID: string };
@@ -79,12 +81,15 @@ export default async function ProjectSinglePage({ params }: Props) {
         </Card>
         <Card className="h-80 w-1/2">
           <CardContent className="flex flex-col h-full gap-4 p-4">
-            <CardTitle>Credentials</CardTitle>
-            <div className="flex flex-col gap-4 *:h-10">
-              <Skeleton />
-              <Skeleton />
-              <Skeleton />
+            <div className="flex justify-between items-center">
+              <CardTitle>Credentials</CardTitle>
+              <AddcredentialsModal
+                projectID={params.projectID}
+                variant="icon"
+              />
             </div>
+
+            <DashCredentials projectID={params.projectID} />
           </CardContent>
         </Card>
       </div>

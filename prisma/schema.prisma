@@ -52,7 +52,8 @@ model User {
 
   teamMembers      TeamMember?
 
-  Feedbacks        Feedback[]
+  feedbacks        Feedback[]
+  credentials      Credential[]
 }
 
 enum Role {
@@ -122,15 +123,15 @@ model Project {
   feedbacks     Feedback[]
   documents     Document[]
   invoices      Invoice[]
-  accesses      Access[]
+  accesses      Credential[]
 }
 
 model Feedback {
   id            String    @id @default(cuid())
   createdAt     DateTime  @default(now())
 
-  user          User?      @relation(fields: [createdBy], references: [id])
   createdBy     String?
+  user          User?      @relation(fields: [createdBy], references: [id])
 
   title         String
   link          String    // Link to usepastel feedback
@@ -169,14 +170,17 @@ model Invoice {
   projectId     String
 }
 
-model Access {
+model Credential {
   id            String    @id @default(cuid())
   createdAt     DateTime  @default(now())
+
+  createdBy     String?
+  user          User?      @relation(fields: [createdBy], references: [id])
+
   service       String    // Website, Hosting, Domain, etc.
   username      String
   password      String
   adminUrl      String
-  expiryDate    DateTime
   
   project       Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId     String
