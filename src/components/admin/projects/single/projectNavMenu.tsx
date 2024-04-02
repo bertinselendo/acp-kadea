@@ -34,7 +34,7 @@ const menus = [
     text: "Feedbacks",
   },
   {
-    link: "#",
+    link: "/documents",
     text: "Documents",
   },
   {

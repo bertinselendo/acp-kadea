@@ -20,6 +20,8 @@ import DashFeedbacks from "@/components/admin/projects/single/dashboard/feedback
 import AddFeedbackModal from "@/components/admin/feedbacks/addFeedbackModal";
 import DashCredentials from "@/components/admin/projects/single/dashboard/credentials";
 import AddcredentialsModal from "@/components/admin/credentials/addcredentialsModal";
+import DashDocuments from "@/components/admin/projects/single/dashboard/documents";
+import AddDocumentModal from "@/components/admin/documents/addDocumentModal";
 
 type Props = {
   params: { projectID: string };
@@ -58,13 +60,11 @@ export default async function ProjectSinglePage({ params }: Props) {
         </Card>
         <Card className="h-80 w-1/2">
           <CardContent className="flex flex-col h-full gap-4 p-4">
-            <CardTitle>Document</CardTitle>
-            <div className="grid grid-rows-2 grid-flow-col gap-4 *:h-28">
-              <Skeleton />
-              <Skeleton />
-              <Skeleton />
-              <Skeleton />
+            <div className="flex justify-between items-center">
+              <CardTitle>Documents</CardTitle>
+              <AddDocumentModal projectID={params.projectID} variant="icon" />
             </div>
+            <DashDocuments projectID={params.projectID} />
           </CardContent>
         </Card>
       </div>
