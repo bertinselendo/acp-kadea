@@ -1,34 +1,63 @@
 "use client";
 
+import {
+  query,
+  collection,
+  onSnapshot,
+  FieldValue,
+  orderBy,
+} from "firebase/firestore";
+import { firestore } from "@/lib/firebase";
+
 import { useEffect, useRef, useState } from "react";
 import { Skeleton } from "../ui/skeleton";
 import ChatForm from "./chatForm";
 import ListMessages from "./listMessages";
 import { messagesData } from "./data";
+import { useParams } from "next/navigation";
+import { User } from "@prisma/client";
+import { useQuery } from "@tanstack/react-query";
+import dayjs from "dayjs";
+import { parseDate, relativeDate } from "@/lib/utils";
 
-export type ChatListTypes = [
-  {
-    id: string;
-    createAt: string;
-    avatar: string;
-    name: string;
-    message: string;
-    images: [string];
-    documents: [string];
-  }
-];
+export type ChatMessageType = {
+  createAt: any;
+  userID: string;
+  name: string;
+  message: string;
+  images?: [];
+  documents?: [];
+};
 
-export type MessagePanelProps = {};
+export type MessagePanelProps = {
+  user: User;
+};
 
 export default function MessagePanel(props: MessagePanelProps) {
-  const [chats, setChats] = useState<any>(messagesData);
+  const [chats, setChats] = useState<any>(null);
+  const { projectID } = useParams();
+
+  // console.log(chats);
+
+  const projectChatsRef = collection(firestore, `${projectID}`);
 
   const chatFormRef = useRef<HTMLDivElement>(null);
   const chatFormHeight = chatFormRef.current?.clientHeight;
 
-  // useEffect(() => {
-  //   setChats(messagesData);
-  // }, []);
+  useEffect(() => {
+    onSnapshot(
+      query(projectChatsRef, orderBy("createAt", "asc")),
+      (querySnapshot) => {
+        const chats: any = [];
+        querySnapshot.forEach((doc) => {
+          chats.push(doc.data());
+        });
+        setChats(chats);
+        console.log(chats);
+        return chats;
+      }
+    );
+  }, []); //eslint-disable-line
 
   return (
     <>
@@ -41,13 +70,18 @@ export default function MessagePanel(props: MessagePanelProps) {
             : { paddingBottom: "160px" }
         }
       >
-        <ListMessages chats={chats} />
+        <ListMessages chats={chats} projectID={projectID} />
       </div>
       <div
         ref={chatFormRef}
         className="bg-secondary mr-2 rounded-lg z-20 sticky bottom-1"
       >
-        <ChatForm chats={chats} setChats={setChats} />
+        <ChatForm
+          chats={chats}
+          setChats={setChats}
+          user={props.user}
+          projectChatsRef={projectChatsRef}
+        />
       </div>
     </>
   );

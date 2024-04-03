@@ -1,8 +1,8 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import React, { useEffect, useRef } from "react";
-import { Avatar, AvatarImage } from "../ui/avatar";
+import React, { useEffect, useRef, useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import { FileText } from "lucide-react";
@@ -12,19 +12,66 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { ChatListTypes } from "./messagePanel";
+import { ChatMessageType } from "./messagePanel";
+import { useQuery } from "@tanstack/react-query";
+import dayjs from "dayjs";
+import { User } from "@prisma/client";
+import { UserDiceAvater } from "../auth/userDiceAvater";
+import { getProjectAllUsers } from "../admin/projects/project.action";
+import { Skeleton } from "../ui/skeleton";
 
-export default function ChatList(props: { chats: ChatListTypes }) {
+type PropsType = {
+  chats: [ChatMessageType];
+  projectID: string | string[];
+};
+
+export default function ChatList({ chats, projectID }: PropsType) {
+  const [projectUsers, setProjectUsers] = useState<any>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
-
-  const chats = props.chats;
 
   useEffect(() => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop =
         messagesContainerRef.current.scrollHeight;
     }
-  }, [chats]);
+  }, [chats, projectUsers]);
+
+  useQuery({
+    queryKey: ["projectUsers"],
+    queryFn: async () => {
+      const users = await getProjectAllUsers(`${projectID}`);
+      if (users) setProjectUsers(users);
+      return users;
+    },
+  });
+
+  const getUserData = (userID: string) => {
+    const user = projectUsers?.filter(
+      (teamUser: User) => teamUser.id === userID
+    );
+    if (user) return user[0];
+  };
+
+  if (!projectUsers) {
+    return (
+      <div className="space-y-4">
+        <div className="flex gap-3 items-top w-full">
+          <div className="w-full flex flex-col gap-1 items-end">
+            <Skeleton className="w-20 h-3" />
+            <Skeleton className="w-full h-16" />
+          </div>
+          <Skeleton className="w-10 h-10 aspect-square rounded-full" />
+        </div>
+        <div className="flex gap-3 items-top w-full">
+          <Skeleton className="w-10 h-10 aspect-square rounded-full" />
+          <div className="w-full flex flex-col gap-1">
+            <Skeleton className="w-20 h-3" />
+            <Skeleton className="w-full h-12" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -53,31 +100,38 @@ export default function ChatList(props: { chats: ChatListTypes }) {
             }}
             className={cn(
               "flex flex-col gap-2 px-4 py-2 whitespace-pre-wrap",
-              message.name !== "Jane Doe" ? "items-end" : "items-start"
+              getUserData(message.userID)?.role !== "CLIENT"
+                ? "items-end"
+                : "items-start"
             )}
           >
             <div className="flex gap-3 items-top w-full">
-              {message.name === "Jane Doe" && (
+              {getUserData(message.userID)?.role === "CLIENT" && (
                 <Avatar className="flex justify-center items-center shadow-lg">
-                  <AvatarImage
-                    src={message.avatar}
-                    alt={message.name}
-                    width={6}
-                    height={6}
-                  />
+                  <AvatarImage src={getUserData(message?.userID)?.avatar} />
+                  <AvatarFallback>
+                    <UserDiceAvater
+                      email={getUserData(message?.userID)?.email}
+                    />
+                  </AvatarFallback>
                 </Avatar>
               )}
               <span
                 className={cn(
                   "flex flex-col w-full",
-                  message.name !== "Jane Doe" ? "items-end" : "items-start"
+                  getUserData(message.userID)?.role !== "CLIENT"
+                    ? "items-end"
+                    : "items-start"
                 )}
               >
-                <h6 className="text-sm">{message.name}</h6>
+                <h6 className="text-xs">
+                  {message.name} ·{" "}
+                  {dayjs(message.createAt?.toMillis()).fromNow()}
+                </h6>
                 <p
                   className={cn(
                     "p-3 rounded-md max-w-xs text-sm ",
-                    message.name !== "Jane Doe"
+                    getUserData(message.userID)?.role !== "CLIENT"
                       ? "rounded-tr-none bg-primary"
                       : "rounded-tl-none bg-accent"
                   )}
@@ -90,7 +144,7 @@ export default function ChatList(props: { chats: ChatListTypes }) {
                       <div key={index}>
                         <Image
                           src={media}
-                          alt=""
+                          alt={message.name}
                           width="100"
                           height="100"
                           className="aspect-video border rounded-lg"
@@ -117,14 +171,14 @@ export default function ChatList(props: { chats: ChatListTypes }) {
                     ))}
                 </div>
               </span>
-              {message.name !== "Jane Doe" && (
+              {getUserData(message.userID)?.role !== "CLIENT" && (
                 <Avatar className="flex justify-center items-center shadow-lg">
-                  <AvatarImage
-                    src={message.avatar}
-                    alt={message.name}
-                    width={6}
-                    height={6}
-                  />
+                  <AvatarImage src={getUserData(message?.userID)?.avatar} />
+                  <AvatarFallback>
+                    <UserDiceAvater
+                      email={getUserData(message?.userID)?.email}
+                    />
+                  </AvatarFallback>
                 </Avatar>
               )}
             </div>

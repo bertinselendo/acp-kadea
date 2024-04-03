@@ -2,6 +2,7 @@
 
 import { auth } from "@/lib/auth/helper";
 import { prisma } from "@/lib/prisma";
+import { Users } from "lucide-react";
 
 export async function getClientProjects(clientID: string) {
   const user = await auth();
@@ -187,5 +188,52 @@ export async function projectRemoveTeamMemberAction(
   } catch (error) {
     console.log(error);
     throw new Error("Error While disconect teamMember Entries");
+  }
+}
+
+export async function getProjectAllUsers(projectID: string) {
+  const user = await auth();
+
+  if (!user) {
+    return;
+  }
+
+  try {
+    const teamUsers = await prisma.teamMember
+      .findMany({
+        where: {
+          projects: {
+            some: {
+              id: projectID,
+            },
+          },
+        },
+        include: {
+          user: true,
+        },
+      })
+      .then((result) => result.map((teamMember) => teamMember.user));
+
+    const clientUsers = await prisma.project
+      .findUnique({
+        where: {
+          id: projectID,
+        },
+        include: {
+          client: {
+            include: {
+              users: true,
+            },
+          },
+        },
+      })
+      .then((result) => result?.client.users);
+
+    const allUsers =
+      clientUsers == null ? teamUsers : teamUsers.concat(clientUsers);
+
+    return allUsers;
+  } catch (error) {
+    throw new Error("Error databse");
   }
 }

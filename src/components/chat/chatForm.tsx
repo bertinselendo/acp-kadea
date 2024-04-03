@@ -1,6 +1,8 @@
 "use client";
 
+import { addDoc, serverTimestamp, Timestamp } from "firebase/firestore";
 import { nanoid } from "nanoid";
+
 import {
   FileImage,
   Mic,
@@ -18,47 +20,65 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Textarea } from "../ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { EmojiPicker } from "../ui/emoji-picker";
-import { messagesData } from "./data";
-import { ChatListTypes } from "./messagePanel";
+import { ChatMessageType } from "./messagePanel";
+import { useMutation } from "@tanstack/react-query";
+import { User } from "@prisma/client";
+import dayjs from "dayjs";
 
 export default function ChatForm({
   chats,
   setChats,
+  user,
+  projectChatsRef,
 }: {
-  chats: ChatListTypes;
+  chats: [ChatMessageType];
   setChats: any;
+  user: User;
+  projectChatsRef: any;
 }) {
   const [message, setMessage] = useState("");
   const inputRef = useRef<HTMLTextAreaElement>(null);
-
-  console.log(chats);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(event.target.value);
   };
 
-  const handleThumbsUp = () => {
-    const newMessage = {
-      id: nanoid(),
-      name: "Jane Doe",
-      avatar: "https://api.dicebear.com/8.x/adventurer/svg?seed=Princess",
+  const chatMutation = useMutation({
+    mutationFn: async (message: ChatMessageType) => {
+      return await addDoc(projectChatsRef, message);
+    },
+  });
+
+  const handleThumbsUp = async () => {
+    if (!user) return;
+
+    const newMessage: ChatMessageType = {
+      createAt: serverTimestamp(),
+      userID: user.id,
+      name: `${user?.firstName}`,
       message: "👍",
+      images: [],
+      documents: [],
     };
 
-    setChats([...chats, newMessage]);
+    await chatMutation.mutateAsync(newMessage);
     setMessage("");
   };
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (message.trim()) {
-      const newMessage = {
-        id: nanoid(),
-        name: "Jane Doe",
-        avatar: "https://api.dicebear.com/8.x/adventurer/svg?seed=Princess",
-        message: message.trim(),
+      if (!user) return;
+
+      const newMessage: ChatMessageType = {
+        createAt: serverTimestamp(),
+        userID: user.id,
+        name: `${user?.firstName}`,
+        message: message,
+        images: [],
+        documents: [],
       };
 
-      setChats([...chats, newMessage]);
+      await chatMutation.mutateAsync(newMessage);
       setMessage("");
 
       if (inputRef.current) {
@@ -80,7 +100,11 @@ export default function ChatForm({
   };
 
   return (
-    <div className="p-2 flex flex-col justify-between w-full items-center gap-0">
+    <div
+      className={`p-2 flex flex-col justify-between w-full items-center gap-0 ${
+        chatMutation.isPending && "animate-pulse pointer-events-none"
+      }`}
+    >
       <div className="flex w-full gap-1">
         <AnimatePresence initial={false}>
           <motion.div
