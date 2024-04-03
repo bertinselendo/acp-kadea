@@ -1,5 +1,6 @@
 import ListClients from "@/components/admin/clients/listClients";
 import ProjectNavMenu from "@/components/admin/projects/single/projectNavMenu";
+import MessagePanel from "@/components/chat/messagePanel";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { LayoutParams } from "@/types/next";
@@ -23,11 +24,8 @@ export default async function RouteLayout(props: LayoutParams<{}>) {
           </div>
         </div>
         <div className="p-3 2xl:w-3/12 md:w-4/12 border-l">
-          <div className="flex flex-col justify-between h-full">
-            <div>Chat..</div>
-            <div>
-              <Skeleton className="w-full h-32" />
-            </div>
+          <div className="flex flex-col justify-between h-full relative">
+            <MessagePanel />
           </div>
         </div>
       </div>
