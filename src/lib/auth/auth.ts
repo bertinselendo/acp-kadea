@@ -2,12 +2,10 @@ import NextAuth from "next-auth";
 // import Nodemailer from "next-auth/providers/nodemailer";
 import Resend from "next-auth/providers/resend";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { PrismaClient } from "@prisma/client";
 import { sendEmail } from "../mail/sendEmail";
 import { toast } from "sonner";
 import MagicLinkMail from "../../../emails/magicLinkEmail";
-
-const prisma = new PrismaClient();
+import { prisma } from "../prisma";
 
 export const {
   handlers: { GET, POST },
