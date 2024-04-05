@@ -3,10 +3,13 @@
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { IoNotificationsOutline } from "react-icons/io5";
 import HeaderUserPoper from "./header/headerUser";
+import { ChevronLeft } from "lucide-react";
+import Link from "next/link";
+import { AnimatePresence, motion } from "framer-motion";
 
 type HeaderProps = {
   user: any;
@@ -15,6 +18,7 @@ type HeaderProps = {
 export default function Header(props: HeaderProps) {
   const [pageTitle, setPageTitle] = useState("");
   const url = usePathname();
+  const router = useRouter();
 
   useEffect(() => {
     setPageTitle(document.title);
@@ -22,8 +26,24 @@ export default function Header(props: HeaderProps) {
 
   return (
     <>
-      <div className="w-4/12">
-        <h1 className="text-2xl font-bold">{pageTitle}</h1>
+      <div className="w-4/12 flex gap-2 items-center">
+        <Link href="#" onClick={() => router.back()}>
+          <ChevronLeft />
+        </Link>
+        <AnimatePresence>
+          {pageTitle && (
+            <motion.h1
+              key="htitle"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ ease: "easeOut", duration: 0.2 }}
+              className="text-2xl font-bold truncate"
+            >
+              {pageTitle}
+            </motion.h1>
+          )}
+        </AnimatePresence>
       </div>
       <div className="w-4/12 flex justify-center">
         <Skeleton className="w-[250px] h-10" />

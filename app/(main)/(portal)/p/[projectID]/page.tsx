@@ -11,9 +11,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { parseDate, relativeDate } from "@/lib/utils";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ProjectHeader from "@/components/admin/projects/single/projectHeader";
 import { Project } from "@prisma/client";
 import DashFeedbacks from "@/components/admin/projects/single/dashboard/feedbacks";
@@ -31,15 +28,6 @@ export const metadata: Metadata = {
   title: "",
   description: "",
 };
-
-// export async function generateMetadata({ params }: Props) {
-//   const project = await getClientSingleProject(params.projectID);
-//   if (project) {
-//     return {
-//       title: project.clientID + ": " + project.title,
-//     };
-//   }
-// }
 
 export default async function ProjectSinglePage({ params }: Props) {
   const project = await getClientSingleProject(params.projectID);

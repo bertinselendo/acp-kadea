@@ -3,7 +3,7 @@
 import { auth } from "@/lib/auth/helper";
 import { prisma } from "@/lib/prisma";
 import { Document } from "@prisma/client";
-import { redirect } from "next/navigation";
+import { Value } from "@radix-ui/react-select";
 
 export async function documentCreationAction(
   values: Document,
@@ -156,5 +156,21 @@ export async function documentDeleteAction(documentID: string) {
   } catch (error) {
     console.log(error);
     throw new Error("Error Will Create Entries");
+  }
+}
+
+export async function getProjectDocumentTitle(documentID: string) {
+  try {
+    const title = await prisma.document
+      .findUnique({
+        where: {
+          id: documentID,
+        },
+      })
+      .then((doc) => doc?.title);
+
+    return title;
+  } catch (error) {
+    throw new Error("Error databse");
   }
 }
