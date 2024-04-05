@@ -84,15 +84,17 @@ const TailwindAdvancedEditor = (props: {
   const editorMutation = useMutation({
     mutationFn: async (json: JSONContent) => {
       const values = {
-        title: documentTitle,
+        title: documentTitle ? documentTitle : "Untitled...",
         type: "internal",
         content: JSON.stringify(json),
       };
+
       if (!props.documentID) {
         const saveTitle = await documentCreationAction(
           values as Document,
           props.projectID
         );
+
         if (saveTitle) {
           toast.success("Document created");
           setDocumentTitle(saveTitle.title);
@@ -101,16 +103,17 @@ const TailwindAdvancedEditor = (props: {
           toast.error("Error creating document");
           return;
         }
-      }
-      const saveDocument = await documentUpdatetAction(
-        values as Document,
-        props.documentID
-      );
-      if (!saveDocument) {
-        toast.error("Error: Wait and try again !");
-      }
+      } else {
+        const saveDocument = await documentUpdatetAction(
+          values as Document,
+          props.documentID
+        );
+        if (!saveDocument) {
+          toast.error("Error: Wait and try again !");
+        }
 
-      return saveDocument;
+        return saveDocument;
+      }
     },
   });
 
@@ -121,11 +124,11 @@ const TailwindAdvancedEditor = (props: {
       editorMutation.mutateAsync(json);
       setSaveStatus("Saved");
     },
-    5000
+    3000
   );
 
   useQuery({
-    queryKey: ["documentData", props.documentID],
+    queryKey: ["documentData"],
     queryFn: async () => {
       if (props.documentID) {
         const document = await getProjectDocument(props.documentID);
@@ -136,6 +139,8 @@ const TailwindAdvancedEditor = (props: {
         if (document?.content) setInitialContent(JSON.parse(document.content));
         else setInitialContent(defaultEditorContent);
         return document;
+      } else {
+        setInitialContent(defaultEditorContent);
       }
     },
   });
@@ -168,7 +173,7 @@ const TailwindAdvancedEditor = (props: {
       <div className="my-4">
         <Form {...form}>
           <form
-            onBlur={form.handleSubmit(onTitleSubmit)}
+            onBlur={form.handleSubmit(onTitleSubmit as any)}
             onSubmit={(e) => {
               e.preventDefault();
             }}
@@ -230,7 +235,7 @@ const TailwindAdvancedEditor = (props: {
                   <EditorCommandItem
                     value={item.title}
                     onCommand={(val) => {
-                      item.command(val);
+                      item.command && item.command(val);
                     }}
                     className={`flex w-full items-center space-x-2 rounded-md px-2 py-1 text-left text-sm hover:bg-accent aria-selected:bg-accent `}
                     key={item.title}
