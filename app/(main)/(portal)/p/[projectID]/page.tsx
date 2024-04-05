@@ -19,6 +19,7 @@ import DashCredentials from "@/components/admin/projects/single/dashboard/creden
 import AddcredentialsModal from "@/components/admin/credentials/addcredentialsModal";
 import DashDocuments from "@/components/admin/projects/single/dashboard/documents";
 import AddDocumentModal from "@/components/admin/documents/addDocumentModal";
+import { notFound } from "next/navigation";
 
 type Props = {
   params: { projectID: string };
@@ -31,6 +32,10 @@ export const metadata: Metadata = {
 
 export default async function ProjectSinglePage({ params }: Props) {
   const project = await getClientSingleProject(params.projectID);
+
+  if (!project) {
+    notFound();
+  }
 
   return (
     <div className="w-full p-4 flex flex-col gap-6">
