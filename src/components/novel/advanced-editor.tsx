@@ -52,9 +52,14 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 const extensions = [...defaultExtensions, slashCommand];
 
 const formSchema = z.object({
-  title: z.string().min(3, {
-    message: "Title must be at least 3 characters.",
-  }),
+  title: z
+    .string()
+    .min(3, {
+      message: "Title must be at least 3 characters.",
+    })
+    .max(60, {
+      message: "The limit is 60 characters.",
+    }),
 });
 
 const TailwindAdvancedEditor = (props: {
@@ -146,6 +151,7 @@ const TailwindAdvancedEditor = (props: {
   });
 
   async function onTitleSubmit(values: z.infer<typeof formSchema> & Document) {
+    setSaveStatus("Unsaved");
     if (!props.documentID) {
       values.type = "internal";
       values.content = JSON.stringify(initialContent);
@@ -164,6 +170,7 @@ const TailwindAdvancedEditor = (props: {
         toast.error("Error: Wait and try again !");
       }
     }
+    setSaveStatus("Saved");
   }
 
   if (!initialContent) return null;
