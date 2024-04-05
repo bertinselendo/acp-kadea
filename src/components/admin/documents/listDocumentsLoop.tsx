@@ -86,25 +86,29 @@ export default function ListDocumentsLoop(props: ListDocumentsLoopProps) {
                 <Badge variant="outline" className="bg-white py-1">
                   {parseDate(document.createdAt)}
                 </Badge>
-                <DropdownMenu>
-                  <DropdownMenuTrigger className="focus:hidden">
-                    <IoEllipsisVertical onClick={clickAnimation} />
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    {document.type == "external" && (
-                      <>
-                        <EditDocumentModal document={document} />
-                        <DropdownMenuSeparator />
-                      </>
-                    )}
+                {(currentRole == "ADMIN" ||
+                  currentRole == "MANAGER" ||
+                  document.createdBy === user.id) && (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger className="focus:hidden">
+                      <IoEllipsisVertical onClick={clickAnimation} />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      {document.type == "external" && (
+                        <>
+                          <EditDocumentModal document={document} />
+                          <DropdownMenuSeparator />
+                        </>
+                      )}
 
-                    {(currentRole == "ADMIN" || currentRole == "MANAGER") && (
-                      <>
-                        <DeleteDocumentAlert document={document} />
-                      </>
-                    )}
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                      {
+                        <>
+                          <DeleteDocumentAlert document={document} />
+                        </>
+                      }
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )}
               </div>
               <div className="w-2/3 h-20 flex items-end text">
                 <h3 className="font-semibold text-xl truncate">
