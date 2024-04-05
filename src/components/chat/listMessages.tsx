@@ -5,7 +5,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
-import { FileText } from "lucide-react";
+import { ExternalLink, FileText } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -19,22 +19,35 @@ import { User } from "@prisma/client";
 import { UserDiceAvater } from "../auth/userDiceAvater";
 import { getProjectAllUsers } from "../admin/projects/project.action";
 import { Skeleton } from "../ui/skeleton";
+import Link from "next/link";
+import ChatForm from "./chatForm";
+import { IoDocumentText } from "react-icons/io5";
 
 type PropsType = {
   chats: [ChatMessageType];
   projectID: string | string[];
+  user: User;
+  projectChatsRef: any;
 };
 
-export default function ChatList({ chats, projectID }: PropsType) {
+export default function ChatList({
+  chats,
+  projectID,
+  user,
+  projectChatsRef,
+}: PropsType) {
   const [projectUsers, setProjectUsers] = useState<any>(null);
+  const [chatFormHeight, setChatFormHeight] = useState(0);
+
   const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const chatFormRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop =
         messagesContainerRef.current.scrollHeight;
     }
-  }, [chats, projectUsers]);
+  }, [chats, projectUsers, chatFormHeight]);
 
   useQuery({
     queryKey: ["projectUsers"],
@@ -54,7 +67,7 @@ export default function ChatList({ chats, projectID }: PropsType) {
 
   if (!projectUsers) {
     return (
-      <div className="space-y-4">
+      <div className="space-y-4 sticky top-12">
         <div className="flex gap-3 items-top w-full">
           <div className="w-full flex flex-col gap-1 items-end">
             <Skeleton className="w-20 h-3" />
@@ -76,7 +89,7 @@ export default function ChatList({ chats, projectID }: PropsType) {
   return (
     <div
       ref={messagesContainerRef}
-      className="w-full overflow-y-auto overflow-x-hidden h-full flex flex-col"
+      className="w-full overflow-y-auto overflow-x-hidden h-full flex flex-col scroll-smooth"
     >
       <AnimatePresence>
         {chats?.map((message, index) => (
@@ -128,41 +141,60 @@ export default function ChatList({ chats, projectID }: PropsType) {
                   {message.name} ·{" "}
                   {dayjs(message.createAt?.toMillis()).fromNow()}
                 </h6>
-                <p
+                {message.message && (
+                  <p
+                    className={cn(
+                      "p-3 rounded-md max-w-xs text-sm ",
+                      getUserData(message.userID)?.role !== "CLIENT"
+                        ? "rounded-tr-none bg-primary"
+                        : "rounded-tl-none bg-accent"
+                    )}
+                  >
+                    {message.message}
+                  </p>
+                )}
+                <div
                   className={cn(
-                    "p-3 rounded-md max-w-xs text-sm ",
+                    "flex flex-wrap w-8/12 *:w-[49%] gap-x-[1%] gap-y-1 mt-2",
                     getUserData(message.userID)?.role !== "CLIENT"
-                      ? "rounded-tr-none bg-primary"
-                      : "rounded-tl-none bg-accent"
+                      ? "justify-end"
+                      : "justify-start"
                   )}
                 >
-                  {message.message}
-                </p>
-                <div className="grid grid-cols-2 grid-flow-row gap-2 mt-2 w-max">
                   {message?.images &&
                     message?.images.map((media, index) => (
                       <div key={index}>
-                        <Image
-                          src={media}
-                          alt={message.name}
-                          width="100"
-                          height="100"
-                          className="aspect-video border rounded-lg"
-                        />
+                        <Link href={media} className="relative w-full">
+                          <div className="absolute top-0 bottom-0 right-0 left-0 z-10 rounded-lg transition-all hover:bg-black/20 flex justify-center items-center group">
+                            <ExternalLink className="w-5 text-white opacity-0 transition-all group-hover:opacity-95" />
+                          </div>
+                          <Image
+                            src={media}
+                            alt={message.name}
+                            width="100"
+                            height="100"
+                            className="aspect-video rounded-lg object-cover border relative w-full"
+                          />
+                        </Link>
                       </div>
                     ))}
                   {message?.documents &&
                     message?.documents.map((document, index) => (
                       <div
                         key={index}
-                        className="aspect-video border rounded-lg flex items-center justify-center"
+                        className="aspect-video border rounded-lg"
                       >
-                        <TooltipProvider>
+                        <TooltipProvider delayDuration="200">
                           <Tooltip>
-                            <TooltipTrigger>
-                              <FileText />
+                            <TooltipTrigger
+                              asChild
+                              className="w-full h-full flex items-center justify-center"
+                            >
+                              <Link href={document}>
+                                <IoDocumentText className="w-8 h-8 text-primary" />
+                              </Link>
                             </TooltipTrigger>
-                            <TooltipContent>
+                            <TooltipContent className="w-80">
                               <p>{document}</p>
                             </TooltipContent>
                           </Tooltip>
@@ -185,6 +217,17 @@ export default function ChatList({ chats, projectID }: PropsType) {
           </motion.div>
         ))}
       </AnimatePresence>
+      <div
+        ref={chatFormRef}
+        className="bg-secondary mr-2 rounded-lg z-20 sticky bottom-0"
+      >
+        <ChatForm
+          projectID={`${projectID}`}
+          user={user}
+          projectChatsRef={projectChatsRef}
+          setChatFormHeight={setChatFormHeight}
+        />
+      </div>
     </div>
   );
 }
