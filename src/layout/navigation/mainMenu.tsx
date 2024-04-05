@@ -29,6 +29,7 @@ import {
 import { mainMenu } from "./main-menu";
 import { useSession } from "next-auth/react";
 import { Role, User } from "@prisma/client";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function MainMenu({ menus }: any) {
   const iconSize = "2.2em";
@@ -38,7 +39,27 @@ export default function MainMenu({ menus }: any) {
   const user = session.data?.user;
 
   if (!user) {
-    return;
+    return (
+      <NavigationMenu>
+        <NavigationMenuList className="flex-col gap-2 space-x-0">
+          <NavigationMenuItem className="m-0">
+            <Skeleton
+              className={cn(navigationMenuTriggerStyle(), "h-14 w-14 p-0")}
+            />
+          </NavigationMenuItem>
+          <NavigationMenuItem className="m-0">
+            <Skeleton
+              className={cn(navigationMenuTriggerStyle(), "h-14 w-14 p-0")}
+            />
+          </NavigationMenuItem>
+          <NavigationMenuItem className="m-0">
+            <Skeleton
+              className={cn(navigationMenuTriggerStyle(), "h-14 w-14 p-0")}
+            />
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenu>
+    );
   }
 
   const baseUrl = () => {
