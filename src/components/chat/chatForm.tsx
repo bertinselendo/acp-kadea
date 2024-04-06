@@ -271,61 +271,68 @@ export default function ChatForm({
             </motion.div>
           </AnimatePresence>
         </div>
-        <div className="grid grid-cols-4 grid-flow-row gap-2 mt-2">
-          <AnimatePresence>
-            {filePreview &&
-              filePreview.map((image, index) => (
-                <motion.div
-                  key={index}
-                  className="rounded-lg relative"
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.5 }}
-                  transition={{
-                    duration: 0.2,
-                    delay: 0.3,
-                    ease: [0, 0.71, 0.2, 1.01],
-                  }}
-                >
-                  <X
-                    className="absolute z-10 top-0 right-0 w-5 transition-all text-red-500 hover:scale-110"
-                    onClick={() => handleRemoveKey(index)}
-                  />
-                  <Image
-                    src={image}
-                    alt=""
-                    width="200"
-                    height="200"
-                    className="aspect-video rounded-lg object-cover bg-white shadow-sm"
-                  />
-                </motion.div>
-              ))}
-          </AnimatePresence>
-        </div>
-        <div className="flex flex-col w-full gap-2 mt-2">
-          <AnimatePresence>
-            {filePreview &&
-              docs.map((doc, index) => (
-                <motion.div
-                  key={index}
-                  className="rounded-lg relative bg-background px-3 py-1 border w-10/12"
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.5 }}
-                  transition={{
-                    duration: 0.2,
-                    delay: 0.3,
-                    ease: [0, 0.71, 0.2, 1.01],
-                  }}
-                >
-                  <X
-                    className="absolute z-10 top-[2px] right-2 w-5 transition-all text-red-500 hover:scale-110"
-                    onClick={() => handleDocRemoveKey(index)}
-                  />
-                  <p className="text-sm">{doc.name}</p>
-                </motion.div>
-              ))}
-          </AnimatePresence>
+        <div
+          className={cn(
+            "flex-col gap-2 mt-2 w-full",
+            filePreview.length || docs.length ? "flex" : "hidden"
+          )}
+        >
+          <div className="grid grid-cols-4 grid-flow-row gap-2">
+            <AnimatePresence>
+              {filePreview &&
+                filePreview.map((image, index) => (
+                  <motion.div
+                    key={index}
+                    className="rounded-lg relative"
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.5 }}
+                    transition={{
+                      duration: 0.2,
+                      delay: 0.3,
+                      ease: [0, 0.71, 0.2, 1.01],
+                    }}
+                  >
+                    <X
+                      className="absolute z-10 top-0 right-0 w-5 transition-all text-red-500 hover:scale-110"
+                      onClick={() => handleRemoveKey(index)}
+                    />
+                    <Image
+                      src={image}
+                      alt=""
+                      width="200"
+                      height="200"
+                      className="aspect-video rounded-lg object-cover bg-white shadow-sm"
+                    />
+                  </motion.div>
+                ))}
+            </AnimatePresence>
+          </div>
+          <div className="flex flex-col w-full gap-2">
+            <AnimatePresence>
+              {filePreview &&
+                docs.map((doc, index) => (
+                  <motion.div
+                    key={index}
+                    className="rounded-lg relative bg-background px-3 py-1 border w-10/12"
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.5 }}
+                    transition={{
+                      duration: 0.2,
+                      delay: 0.3,
+                      ease: [0, 0.71, 0.2, 1.01],
+                    }}
+                  >
+                    <X
+                      className="absolute z-10 top-[2px] right-2 w-5 transition-all text-red-500 hover:scale-110"
+                      onClick={() => handleDocRemoveKey(index)}
+                    />
+                    <p className="text-sm">{doc.name}</p>
+                  </motion.div>
+                ))}
+            </AnimatePresence>
+          </div>
         </div>
         <div className="flex w-full">
           <Popover>
