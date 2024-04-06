@@ -7,47 +7,42 @@ import { usePathname } from "next/navigation";
 import {
   IoBriefcase,
   IoBriefcaseOutline,
+  IoExtensionPuzzle,
   IoGrid,
   IoMailUnread,
   IoNotifications,
 } from "react-icons/io5";
 import { useSession } from "next-auth/react";
-import { mainMenu } from "../navigation/main-menu";
+import { adminMenuArray, clientMenuArray } from "../navigation/main-menu";
+import { User } from "@prisma/client";
+import { isTeamMember } from "@/lib/auth/auth-utils";
 
 type menuType = {
-  title: string;
+  name: string;
   href: string;
 };
 
-const menus: menuType[] = mainMenu;
-
-export default function HeaderMainMenu() {
+export default function HeaderMainMenu({ clientID }: { clientID: string }) {
   const iconSize = "1.3em";
-  const pathname = usePathname();
   const session = useSession();
 
-  const user = session.data?.user;
+  const user = session.data?.user as User;
+
+  const menuArray = isTeamMember(user)
+    ? adminMenuArray()
+    : clientMenuArray(clientID);
 
   if (!user) {
     return;
   }
 
-  const baseUrl = () => {
-    const role = user?.role;
-    let baseUrl = "/";
-    if (role == "ADMIN" || role == "MANAGER" || role == "WORKER") {
-      baseUrl = "/admin";
-    }
-    return baseUrl;
-  };
-
   return (
     <>
       <ul>
-        {menus.map((menu: menuType, index: number) => (
+        {menuArray.map((menu: menuType, index: number) => (
           <li key={index}>
             <Link
-              href={baseUrl() + menu.href}
+              href={menu.href}
               className="cursor-pointer"
               legacyBehavior
               passHref
@@ -59,21 +54,25 @@ export default function HeaderMainMenu() {
                 )}
               >
                 {(() => {
-                  switch (menu.title) {
-                    case "home":
+                  switch (menu.name) {
+                    case "dashboard":
                       return <IoGrid size={iconSize} />;
                     case "clients":
+                      return <IoBriefcase size={iconSize} />;
+                    case "projects":
                       return <IoBriefcase size={iconSize} />;
                     case "messages":
                       return <IoMailUnread size={iconSize} />;
                     case "activity":
                       return <IoNotifications size={iconSize} />;
+                    case "team":
+                      return <IoExtensionPuzzle size={iconSize} />;
                     default:
                       return <IoBriefcaseOutline size={iconSize} />;
                   }
                 })()}
                 <span className="ml-2 cursor-pointer">
-                  {menu.title.charAt(0).toUpperCase() + menu.title.slice(1)}
+                  {menu.name.charAt(0).toUpperCase() + menu.name.slice(1)}
                 </span>
               </div>
             </Link>

@@ -13,6 +13,7 @@ import { AnimatePresence, motion } from "framer-motion";
 
 type HeaderProps = {
   user: any;
+  clientID: string;
 };
 
 export default function Header(props: HeaderProps) {
@@ -54,7 +55,7 @@ export default function Header(props: HeaderProps) {
             <IoNotificationsOutline size="2em" />
           </li>
           <li className="flex">
-            <HeaderUserPoper user={props.user} />
+            <HeaderUserPoper user={props.user} clientID={props.clientID} />
           </li>
         </ul>
       </div>

@@ -27,6 +27,8 @@ import AddProjectForm from "../addProjectForm";
 import Link from "next/link";
 import EditProjectForm from "../editProjectForm";
 import { useParams } from "next/navigation";
+import { User } from "@prisma/client";
+import { isTeamManager } from "@/lib/auth/auth-utils";
 
 const menus = [
   {
@@ -47,7 +49,9 @@ const menus = [
   },
 ];
 
-export type ProjectNavMenuProps = {};
+export type ProjectNavMenuProps = {
+  user: User;
+};
 
 export default function ProjectNavMenu(props: ProjectNavMenuProps) {
   const { projectID } = useParams();
@@ -68,25 +72,27 @@ export default function ProjectNavMenu(props: ProjectNavMenuProps) {
           ))}
         </NavigationMenuList>
       </NavigationMenu>
-      <NavigationMenu>
-        <NavigationMenuList>
-          <NavigationMenuItem>
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="secondary" onClick={clickAnimation}>
-                  <Settings className="mr-2 h-4 w-4" /> Settings
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-[60vw] max-h-[80vh] overflow-scroll">
-                <DialogHeader>
-                  <DialogTitle className="text-xl">Edit project</DialogTitle>
-                </DialogHeader>
-                <EditProjectForm />
-              </DialogContent>
-            </Dialog>
-          </NavigationMenuItem>
-        </NavigationMenuList>
-      </NavigationMenu>
+      {isTeamManager(props.user) && (
+        <NavigationMenu>
+          <NavigationMenuList>
+            <NavigationMenuItem>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="secondary" onClick={clickAnimation}>
+                    <Settings className="mr-2 h-4 w-4" /> Settings
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-[60vw] max-h-[80vh] overflow-scroll">
+                  <DialogHeader>
+                    <DialogTitle className="text-xl">Edit project</DialogTitle>
+                  </DialogHeader>
+                  <EditProjectForm />
+                </DialogContent>
+              </Dialog>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
+      )}
     </div>
   );
 }

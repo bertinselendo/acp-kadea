@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import {
   IoBriefcase,
   IoBriefcaseOutline,
@@ -26,17 +26,28 @@ import {
   IoNotifications,
   IoNotificationsOutline,
 } from "react-icons/io5";
-import { mainMenu } from "./main-menu";
+import { adminMenuArray, clientMenuArray } from "./main-menu";
 import { useSession } from "next-auth/react";
-import { Role, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import { Skeleton } from "@/components/ui/skeleton";
+import { isTeamMember } from "@/lib/auth/auth-utils";
 
-export default function MainMenu({ menus }: any) {
+type menuType = {
+  name: string;
+  href: string;
+};
+
+export default function MainMenu({ clientID }: { clientID: string }) {
   const iconSize = "2.2em";
   const pathname = usePathname();
+  const params = useParams();
   const session = useSession();
 
-  const user = session.data?.user;
+  const user = session.data?.user as User;
+
+  const menuArray = isTeamMember(user)
+    ? adminMenuArray()
+    : clientMenuArray(clientID);
 
   if (!user) {
     return (
@@ -62,66 +73,56 @@ export default function MainMenu({ menus }: any) {
     );
   }
 
-  const baseUrl = () => {
-    const role = (user as User & { role: string })?.role;
-
-    let baseUrl = "/";
-
-    if (role == "ADMIN" || role == "MANAGER" || role == "WORKER") {
-      baseUrl = "/admin";
-    }
-    return baseUrl;
-  };
-
   function isMenuPage(menu: string) {
-    if (pathname == baseUrl() + menu) {
+    if (pathname.includes(menu)) {
       return true;
     }
     return false;
   }
 
-  type menuType = {
-    title: string;
-    href: string;
-  };
-
   return (
     <NavigationMenu>
       <NavigationMenuList className="flex-col gap-2 space-x-0">
-        {menus.map((menu: menuType, index: number) => (
+        {menuArray.map((menu: menuType, index: number) => (
           <NavigationMenuItem key={index} className="m-0">
-            <Link href={baseUrl() + menu.href} legacyBehavior passHref>
+            <Link href={menu.href} legacyBehavior passHref>
               <NavigationMenuLink
                 className={cn(navigationMenuTriggerStyle(), "h-14 w-14 p-0")}
               >
                 {(() => {
-                  switch (menu.title) {
-                    case "home":
-                      return isMenuPage("") ? (
+                  switch (menu.name) {
+                    case "dashboard":
+                      return pathname == menu.href ? (
                         <IoGrid size={iconSize} />
                       ) : (
                         <IoGridOutline size={iconSize} />
                       );
                     case "clients":
-                      return isMenuPage("/clients") ? (
+                      return isMenuPage(menu.href) ? (
+                        <IoBriefcase size={iconSize} />
+                      ) : (
+                        <IoBriefcaseOutline size={iconSize} />
+                      );
+                    case "projects":
+                      return isMenuPage(menu.href) ? (
                         <IoBriefcase size={iconSize} />
                       ) : (
                         <IoBriefcaseOutline size={iconSize} />
                       );
                     case "messages":
-                      return pathname == "/client" ? (
+                      return isMenuPage(menu.href) ? (
                         <IoMailUnread size={iconSize} />
                       ) : (
                         <IoMailUnreadOutline size={iconSize} />
                       );
                     case "activity":
-                      return isMenuPage("/activity") ? (
+                      return isMenuPage(menu.href) ? (
                         <IoNotifications size={iconSize} />
                       ) : (
                         <IoNotificationsOutline size={iconSize} />
                       );
                     case "team":
-                      return isMenuPage("/team") ? (
+                      return isMenuPage(menu.href) ? (
                         <IoExtensionPuzzle size={iconSize} />
                       ) : (
                         <IoExtensionPuzzleOutline size={iconSize} />

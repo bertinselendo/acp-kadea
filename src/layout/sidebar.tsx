@@ -3,7 +3,7 @@ import MainMenu from "./navigation/mainMenu";
 import { auth } from "@/lib/auth/helper";
 import MainLogo from "./navigation/mainLogo";
 import SidebarUser from "./navigation/sidebarUser";
-import { mainMenu } from "./navigation/main-menu";
+import { getClientByUser } from "@/components/admin/clients/clients.action";
 
 export default async function SidebarGlobal(props: PropsWithChildren) {
   const user = await auth();
@@ -12,12 +12,7 @@ export default async function SidebarGlobal(props: PropsWithChildren) {
     return;
   }
 
-  type menuType = {
-    title: string;
-    href: string;
-  };
-
-  const menus: menuType[] = mainMenu;
+  const client = await getClientByUser(user.id);
 
   return (
     <>
@@ -26,7 +21,7 @@ export default async function SidebarGlobal(props: PropsWithChildren) {
           <MainLogo />
         </div>
         <div>
-          <MainMenu menus={menus} />
+          <MainMenu clientID={`${client?.id}`} />
         </div>
         <div>
           <SidebarUser src={user.avatar as string} />
