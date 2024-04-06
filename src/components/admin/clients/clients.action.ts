@@ -45,3 +45,26 @@ export async function getSingleClient(clientID: string) {
     throw new Error("Error databse");
   }
 }
+
+export async function getClientByUser(userID: string) {
+  const user = await auth();
+
+  if (!user) {
+    return;
+  }
+
+  try {
+    const client = await prisma.client.findFirst({
+      where: {
+        users: {
+          some: {
+            id: userID,
+          },
+        },
+      },
+    });
+    return client;
+  } catch (error) {
+    throw new Error("Error databse");
+  }
+}

@@ -7,14 +7,12 @@ import { Card, CardContent } from "@/components/ui/card";
 
 import { getClientProjects } from "./project.action";
 import AddProjectModal from "./addProjectModal";
+import { User } from "@prisma/client";
+import { isTeamManager, isTeamMember } from "@/lib/auth/auth-utils";
 
-export type ListProjectsProps = [
-  {
-    projects: string;
-  }
-];
+export type ListProjectsProps = { clientID: string; user: User };
 
-export default function ListProjects(params: { clientID: string }) {
+export default function ListProjects({ clientID, user }: ListProjectsProps) {
   const [projects, setprojects] = useState<any | null>(null);
   // const [filteredClients, setfilteredClients] =
   //   useState<ListClientsProps | null>(null);
@@ -24,14 +22,14 @@ export default function ListProjects(params: { clientID: string }) {
 
   useEffect(() => {
     const fetchData = async () => {
-      const projects = await getClientProjects(params.clientID);
+      const projects = await getClientProjects(clientID);
       if (projects) {
         setprojects(projects as any);
         // setfilteredClients(client as any);
       }
     };
     fetchData();
-  }, [params]);
+  }, [clientID]);
 
   // const handlerSearch = (event: any, type: string | null = null) => {
   //   let query = type ? event : event.target.value;
@@ -70,14 +68,16 @@ export default function ListProjects(params: { clientID: string }) {
       <ul className="flex gap-x-[2%] gap-y-4 flex-wrap pt-4 mt-4 border-t">
         <ListSingleProject projects={projects} />
 
-        <li className="w-[49%]">
-          <Card className="p-1 h-[100%] min-h-52 w-full">
-            <CardContent className="rounded-lg p-4 flex flex-col gap-4 text-center items-center h-[100%] justify-center">
-              <h3 className="font-semibold text-xl">New project ?</h3>
-              <AddProjectModal clientID={params.clientID} />
-            </CardContent>
-          </Card>
-        </li>
+        {isTeamManager(user) && (
+          <li className="w-[49%]">
+            <Card className="p-1 h-[100%] min-h-52 w-full">
+              <CardContent className="rounded-lg p-4 flex flex-col gap-4 text-center items-center h-[100%] justify-center">
+                <h3 className="font-semibold text-xl">New project ?</h3>
+                <AddProjectModal clientID={clientID} />
+              </CardContent>
+            </Card>
+          </li>
+        )}
       </ul>
     </div>
   );

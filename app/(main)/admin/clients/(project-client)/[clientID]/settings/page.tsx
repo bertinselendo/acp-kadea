@@ -25,6 +25,8 @@ export default async function ClientSettingPage(
 
   const client = await getClientData(props.params.clientID);
 
+  if (!client) return;
+
   return (
     <div className="flex flex-col">
       <div className="my-4 text-left">
