@@ -33,6 +33,14 @@ export const isAdmin = (user: User | undefined | null) => {
   return false;
 };
 
+export const isWorker = (user: User | undefined | null) => {
+  if (user?.role == "WORKER") {
+    return true;
+  }
+
+  return false;
+};
+
 export const isClient = (user: User | undefined | null) => {
   if (user?.role == "CLIENT") {
     return true;

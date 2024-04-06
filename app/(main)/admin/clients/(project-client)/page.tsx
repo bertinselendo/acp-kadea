@@ -1,12 +1,21 @@
 import LottieRobot from "@/components/lotties/lottie-robot";
+import { isClient } from "@/lib/auth/auth-utils";
+import { auth } from "@/lib/auth/helper";
 import { PageParams } from "@/types/next";
 import { Metadata } from "next";
+import { notFound, redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Clients",
 };
 
-export default function ClientPage(props: PageParams) {
+export default async function ClientPage(props: PageParams) {
+  const user = await auth();
+  if (!user) redirect("/admin");
+  console.log(isClient(user));
+
+  if (isClient(user)) notFound();
+
   return (
     <div className="flex flex-col items-center justify-center p-20">
       {/* <LottieRobot /> */}
