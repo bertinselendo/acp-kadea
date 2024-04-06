@@ -35,5 +35,5 @@ export const userRole = async () => {
     return user.role;
   }
 
-  return false;
+  return null;
 };
