@@ -36,6 +36,9 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
 
+const urlRegex =
+  /^(?:(?:https?|ftp):\/\/)?(?:www\.)?[a-zA-Z0-9-]+(\.[a-z]{2,})+(?:\/[\w-]*)*$/;
+
 const formSchema = z.object({
   companyName: z.string().min(2, {
     message: "Must be at least 2 characters.",
@@ -57,10 +60,13 @@ const formSchema = z.object({
   companyCategorie: z.string().min(1, {
     message: "Requied.",
   }),
-  companySize: z.string().min(1, {
-    message: "Requied.",
-  }),
-  companyWebsite: z.string().url(),
+  companySize: z.string().optional(),
+  companyWebsite: z
+    .string()
+    .regex(
+      /^(?:(?:https?|ftp):\/\/)?(?:www\.)?[a-zA-Z0-9-]+(\.[a-z]{2,})+(?:\/[\w-]*)*$/,
+      "Invalide url"
+    ),
   contactFistName: z.string().min(2, {
     message: "Must be at least 2 characters.",
   }),
@@ -92,7 +98,7 @@ export default function CreateClientForm() {
         toast.loading("Setup project...");
         // then add user
         const user = await userCreationAction(values as any, client.id);
-        return user;
+        return user && client;
       }
 
       // error if nothing perform
