@@ -67,14 +67,16 @@ export default function ChatForm({
     Promise.all(promises).then(() => {
       setFilePreview(files);
     });
+  }, [images]);
 
+  useEffect(() => {
     // wait animations end for exact height value
     setTimeout(() => {
       if (chatFormRef.current) {
-        setChatFormHeight(chatFormRef.current?.clientHeight);
+        setChatFormHeight(chatFormRef.current.offsetHeight);
       }
     }, 500);
-  }, [images, setChatFormHeight]);
+  }, [images, docs, setChatFormHeight]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(event.target.value);

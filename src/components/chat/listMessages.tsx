@@ -43,9 +43,6 @@ export default function ChatList({
   const chatFormRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (chatFormRef.current) {
-      setChatFormHeight(chatFormRef.current.offsetHeight);
-    }
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop =
         messagesContainerRef.current.scrollHeight;
