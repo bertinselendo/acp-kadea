@@ -35,16 +35,18 @@ export default function MessagePanel(props: MessagePanelProps) {
         querySnapshot.forEach((doc) => {
           chats.push(doc.data());
         });
-        setChats(chats);
+        if (chats.length) setChats(chats);
         return chats;
       }
     );
   }, []); //eslint-disable-line
 
   return (
-    <>
-      <h4 className="text-xl font-bold pb-2 bg-background z-20">Discutions</h4>
-      <div className="h-full -mt-6 z-10">
+    <div className="flex flex-col h-full relative">
+      <div className="py-2 flex gap-2 z-20 p-0">
+        <h4 className="text-xl font-bold p-0">Discutions</h4>
+      </div>
+      <div className="h-full z-10">
         <ListMessages
           chats={chats}
           projectID={projectID}
@@ -52,6 +54,6 @@ export default function MessagePanel(props: MessagePanelProps) {
           projectChatsRef={projectChatsRef}
         />
       </div>
-    </>
+    </div>
   );
 }
