@@ -131,7 +131,7 @@ export default function ListDocumentsLoop(props: ListDocumentsLoopProps) {
                     ? `${document.link}`
                     : `${pathname}/editor?doc=${document.id}`
                 }
-                target="_blank"
+                target={document.type == "external" ? "_blank" : "_top"}
                 onClick={clickAnimation}
               >
                 <Button className="bg-black text-white rounded-full transition hover:bg-gray-800">
