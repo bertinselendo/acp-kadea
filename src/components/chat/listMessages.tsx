@@ -217,6 +217,12 @@ export default function ChatList({
           </motion.div>
         ))}
       </AnimatePresence>
+      {!chats?.length && (
+        <div className="h-full w-full flex flex-col gap-1 justify-center items-center">
+          <p className="text-2xl">🤗</p>
+          <p>Be first to write</p>
+        </div>
+      )}
       <div
         ref={chatFormRef}
         className="bg-secondary mr-2 rounded-lg z-20 sticky bottom-0"
