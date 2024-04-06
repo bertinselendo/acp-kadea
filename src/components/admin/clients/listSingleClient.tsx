@@ -12,6 +12,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { usePathname } from "next/navigation";
+import { ChevronRight, Phone } from "lucide-react";
 
 export type ListSingleClientProps = {
   clients:
@@ -71,20 +72,20 @@ export default function ListSingleClient(props: ListSingleClientProps) {
           </Link>
           <Link href={`/admin/clients/${client.id}`}>
             <div className="flex">
-              <div className="w-1/3">
+              <div className="w-3/12">
                 {client.logo ? (
                   <Image
                     src={client.logo}
                     alt=""
                     width={300}
                     height={300}
-                    className="aspect-square rounded-lg bg-secondary w-full"
+                    className="aspect-square rounded-full bg-secondary w-full"
                   />
                 ) : (
                   <div className="aspect-square rounded bg-secondary w-full"></div>
                 )}
               </div>
-              <div className="w-2/3 flex flex-col pl-2 gap-[2px] text-sm md:text-xs lg:text-sm pb-1 justify-between">
+              <div className="w-9/12 flex flex-col pl-2 gap-[2px] text-sm md:text-xs lg:text-sm pb-1 justify-between">
                 <div className="flex flex-col xl:gap-[2px]">
                   <div className="flex justify-between items-center">
                     <div className="font-bold text-lg md:text-base lg:text-lg xl:text-xl">
@@ -95,8 +96,14 @@ export default function ListSingleClient(props: ListSingleClientProps) {
                   <div>
                     <ListClientUsers users={client.users} />
                   </div>
-                  <div className="truncate">{client.companyEmail}</div>
-                  <div className="truncate">{client.phone}</div>
+                  <div className="truncate flex items-center gap-0.2">
+                    <ChevronRight className="w-3 h-3" />
+                    <span>{client.companyEmail}</span>
+                  </div>
+                  <div className="truncate flex items-center gap-0.2">
+                    <ChevronRight className="w-3 h-3" />
+                    {client.phone}
+                  </div>
                 </div>
                 <div className="flex justify-between gap-2 items-center">
                   <div className="flex gap-2">
