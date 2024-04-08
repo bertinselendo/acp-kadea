@@ -221,7 +221,7 @@ export default function EditMemberModal(props: EditMemberModalProps) {
                     )}
                   />
                   {form.watch("type") == "Internal" &&
-                    (form.setValue("companyName", "") as ReactNode)}
+                    (form.setValue("companyName", "") as any)}
                   {form.watch("type") == "External" && (
                     <FormField
                       control={form.control}

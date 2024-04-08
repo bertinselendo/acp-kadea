@@ -4,8 +4,9 @@ import SidebarGlobal from "@/layout/sidebar";
 import { auth } from "@/lib/auth/helper";
 import type { LayoutParams } from "@/types/next";
 import { redirect } from "next/navigation";
+import { ReactNode } from "react";
 
-export default async function RouteLayout(props: LayoutParams<{}>) {
+export default async function RouteLayout(props: { children: ReactNode }) {
   const user = await auth();
 
   if (!user) {

@@ -22,7 +22,6 @@ export async function credentialsCreationAction(
         username: values.username,
         password: values.password,
         adminUrl: values.adminUrl,
-        expiryDate: values.expiryDate,
         projectId: projectID,
       },
     });
@@ -79,7 +78,6 @@ export async function credentialUpdatetAction(
         username: values.username,
         password: values.password,
         adminUrl: values.adminUrl,
-        expiryDate: values.expiryDate,
       },
     });
     return credential;

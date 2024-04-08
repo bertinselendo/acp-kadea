@@ -19,8 +19,12 @@ const GenerativeMenuSwitch = ({
   const { editor } = useEditor();
 
   useEffect(() => {
+    if (!editor) return;
     if (!open) removeAIHighlight(editor);
-  }, [open]);
+  }, [open]); //eslint-disable-line
+
+  if (!editor) return;
+
   return (
     <EditorBubble
       tippyOptions={{

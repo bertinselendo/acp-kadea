@@ -188,7 +188,7 @@ export default function ChatList({
                           key={index}
                           className="aspect-video border rounded-lg"
                         >
-                          <TooltipProvider delayDuration="200">
+                          <TooltipProvider delayDuration={200}>
                             <Tooltip>
                               <TooltipTrigger
                                 asChild

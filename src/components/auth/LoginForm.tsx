@@ -55,8 +55,6 @@ export function LoginForm() {
     await mutateAsync(values.email);
   }
 
-  console.log(status);
-
   return (
     <Form {...form}>
       <form

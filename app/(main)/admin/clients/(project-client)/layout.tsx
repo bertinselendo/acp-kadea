@@ -6,12 +6,13 @@ import { auth } from "@/lib/auth/helper";
 import type { LayoutParams } from "@/types/next";
 import { Metadata } from "next";
 import Link from "next/link";
+import { ReactNode } from "react";
 
 export const metadata: Metadata = {
   title: "Clients",
 };
 
-export default async function RouteLayout(props: LayoutParams<{}>) {
+export default async function RouteLayout(props: { children: ReactNode }) {
   const user = await auth();
   return (
     <div className="flex h-full overflow-y-scroll justify-center">

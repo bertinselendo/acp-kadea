@@ -6,7 +6,11 @@ import { PageParams } from "@/types/next";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-export async function generateMetadata() {
+export async function generateMetadata({
+  params,
+}: {
+  params: { clientID: string };
+}) {
   const user = await auth();
   if (isTeamMember(user)) {
     return {

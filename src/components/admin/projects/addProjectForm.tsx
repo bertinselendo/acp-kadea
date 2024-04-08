@@ -94,8 +94,8 @@ export type AddProjectModalProps = {
 export default function AddProjectForm(props: AddProjectModalProps) {
   const [cover, setCover] = useState("");
   const [tags, setTags] = useState([] as string[]);
-  const [members, setMembers] = useState([] as [MemberTypes] | []);
-  const [sMembers, setSMembers] = useState([] as [MemberTypes] | []);
+  const [members, setMembers] = useState<MemberTypes[]>([]);
+  const [sMembers, setSMembers] = useState<MemberTypes[]>([]);
   const router = useRouter();
 
   useEffect(() => {

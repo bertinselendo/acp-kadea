@@ -270,7 +270,16 @@ const TailwindAdvancedEditor = (props: {
               <Separator orientation="vertical" />
               <TextButtons />
               <Separator orientation="vertical" />
-              <ColorSelector open={openColor} onOpenChange={setOpenColor} />
+              <ColorSelector
+                open={openColor}
+                onOpenChange={setOpenColor}
+                isOpen={false}
+                setIsOpen={function (
+                  value: React.SetStateAction<boolean>
+                ): void {
+                  throw new Error("Function not implemented.");
+                }}
+              />
             </GenerativeMenuSwitch>
           </EditorContent>
         </EditorRoot>

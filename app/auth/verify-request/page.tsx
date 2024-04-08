@@ -13,9 +13,6 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
 export default function AuthVerifiyPage() {
-  const params = useSearchParams();
-  const email = params.get("login_hint");
-
   return (
     <main className="bg-gradient-to-r from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90% h-screen w-screen">
       <div className="flex justify-center items-center transition-all bg-blend-overlay bg-noise bg-white/80 h-screen w-screen">
@@ -29,9 +26,8 @@ export default function AuthVerifiyPage() {
                 Check your email for a link
               </CardTitle>
               <CardDescription>
-                {email
-                  ? "We have sent a magic link to contact@bertinselendo.com. The link will expire shortly, so please click on it quickly.."
-                  : "We have sent a magic link to your email address. The link will expire shortly, so please use it promptly."}
+                We have sent a magic link to your email address. The link will
+                expire shortly, so please use it promptly.
               </CardDescription>
             </CardHeader>
             <CardFooter className="flex gap-4">

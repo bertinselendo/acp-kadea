@@ -1,9 +1,10 @@
 import { getClientUsers } from "@/components/admin/clients/clients.action";
 import { auth } from "@/lib/auth/helper";
 import { notFound, redirect } from "next/navigation";
+import { ReactNode } from "react";
 
 type propsType = {
-  children: ChildNode;
+  children: ReactNode;
   params: { clientID: string };
 };
 
