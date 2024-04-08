@@ -41,8 +41,9 @@ export function LoginForm() {
 
   const { mutateAsync, status } = useMutation({
     mutationFn: async (email: string) => {
-      await signIn("nodemailer", {
-        callbackUrl: searchParams.get("callbackUrl") ?? `${getServerUrl()}/`,
+      await signIn("resend", {
+        callbackUrl:
+          searchParams.get("callbackUrl") ?? `${getServerUrl()}/admin`,
         redirect: true,
         email,
       });
@@ -50,11 +51,9 @@ export function LoginForm() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>, event: any) {
-    event.preventDefault();
+    // event.preventDefault();
     await mutateAsync(values.email);
   }
-
-  console.log(status);
 
   return (
     <Form {...form}>
@@ -71,20 +70,19 @@ export function LoginForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel className="hidden">Email</FormLabel>
               <FormControl>
-                <Input placeholder="ex: mail@gmail.com" {...field} />
+                <Input placeholder="ex: name@work-email.com" {...field} />
               </FormControl>
               <FormDescription>You will recieve a mail</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <div className="flex justify-between">
-          <Button variant="destructive" asChild>
-            <Link href="/">Home</Link>
+        <div className="flex justify-between w-full">
+          <Button type="submit" className="w-full rounded-lg">
+            Sign in with email
           </Button>
-          <Button type="submit">Signin</Button>
         </div>
       </form>
     </Form>

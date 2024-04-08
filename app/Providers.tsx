@@ -14,7 +14,11 @@ export default function Providers({ children }: { children: React.ReactNode }) {
           {children}
         </QueryClientProvider>
       </SessionProvider>
-      <Toaster />
+      <Toaster
+        toastOptions={{
+          duration: 6000,
+        }}
+      />
     </>
   );
 }

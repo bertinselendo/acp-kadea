@@ -43,8 +43,6 @@ export default function NewUserForm() {
   const [file, setFile] = useState<File>();
   const [filePreview, setFilePreview] = useState("");
 
-  console.log(file);
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {

@@ -13,10 +13,10 @@ export default function LogoutPage() {
   }
 
   const { status, mutateAsync } = useMutation({
-    mutationFn: () => signOut(),
+    mutationFn: async () => await signOut(),
   });
 
-  mutateAsync();
+  status == "idle" && mutateAsync();
 
   status == "success" ? redirect("/") : "";
 }

@@ -42,13 +42,28 @@ model User {
   lastName         String?
   emailVerified    DateTime?
   avatar           String?
-  type             String?    // team-member | client
+  role    Role     @default(GUEST)   // team-member | client
 
   accounts         Account[]
   sessions         Session[]
 
-  teamMembers      TeamMember[]
-  clients          Client[]
+  client           Client?      @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  clientId         String?
+
+  teamMembers      TeamMember?
+
+  feedbacks        Feedback[]
+  documents        Document[]
+  invoices         Invoice[]
+  credentials      Credential[]
+}
+
+enum Role {
+  GUEST
+  CLIENT
+  WORKER
+  MANAGER
+  ADMIN
 }
 
 model VerificationToken {
@@ -64,11 +79,12 @@ model TeamMember {
   createdAt   DateTime   @default(now())
   type        String    // internal | external
   companyName String?   // if type is external
-  phone       String
-  role        String    // admin | project-master | employer
+  phone       String?
 
   user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      String
+  userId      String     @unique
+
+  projects    Project[]  @relation("TeamMemberProjects")
 }
 
 model Client {
@@ -80,14 +96,12 @@ model Client {
   country        String
   companyName    String
   logo           String?
-  sector         String?    // Business sector
+  categorie      String?    // Business sector
   size           String?    // Company size
   website        String?
-  internalNotes  String?
+  internalNote   String?
 
-  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId         String
-
+  users          User[]
   projects       Project[]
 }
 
@@ -97,25 +111,32 @@ model Project {
   cover         String?    // Link to project cover image
   title         String
   description   String?
-  startedDate   DateTime?
-  endedDate     DateTime?
+  priority      String?
+  startDate     DateTime?
+  endDate       DateTime?
   status        String?
-  budget        Float?
+  tags          String?
 
-  client        Client    @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  clientId      String
+  client        Client      @relation(fields: [clientID], references: [id])
+  clientID      String
+
+  teamMembers   TeamMember[] @relation("TeamMemberProjects")
 
   feedbacks     Feedback[]
   documents     Document[]
   invoices      Invoice[]
-  accesses      Access[]
+  accesses      Credential[]
 }
 
 model Feedback {
   id            String    @id @default(cuid())
   createdAt     DateTime  @default(now())
+
+  createdBy     String?
+  user          User?      @relation(fields: [createdBy], references: [id])
+
   title         String
-  usepastelLink String    // Link to usepastel feedback
+  link          String    // Link to usepastel feedback
   note          String?
 
   project       Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
@@ -125,12 +146,14 @@ model Feedback {
 model Document {
   id            String    @id @default(cuid())
   createdAt     DateTime  @default(now())
+
+  createdBy     String?
+  user          User?      @relation(fields: [createdBy], references: [id])
+
   title         String
-  description   String?
+  content       String?   // Rich text
   type          String    // External | Internal
-  service       String?   // Document, Spreadsheet, Notion, etc.
   link          String?   // Link to the document
-  file          String?   // File to upload
   
   project       Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId     String
@@ -139,26 +162,30 @@ model Document {
 model Invoice {
   id            String    @id @default(cuid())
   createdAt     DateTime  @default(now())
-  invoiceNumber String
-  issueDate     DateTime
-  amount        Float
-  description   String?
-  type          String    // Link or File
-  link          String?    // Link to the invoice or file upload
+
+  createdBy     String?
+  user          User?      @relation(fields: [createdBy], references: [id])
+
+  reference     String
+  dueDate       DateTime
   file          String?   // File to upload
+  link          String?   // Link to the invoice or file upload
   
   project       Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId     String
 }
 
-model Access {
+model Credential {
   id            String    @id @default(cuid())
   createdAt     DateTime  @default(now())
+
+  createdBy     String?
+  user          User?      @relation(fields: [createdBy], references: [id])
+
   service       String    // Website, Hosting, Domain, etc.
   username      String
   password      String
   adminUrl      String
-  expiryDate    DateTime
   
   project       Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId     String

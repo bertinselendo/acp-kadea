@@ -8,7 +8,7 @@ export const getServerUrl = () => {
 
   // If we are in production, we return the production URL.
   if (process.env.DEV_ENV === "production") {
-    return `https://${process.env.VERCEL_URL}`;
+    return `https://${process.env.PRODUCTION_URL}`;
   }
 
   // If we are in development, we return the localhost URL.

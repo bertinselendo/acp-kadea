@@ -1,6 +1,5 @@
-import type { Config } from "tailwindcss";
-
-const config = {
+/** @type {import('tailwindcss').Config} */
+module.exports = {
   darkMode: ["class"],
   content: [
     "./pages/**/*.{ts,tsx}",
@@ -52,6 +51,15 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        "light-orange": "#ffe1cc",
+        "light-green": "#d4f6ed",
+        lavander: "#e3dbfa",
+        "light-blue": "#dff3fe",
+        "light-red": "#fbe2f4",
+        "ice-blue": "#eceff4",
+      },
+      backgroundImage: {
+        noise: "url('/noise.svg')",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -85,7 +93,5 @@ const config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
-} satisfies Config;
-
-export default config;
+  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
+};
