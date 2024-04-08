@@ -8,6 +8,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { parseDate, relativeDate } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
+import { TeamMember, User } from "@prisma/client";
+import { UserDiceAvater } from "@/components/auth/userDiceAvater";
 
 export type ListSingleProjectProps = {
   projects:
@@ -22,7 +24,7 @@ export type ListSingleProjectProps = {
           endDate: Date;
           status: string;
           tags: string;
-          teamMembers: Array<{}>;
+          teamMembers: [TeamMember & { user: User }];
         }
       ]
     | null;
@@ -74,10 +76,16 @@ export default function ListSingleProject(props: ListSingleProjectProps) {
                 <div className="text-sm font-semibold">{project.priority}</div>
                 <div className="flex justify-between items-center">
                   <h3 className="font-semibold text-xl">{project.title}</h3>
-                  <Avatar>
-                    <AvatarImage src="https://github.com/shadcn.png" />
-                    <AvatarFallback>CN</AvatarFallback>
-                  </Avatar>
+                  <div className="flex gap-2">
+                    {project.teamMembers.map((team, index) => (
+                      <Avatar key={index} className="w-7 h-7">
+                        <AvatarImage src={team.user.avatar as string} />
+                        <AvatarFallback>
+                          <UserDiceAvater email={team.user.email} />
+                        </AvatarFallback>
+                      </Avatar>
+                    ))}
+                  </div>
                 </div>
               </div>
               <div className="flex gap-2 flex-wrap">

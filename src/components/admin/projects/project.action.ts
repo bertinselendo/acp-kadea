@@ -80,7 +80,11 @@ export async function getClientProjects(clientID: string) {
         clientID: clientID,
       },
       include: {
-        teamMembers: true,
+        teamMembers: {
+          include: {
+            user: true,
+          },
+        },
       },
     });
 
