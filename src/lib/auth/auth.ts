@@ -37,7 +37,7 @@ export const {
         const result = await sendEmail({
           from: process.env.EMAIL_FROM,
           to: email,
-          subject: `Sign in to localhost`,
+          subject: `Access your account in one click`,
           react: MagicLinkMail({
             url,
           }),
@@ -54,6 +54,8 @@ export const {
   ],
   callbacks: {
     async redirect({ url, baseUrl }) {
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      else if (new URL(url).origin === baseUrl) return url;
       return baseUrl;
     },
     async session({ session, user }) {
