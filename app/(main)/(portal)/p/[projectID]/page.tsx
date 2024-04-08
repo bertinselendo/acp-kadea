@@ -20,6 +20,8 @@ import AddcredentialsModal from "@/components/admin/credentials/addcredentialsMo
 import DashDocuments from "@/components/admin/projects/single/dashboard/documents";
 import AddDocumentModal from "@/components/admin/documents/addDocumentModal";
 import { notFound } from "next/navigation";
+import AddInvoiceModal from "@/components/admin/invoices/addInvoicesModal";
+import DashInvoices from "@/components/admin/projects/single/dashboard/invoices";
 
 type Props = {
   params: { projectID: string };
@@ -41,8 +43,8 @@ export default async function ProjectSinglePage({ params }: Props) {
     <div className="w-full p-4 flex flex-col gap-6">
       <ProjectHeader project={project as Project} />
 
-      <div className="flex gap-6">
-        <Card className="h-80 w-1/2">
+      <div className="grid grid-cols-2 gap-6">
+        <Card className="h-80">
           <CardContent className="flex flex-col h-full gap-4 p-4">
             <div className="flex justify-between items-center">
               <CardTitle>Feedbacks</CardTitle>
@@ -51,8 +53,8 @@ export default async function ProjectSinglePage({ params }: Props) {
             <DashFeedbacks projectID={params.projectID} />
           </CardContent>
         </Card>
-        <Card className="h-80 w-1/2">
-          <CardContent className="flex flex-col h-full gap-4 p-4">
+        <Card className="h-80">
+          <CardContent className="flex flex-col w-full h-full gap-4 p-4">
             <div className="flex justify-between items-center">
               <CardTitle>Documents</CardTitle>
               <AddDocumentModal projectID={params.projectID} variant="icon" />
@@ -60,19 +62,16 @@ export default async function ProjectSinglePage({ params }: Props) {
             <DashDocuments projectID={params.projectID} />
           </CardContent>
         </Card>
-      </div>
-      <div className="flex gap-6">
-        <Card className="h-80 w-1/2">
+        <Card className="h-80">
           <CardContent className="flex flex-col h-full gap-4 p-4">
-            <CardTitle>Invoices</CardTitle>
-            <div className="grid grid-rows-1 grid-flow-col gap-4 *:h-60">
-              <Skeleton />
-              <Skeleton />
-              <Skeleton />
+            <div className="flex justify-between items-center">
+              <CardTitle>Invoices</CardTitle>
+              <AddInvoiceModal projectID={params.projectID} variant="icon" />
             </div>
+            <DashInvoices projectID={params.projectID} />
           </CardContent>
         </Card>
-        <Card className="h-80 w-1/2">
+        <Card className="h-80">
           <CardContent className="flex flex-col h-full gap-4 p-4">
             <div className="flex justify-between items-center">
               <CardTitle>Credentials</CardTitle>
@@ -86,7 +85,6 @@ export default async function ProjectSinglePage({ params }: Props) {
           </CardContent>
         </Card>
       </div>
-      <div>{/* <ListProjects clientID={params.clientID} /> */}</div>
     </div>
   );
 }

@@ -104,3 +104,10 @@ export function sanitizeFiles(
   event.target.value = null;
   return validFiles;
 }
+
+export function corsUrl(url: string | null | undefined) {
+  if (!url) return "";
+
+  const corsUrl = "https://corsproxy.io/?" + encodeURIComponent(url);
+  return corsUrl;
+}

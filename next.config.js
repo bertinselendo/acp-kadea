@@ -21,5 +21,9 @@ const nextConfig = withPlausibleProxy()({});
       },
     ],
   },
+  webpack: (config) => {
+    config.resolve.alias.canvas = false;
+    return config;
+  },
 }),
   nextConfig;

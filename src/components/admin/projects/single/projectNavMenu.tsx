@@ -40,7 +40,7 @@ const menus = [
     text: "Documents",
   },
   {
-    link: "#",
+    link: "/invoices",
     text: "Invoices",
   },
   {
