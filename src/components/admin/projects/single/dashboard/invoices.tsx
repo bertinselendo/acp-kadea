@@ -37,7 +37,6 @@ export default function DashInvoices(params: { projectID: string }) {
 
   function onPageLoadSuccess() {
     setPageWidth(docRef.current?.clientWidth);
-    console.log(docRef.current?.clientWidth);
   }
 
   const { isPending, data } = useQuery({

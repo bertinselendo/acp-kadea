@@ -44,7 +44,6 @@ export type FeedbackFormProps = {
 
 export default function FeedbackForm(props: FeedbackFormProps) {
   const router = useRouter();
-  console.log(router);
 
   const feedbackMutation = useMutation({
     mutationFn: async (values) => {

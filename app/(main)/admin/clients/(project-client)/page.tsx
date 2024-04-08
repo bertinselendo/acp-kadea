@@ -12,7 +12,6 @@ export const metadata: Metadata = {
 export default async function ClientPage(props: PageParams) {
   const user = await auth();
   if (!user) redirect("/admin");
-  console.log(isClient(user));
 
   if (isClient(user)) notFound();
 
