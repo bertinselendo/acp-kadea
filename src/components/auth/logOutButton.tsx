@@ -8,14 +8,14 @@ import { signOut } from "next-auth/react";
 
 export const LogOutButton = () => {
   const logout = useMutation({
-    mutationFn: () => signOut(),
+    mutationFn: async () => await signOut(),
   });
 
   return (
     <Button
       size="sm"
       onClick={() => {
-        logout.mutate();
+        logout.mutateAsync();
       }}
     >
       {logout.isPending ? (
