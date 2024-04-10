@@ -42,7 +42,7 @@ export default async function ProjectPage({
 
   return (
     <div>
-      <div>Projects of {client?.companyName}</div>
+      <h2 className="h2">{client?.companyName}&apos;s Projects</h2>
       <div>
         <ListProjects clientID={params.clientID} user={user} />
       </div>
