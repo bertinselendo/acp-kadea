@@ -8,10 +8,10 @@ export const adminMenuArray = () => {
       name: "clients",
       href: "/admin/clients",
     },
-    {
-      name: "messages",
-      href: "/admin/messages",
-    },
+    // {
+    //   name: "messages",
+    //   href: "/admin/messages",
+    // },
     {
       name: "activity",
       href: "/admin/activity",
@@ -33,10 +33,10 @@ export const clientMenuArray = (clientID: string) => {
       name: "projects",
       href: "/admin/clients/" + clientID,
     },
-    {
-      name: "messages",
-      href: "/admin/messages",
-    },
+    // {
+    //   name: "messages",
+    //   href: "/admin/messages",
+    // },
     {
       name: "activity",
       href: "/admin/activity",
