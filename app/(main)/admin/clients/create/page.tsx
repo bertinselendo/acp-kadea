@@ -24,7 +24,7 @@ export default async function CreateClientPage(props: PageParams<{}>) {
     <div className="flex w-full justify-center">
       <div className="flex w-5/12 flex-col">
         <div className="my-4 text-left">
-          <h2 className="text-2xl font-bold">Create new client</h2>
+          <h2 className="h2">Create new client</h2>
         </div>
         <div className="flex flex-col gap-4 mb-20">
           <CreateClientForm />
