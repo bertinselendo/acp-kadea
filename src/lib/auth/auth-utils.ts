@@ -48,3 +48,11 @@ export const isClient = (user: User | undefined | null) => {
 
   return false;
 };
+
+export const isGuest = (user: User | undefined | null) => {
+  if (user?.role == "GUEST") {
+    return true;
+  }
+
+  return false;
+};
