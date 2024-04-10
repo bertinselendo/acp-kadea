@@ -35,7 +35,7 @@ export default function MessagePanel(props: MessagePanelProps) {
         querySnapshot.forEach((doc) => {
           chats.push(doc.data());
         });
-        if (chats.length) setChats(chats);
+        setChats(chats);
         return chats;
       }
     );

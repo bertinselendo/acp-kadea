@@ -36,7 +36,7 @@ export default function ChatList({
   user,
   projectChatsRef,
 }: PropsType) {
-  const [projectUsers, setProjectUsers] = useState<any>(null);
+  const [projectUsers, setProjectUsers] = useState<User[] | null>(null);
   const [chatFormHeight, setChatFormHeight] = useState(0);
 
   const messagesContainerRef = useRef<HTMLDivElement>(null);
@@ -65,6 +65,7 @@ export default function ChatList({
     if (user) return user[0];
   };
 
+  // if projectUsers or chats null, show skeleton
   if (!projectUsers || !chats) {
     return (
       <div className="space-y-4 sticky top-12">
