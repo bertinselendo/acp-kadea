@@ -82,7 +82,7 @@ export default function CredentialForm(props: CredentialFormProps) {
 
       setTimeout(() => {
         window.location.reload();
-      }, 2000);
+      }, 1000);
     },
   });
 

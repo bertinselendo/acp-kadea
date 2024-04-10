@@ -31,7 +31,7 @@ export function DeleteDocumentAlert(props: DeleteDocumentProps) {
     onSuccess(data) {
       setTimeout(() => {
         data && window.location.reload();
-      }, 2000);
+      }, 1000);
     },
   });
 

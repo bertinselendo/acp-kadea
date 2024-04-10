@@ -31,7 +31,7 @@ export function DeleteInvoiceAlert(props: DeleteInvoiceProps) {
     onSuccess(data) {
       setTimeout(() => {
         data && window.location.reload();
-      }, 2000);
+      }, 1000);
     },
   });
 

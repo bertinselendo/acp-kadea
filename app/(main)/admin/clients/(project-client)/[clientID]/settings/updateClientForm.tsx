@@ -110,7 +110,7 @@ export default function UpdateClientForm({ clientID, client }: any) {
         });
         setTimeout(() => {
           window.location.reload();
-        }, 2000);
+        }, 1000);
       }
     },
   });

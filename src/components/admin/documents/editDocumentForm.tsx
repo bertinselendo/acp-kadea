@@ -41,7 +41,7 @@ export default function EditDocumentForm(props: DocumentFormProps) {
     onSuccess(data) {
       setTimeout(() => {
         window.location.reload();
-      }, 2000);
+      }, 1000);
     },
   });
 

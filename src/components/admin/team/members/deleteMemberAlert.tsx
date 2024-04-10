@@ -50,7 +50,7 @@ export function DeleteMemberAlert(props: DeleteMemberModalProps) {
 
       setTimeout(() => {
         window.location.reload();
-      }, 3000);
+      }, 1000);
     },
   });
 

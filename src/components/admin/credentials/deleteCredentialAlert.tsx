@@ -48,7 +48,7 @@ export function DeleteCredentialAlert(props: DeleteCredentialProps) {
 
       setTimeout(() => {
         window.location.reload();
-      }, 3000);
+      }, 1000);
     },
   });
 
