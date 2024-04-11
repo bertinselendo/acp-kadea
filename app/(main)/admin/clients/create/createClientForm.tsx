@@ -35,6 +35,8 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
+import { resolve } from "path";
+import { getRandomColor } from "@/lib/utils";
 
 const urlRegex =
   /^(?:(?:https?|ftp):\/\/)?(?:www\.)?[a-zA-Z0-9-]+(\.[a-z]{2,})+(?:\/[\w-]*)*$/;
@@ -74,28 +76,18 @@ const formSchema = z.object({
   internalNote: z.any(),
 });
 
-const randomColor = () => {
-  var letters = "0123456789ABCDEF";
-  var color = "#";
-  for (var i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
-};
-
 export default function CreateClientForm() {
   const { onUpload, progresspercent, uploadImage } = useUpload();
   const [logo, setFile] = useState<File>();
   const [logoPreview, setLogoPreview] = useState("");
   const router = useRouter();
-  const [generatedColor, setgeneratedColor] = useState(randomColor());
+  const [generatedColor, setGeneratedColor] = useState(getRandomColor());
 
   const creationMutation = useMutation({
     mutationFn: async (values) => {
       // add client first
       const client = await clientCreationAction(values as any);
       if (client) {
-        toast.loading("Setup project...");
         // then add user
         const user = await userCreationAction(values as any, client.id);
         return user && client;
@@ -110,18 +102,9 @@ export default function CreateClientForm() {
     },
     onSuccess(data) {
       if (data) {
-        console.log(data);
-
-        toast.dismiss();
-        toast.success("Setup succesfull", {
-          description: "contact email will recieve email to access resources",
-          action: {
-            label: "Go to client",
-            onClick() {
-              router.push(`/admin/clients/${data.id}`);
-            },
-          },
-        });
+        setTimeout(() => {
+          router.push(`/admin/clients/${data.id}`);
+        }, 1000);
       }
     },
   });
@@ -156,7 +139,6 @@ export default function CreateClientForm() {
     event.preventDefault();
 
     // check if client already exist
-    toast.loading("Checking...");
     const clientData = await isClientData(values);
     if (clientData) {
       toast.dismiss();
@@ -164,12 +146,28 @@ export default function CreateClientForm() {
       return;
     }
 
-    toast.loading("Creating...");
-    if (logo) {
-      const companyLogo = await uploadImage(logo, "company/logo");
-      values.companyLogo = companyLogo as string;
-    }
-    creationMutation.mutateAsync(values as any);
+    toast.promise(
+      new Promise(async (resolve) => {
+        if (logo) {
+          const companyLogo = await uploadImage(logo, "company/logo");
+          values.companyLogo = companyLogo as string;
+        }
+
+        const client = await creationMutation.mutateAsync(values as any);
+        if (client) {
+          resolve(client);
+          return client;
+        }
+      }),
+      {
+        loading: "Creating...",
+        success:
+          "Setup succesfull<br>Contact email will recieve email to access resources",
+        error: (error) => {
+          return error;
+        },
+      }
+    );
   }
 
   return (
@@ -184,24 +182,25 @@ export default function CreateClientForm() {
       >
         <Card>
           <CardContent className="p-6 flex flex-col gap-4">
+            <div
+              className="w-full h-40 rounded relative"
+              style={{
+                background: `${generatedColor}`,
+              }}
+            >
+              <div
+                className="p-2 text-xs bg-secondary rounded-lg shadow-sm cursor-pointer hover:bg-secondary hover:opacity-90 absolute bottom-2 right-2"
+                onClick={() => setGeneratedColor(getRandomColor())}
+              >
+                Generate color
+              </div>
+            </div>
             <FormField
               control={form.control}
               name="companyLogo"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    <div
-                      className="w-full h-40 rounded relative"
-                      style={{ background: generatedColor }}
-                      onClick={() => setgeneratedColor(randomColor())}
-                    >
-                      <Button
-                        size="sm"
-                        className="p-2 text-xs bg-secondary hover:bg-secondary hover:opacity-90 absolute bottom-2 right-2"
-                      >
-                        Generate color
-                      </Button>
-                    </div>
                     <Avatar className="w-32 h-32 -mt-16 ml-4 cursor-pointer transition bg-secondary">
                       <AvatarImage src={logoPreview} />
                       <AvatarFallback className="hover:scale-105">
