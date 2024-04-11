@@ -66,6 +66,12 @@
   }
 }
 
+@layer components {
+  .h2 {
+    @apply text-2xl font-bold;
+  }
+}
+
 @keyframes clickAnimation {
   0%,
   100% {

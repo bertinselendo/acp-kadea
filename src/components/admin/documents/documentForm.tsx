@@ -48,7 +48,7 @@ export default function DocumentForm(props: DocumentFormProps) {
     onSuccess(data) {
       setTimeout(() => {
         window.location.reload();
-      }, 3000);
+      }, 1000);
     },
   });
 

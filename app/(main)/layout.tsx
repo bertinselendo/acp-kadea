@@ -1,6 +1,7 @@
 import { getClientByUser } from "@/components/admin/clients/clients.action";
 import Header from "@/layout/header";
 import SidebarGlobal from "@/layout/sidebar";
+import { isAdmin, isGuest } from "@/lib/auth/auth-utils";
 import { auth } from "@/lib/auth/helper";
 import type { LayoutParams } from "@/types/next";
 import { redirect } from "next/navigation";
@@ -11,6 +12,10 @@ export default async function RouteLayout(props: { children: ReactNode }) {
 
   if (!user) {
     redirect("/login");
+  }
+
+  if (isGuest(user)) {
+    redirect("/no-access");
   }
 
   const client = await getClientByUser(user.id);

@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useParams, useRouter } from "next/navigation";
+import { getRandomColor } from "@/lib/utils";
 
 const formSchema = z.object({
   companyName: z.string().min(2, {
@@ -60,19 +61,10 @@ const formSchema = z.object({
   internalNote: z.any(),
 });
 
-const randomColor = () => {
-  var letters = "0123456789ABCDEF";
-  var color = "#";
-  for (var i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
-};
-
 export default function UpdateClientForm({ clientID, client }: any) {
   const { onUpload, progresspercent, uploadImage } = useUpload();
   const [logo, setFile] = useState<File>();
-  const [logoPreview, setLogoPreview] = useState("");
+  const [logoPreview, setLogoPreview] = useState<string | null>();
   const [currentData, setCurrentData] = useState({
     companyName: client.companyName,
     companyEmail: client.companyEmail,
@@ -85,7 +77,9 @@ export default function UpdateClientForm({ clientID, client }: any) {
     companyWebsite: client.website,
     internalNote: client.internalNote,
   });
-  const [generatedColor, setgeneratedColor] = useState(randomColor());
+  const [generatedColor, setGeneratedColor] = useState<string>(
+    getRandomColor()
+  );
   const router = useRouter();
 
   const updateMutation = useMutation({
@@ -104,13 +98,9 @@ export default function UpdateClientForm({ clientID, client }: any) {
     },
     onSuccess(data) {
       if (data) {
-        toast.dismiss();
-        toast.success("Saved", {
-          description: "You will be redirect...",
-        });
         setTimeout(() => {
           window.location.reload();
-        }, 2000);
+        }, 1000);
       }
     },
   });
@@ -155,12 +145,27 @@ export default function UpdateClientForm({ clientID, client }: any) {
       return;
     }
 
-    toast.loading("Updatiing...");
-    if (logo) {
-      const companyLogo = await uploadImage(logo, "company/logo");
-      values.companyLogo = companyLogo as string;
-    }
-    updateMutation.mutate(values as any);
+    toast.promise(
+      new Promise(async (resolve) => {
+        if (logo) {
+          const companyLogo = await uploadImage(logo, "company/logo");
+          values.companyLogo = companyLogo as string;
+        }
+
+        const client = await updateMutation.mutateAsync(values as any);
+        if (client) {
+          resolve(client);
+          return client;
+        }
+      }),
+      {
+        loading: "Updating...",
+        success: "Update succesfull<br>You will be redirect",
+        error: (error) => {
+          return error;
+        },
+      }
+    );
   }
 
   return (
@@ -175,24 +180,25 @@ export default function UpdateClientForm({ clientID, client }: any) {
       >
         <Card>
           <CardContent className="p-6 flex flex-col gap-4">
+            <div
+              className="w-full h-40 rounded relative"
+              style={{
+                background: `${generatedColor}`,
+              }}
+            >
+              <div
+                className="p-2 text-xs bg-secondary rounded-lg shadow-sm cursor-pointer hover:bg-secondary hover:opacity-90 absolute bottom-2 right-2"
+                onClick={() => setGeneratedColor(getRandomColor())}
+              >
+                Generate color
+              </div>
+            </div>
             <FormField
               control={form.control}
               name="companyLogo"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    <div
-                      className="w-full h-40 rounded relative"
-                      style={{ background: generatedColor }}
-                      onClick={() => setgeneratedColor(randomColor())}
-                    >
-                      <Button
-                        size="sm"
-                        className="p-2 text-xs bg-secondary hover:bg-secondary hover:opacity-90 absolute bottom-2 right-2"
-                      >
-                        Generate color
-                      </Button>
-                    </div>
                     <Avatar className="w-32 h-32 -mt-16 ml-4 cursor-pointer transition bg-secondary">
                       <AvatarImage src={logoPreview} />
                       <AvatarFallback className="hover:scale-105">

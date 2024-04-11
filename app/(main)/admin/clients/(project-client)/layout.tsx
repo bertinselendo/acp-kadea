@@ -17,7 +17,7 @@ export default async function RouteLayout(props: { children: ReactNode }) {
   return (
     <div className="flex h-full overflow-y-scroll justify-center">
       {isTeamMember(user) && (
-        <div className="sticky top-0 overflow-y-scroll scroll custom-scrollbar 2xl:w-3/12 md:w-4/12 p-3 border-r">
+        <div className="sticky top-0 overflow-y-scroll scroll custom-scrollbar 2xl:w-3/12 md:w-4/12 p-3 border-r pb-20">
           <ListClients />
           <Button className="w-full mt-4">
             <Link href="/admin/clients/create">Create new client</Link>

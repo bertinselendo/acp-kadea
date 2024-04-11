@@ -80,7 +80,7 @@ export default function FeedbackForm(props: FeedbackFormProps) {
         } else {
           window.location.reload();
         }
-      }, 3000);
+      }, 1000);
     },
   });
 

@@ -14,23 +14,28 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 import { clickAnimation } from "@/components/ui/click-animation";
-import { Invoice } from "@prisma/client";
-import { invoiceDeleteAction } from "./invoices.action";
+import { User } from "@prisma/client";
+import { deleteClientUser } from "../clients.action";
 
-type DeleteInvoiceProps = {
-  invoice: Invoice;
-};
-
-export function DeleteInvoiceAlert(props: DeleteInvoiceProps) {
-  const invoiceID = props.invoice.id;
-
+export function DeleteClientUserAlert({ user }: { user: User }) {
+  const userID = user.id;
   const deleteMutation = useMutation({
     mutationFn: async () => {
-      return await invoiceDeleteAction(invoiceID);
+      const user = await deleteClientUser(userID);
+
+      if (!user) {
+        toast.dismiss();
+        toast.error("Process Error", {
+          description: "Please wait and retry",
+          duration: 10000,
+        });
+      }
+
+      return user;
     },
     onSuccess(data) {
       setTimeout(() => {
-        data && window.location.reload();
+        window.location.reload();
       }, 1000);
     },
   });
@@ -40,16 +45,15 @@ export function DeleteInvoiceAlert(props: DeleteInvoiceProps) {
 
     toast.promise(
       () =>
-        new Promise((resolve) => {
-          const invoice = deleteMutation.mutateAsync();
-
-          if (invoice) {
-            resolve(invoice);
+        new Promise(async (resolve) => {
+          const user = await deleteMutation.mutateAsync();
+          if (user) {
+            resolve(user);
           }
         }),
       {
         loading: "Deleting...",
-        success: "Invoice was deleted",
+        success: "User deleted<br> You will be redirect",
         error: (error) => {
           return error;
         },
@@ -81,7 +85,7 @@ export function DeleteInvoiceAlert(props: DeleteInvoiceProps) {
             onClick={onSubmit}
             className="bg-red-600 text-white hover:bg-red-700 hover:text-white"
           >
-            Yes Delete
+            Yes Delete {user.firstName}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

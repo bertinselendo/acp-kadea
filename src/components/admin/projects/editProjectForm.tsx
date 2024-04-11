@@ -131,7 +131,7 @@ export default function EditProjectForm(props: AddProjectModalProps) {
       setTimeout(() => {
         window.location.reload();
         // router.push(`/p/${data?.id}`);
-      }, 3000);
+      }, 1000);
     },
   });
 
