@@ -152,6 +152,26 @@ export async function getClientUsers(clientID: string) {
   }
 }
 
+export async function getUser(userEmail: string) {
+  const user = await auth();
+
+  if (!user) {
+    return;
+  }
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        email: userEmail, // Inclure les posts associés
+      },
+    });
+
+    return user;
+  } catch (error) {
+    throw new Error("Error getting user");
+  }
+}
+
 // DELETE
 
 export async function deleteClientUser(userID: string) {
