@@ -25,6 +25,9 @@ export async function documentCreationAction(
         link: values?.link,
         projectId: projectID,
       },
+      include: {
+        project: true,
+      },
     });
     return newDocument;
   } catch (error) {

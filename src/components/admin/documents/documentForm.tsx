@@ -21,8 +21,12 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 
 import { documentCreationAction } from "./documents.action";
-import { Document } from "@prisma/client";
+import { Document, Project, User } from "@prisma/client";
 import Link from "next/link";
+import { getProjectAllUsers } from "../projects/project.action";
+import { sendNewDocumentNotification } from "@/jobs/document/new";
+import { useSession } from "next-auth/react";
+import { getServerUrl } from "@/lib/server-url";
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -38,6 +42,8 @@ export type DocumentFormProps = {
 
 export default function DocumentForm(props: DocumentFormProps) {
   const [type, setType] = useState("internal");
+  const session = useSession();
+  const currentUser = session?.data?.user as User;
 
   const documentMutation = useMutation({
     mutationFn: async (values: Document) => {
@@ -45,7 +51,21 @@ export default function DocumentForm(props: DocumentFormProps) {
       values.type = type as string;
       return await documentCreationAction(values, props.projectID);
     },
-    onSuccess(data) {
+    onSuccess: async (data: Document & { project: Project }) => {
+      if (props.projectID) {
+        const users = await getProjectAllUsers(props.projectID);
+        const usersToNotify = users.filter((user) => user.id != data.createdBy);
+        const emailsUsers = usersToNotify.map((user) => user.email);
+
+        sendNewDocumentNotification({
+          userEmail: emailsUsers,
+          senderEmail: currentUser?.email,
+          senderName: currentUser?.firstName ?? "somme one",
+          reference: data.project.title,
+          link: `${getServerUrl()}/p/${props.projectID}/documents`,
+        });
+      }
+
       setTimeout(() => {
         window.location.reload();
       }, 1000);

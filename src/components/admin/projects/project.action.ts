@@ -164,6 +164,58 @@ export async function getProjectAllUsers(projectID: string) {
   }
 }
 
+export async function getProjectClient(clientID: string) {
+  const user = await auth();
+
+  if (!user) {
+    return;
+  }
+
+  try {
+    const client = await prisma.client.findUnique({
+      where: {
+        id: clientID,
+      },
+      include: {
+        users: true,
+      },
+    });
+
+    return client;
+  } catch (error) {
+    throw new Error("Error getting client");
+  }
+}
+
+export async function getProjectTeamMembers(clientID: string) {
+  const user = await auth();
+
+  if (!user) {
+    return;
+  }
+
+  try {
+    const team = await prisma.teamMember
+      .findMany({
+        where: {
+          projects: {
+            some: {
+              clientID: clientID,
+            },
+          },
+        },
+        include: {
+          user: true,
+        },
+      })
+      .then((result) => result.map((teamMember) => teamMember.user));
+
+    return team;
+  } catch (error) {
+    throw new Error("Error getting team");
+  }
+}
+
 // UPDATE
 
 export async function projectUpdateAction(

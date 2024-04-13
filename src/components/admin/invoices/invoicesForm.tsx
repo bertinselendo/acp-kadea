@@ -22,7 +22,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 
 import { invoiceCreationAction, invoiceUpdatetAction } from "./invoices.action";
-import { Invoice } from "@prisma/client";
+import { Invoice, Project, User } from "@prisma/client";
 import Link from "next/link";
 import { cn, sanitizeFiles } from "@/lib/utils";
 import { useProjectUpload } from "@/hooks/useUpload";
@@ -38,6 +38,10 @@ import {
   LucideUploadCloud,
 } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
+import { useSession } from "next-auth/react";
+import { sendNewInvoiceNotification } from "@/jobs";
+import { getServerUrl } from "@/lib/server-url";
+import { getProjectClient } from "../projects/project.action";
 
 const formSchema = z.object({
   reference: z.string().min(2, {
@@ -56,6 +60,8 @@ export type InvoiceFormProps = {
 export default function InvoiceForm(props: InvoiceFormProps) {
   const [editMode, setEditMode] = useState<boolean>(false);
   const [file, setFile] = useState<File[]>([]);
+  const session = useSession();
+  const currentUser = session?.data?.user as User;
 
   const { onUpload, progresspercent, uploadProjectFiles } = useProjectUpload();
 
@@ -69,11 +75,23 @@ export default function InvoiceForm(props: InvoiceFormProps) {
       if (editMode && props.invoice) {
         return await invoiceUpdatetAction(values, props.invoice.id);
       } else {
-        return await invoiceCreationAction(values, props.projectID);
+        const invoice = await invoiceCreationAction(values, props.projectID);
+        if (invoice) {
+          // send notification
+          const client = await getProjectClient(invoice.project.clientID);
+          let emailsClient = client.users.map((client) => client.email);
+          sendNewInvoiceNotification({
+            userEmail: emailsClient,
+            senderEmail: currentUser?.email,
+            senderName: currentUser?.firstName ?? "somme one",
+            reference: invoice.project.title,
+            link: `${getServerUrl()}/p/${props.projectID}/invoices`,
+          });
+        }
       }
     },
     onSuccess(data) {
-      window.location.reload();
+      // window.location.reload();
     },
   });
 

@@ -47,10 +47,21 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Check, ChevronsUpDown } from "lucide-react";
-import { projectCreationAction } from "./project.action";
+import {
+  getProjectClient,
+  getProjectTeamMembers,
+  projectCreationAction,
+} from "./project.action";
 import { getTeamMembers } from "../team/members/members.action";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Loader } from "@/components/ui/loader";
+import { useSession } from "next-auth/react";
+import { Project, User } from "@prisma/client";
+import { getServerUrl } from "@/lib/server-url";
+import {
+  sendProjectCreationClientNotification,
+  sendProjectCreationTeamNotification,
+} from "@/jobs";
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -97,6 +108,8 @@ export default function AddProjectForm(props: AddProjectModalProps) {
   const [members, setMembers] = useState<MemberTypes[]>([]);
   const [sMembers, setSMembers] = useState<MemberTypes[]>([]);
   const router = useRouter();
+  const session = useSession();
+  const currentUser = session?.data?.user as User;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -126,18 +139,36 @@ export default function AddProjectForm(props: AddProjectModalProps) {
 
       return project;
     },
-    onSuccess(data) {
+    onSuccess: async (data: Project) => {
       if (data) {
-        toast.dismiss();
-        toast.success("Projectwas add successuf", {
-          description: "You will be redirect ",
+        // send email to client users
+        const client = await getProjectClient(data.clientID);
+        let emailsClient = client.users.map((client) => client.email);
+        sendProjectCreationClientNotification({
+          userEmail: emailsClient,
+          senderEmail: currentUser?.email,
+          senderName: currentUser?.firstName ?? "somme one",
+          reference: data.title,
+          reference2: client.companyName,
+          link: `${getServerUrl()}/p/${data?.id}`,
         });
-      }
 
-      setTimeout(() => {
-        // window.location.reload();
-        router.push(`/p/${data?.id}`);
-      }, 1000);
+        // send email to team members
+        const teams = await getProjectTeamMembers(data.clientID);
+        let emailsTeam = teams.map((team) => team.email);
+        sendProjectCreationTeamNotification({
+          userEmail: emailsTeam,
+          senderEmail: currentUser?.email,
+          senderName: currentUser?.firstName ?? "somme one",
+          reference: data.title,
+          link: `${getServerUrl()}/p/${data?.id}`,
+        });
+
+        setTimeout(() => {
+          window.location.reload();
+          // router.push(`/p/${data?.id}`);
+        }, 1000);
+      }
     },
   });
 
@@ -156,10 +187,24 @@ export default function AddProjectForm(props: AddProjectModalProps) {
   async function onSubmit(values: z.infer<typeof formSchema>, event: any) {
     event.preventDefault();
 
-    toast.loading("Creating...");
-    values.tags = tags.join(",");
+    toast.promise(
+      new Promise(async (resolve) => {
+        values.tags = tags.join(",");
 
-    creationMutation.mutateAsync(values as any);
+        const project = creationMutation.mutateAsync(values as any);
+        if (project) {
+          resolve(project);
+          return project;
+        }
+      }),
+      {
+        loading: "Creating...",
+        success: "Setup succesfull<br>You will be redirect",
+        error: (error) => {
+          return error;
+        },
+      }
+    );
   }
 
   const addBadge = (tag: any, where: any) => {

@@ -35,8 +35,8 @@ export const EmailLayout = ({ children }: PropsWithChildren) => {
             <Section className="mt-9">
               <Img
                 src={`${baseUrl}/logo.png`}
-                width="120"
-                height="36"
+                width="16"
+                height="16"
                 alt="Localhost"
               />
             </Section>
@@ -50,8 +50,8 @@ export const EmailLayout = ({ children }: PropsWithChildren) => {
                 <Column style={{ width: "66%" }}>
                   <Img
                     src={`${baseUrl}/static/slack-logo.png`}
-                    width="120"
-                    height="36"
+                    width="16"
+                    height="16"
                     alt="Localhost"
                   />
                 </Column>
@@ -61,9 +61,9 @@ export const EmailLayout = ({ children }: PropsWithChildren) => {
                       <Column>
                         <Link href="/">
                           <Img
-                            src={`${baseUrl}/logo/twitter.png`}
-                            width="32"
-                            height="32"
+                            src={`${baseUrl}/logos/twitter.png`}
+                            width="16"
+                            height="16"
                             alt="Twitter"
                             style={socialMediaIcon}
                           />
@@ -72,9 +72,9 @@ export const EmailLayout = ({ children }: PropsWithChildren) => {
                       <Column>
                         <Link href="/">
                           <Img
-                            src={`${baseUrl}/logo/facebook.png`}
-                            width="32"
-                            height="32"
+                            src={`${baseUrl}/logos/facebook.png`}
+                            width="16"
+                            height="16"
                             alt="Facebook"
                             style={socialMediaIcon}
                           />
@@ -83,9 +83,9 @@ export const EmailLayout = ({ children }: PropsWithChildren) => {
                       <Column>
                         <Link href="/">
                           <Img
-                            src={`${baseUrl}/logo/linkedin.png`}
-                            width="32"
-                            height="32"
+                            src={`${baseUrl}/logos/linkedin.png`}
+                            width="16"
+                            height="16"
                             alt="linkedin"
                             style={socialMediaIcon}
                           />
