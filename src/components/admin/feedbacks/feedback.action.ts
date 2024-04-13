@@ -23,6 +23,9 @@ export async function feedbackCreationAction(
         note: values.note,
         projectId: projectID,
       },
+      include: {
+        project: true,
+      },
     });
     return newFeedback;
   } catch (error) {

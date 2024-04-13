@@ -14,43 +14,22 @@ import { User } from "@prisma/client";
 import { UserDiceAvater } from "../auth/userDiceAvater";
 import { Skeleton } from "../ui/skeleton";
 import Link from "next/link";
-import {
-  collection,
-  doc,
-  onSnapshot,
-  orderBy,
-  query,
-  updateDoc,
-} from "firebase/firestore";
-import { firestore } from "@/lib/firebase";
+import { doc, onSnapshot, orderBy, query, updateDoc } from "firebase/firestore";
 import { Badge } from "../ui/badge";
 import { getEventTypeString } from "./event-type";
 import { getUser } from "../admin/clients/clients.action";
+import { notificationRef } from "./notifications-ref";
+import { notificationType } from "./notifications-types";
 
 type PropsType = {
   user: User;
 };
 
-type notifications = {
-  id: string;
-  senderEmail: string;
-  senderName: string;
-  userID: string;
-  type: string;
-  date: any;
-  reference: string;
-  text: string;
-  link: string;
-  isRead: boolean;
-};
-
 export default function NotificationsList({ user }: PropsType) {
-  const [notifications, setNotifications] = useState<notifications[] | null>(
+  const [notifications, setNotifications] = useState<notificationType[] | null>(
     null
   );
   const [senderDatas, setSenderDatas] = useState({});
-
-  const notificationRef = collection(firestore, "notifications");
 
   useEffect(() => {
     onSnapshot(
