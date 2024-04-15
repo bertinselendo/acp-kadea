@@ -117,7 +117,7 @@ const TailwindAdvancedEditor = (props: {
             (user) => user.id != saveTitle.createdBy
           );
           const emailsUsers = usersToNotify.map((user) => user.email);
-          sendNewDocumentNotification({
+          await sendNewDocumentNotification({
             userEmail: emailsUsers,
             senderEmail: currentUser?.email,
             senderName: currentUser?.firstName ?? "somme one",
@@ -181,6 +181,19 @@ const TailwindAdvancedEditor = (props: {
       const saveTitle = await documentCreationAction(values, props.projectID);
       if (saveTitle) {
         toast.success("Document created");
+        // send notification
+        const users = await getProjectAllUsers(props.projectID);
+        const usersToNotify = users.filter(
+          (user) => user.id != saveTitle.createdBy
+        );
+        const emailsUsers = usersToNotify.map((user) => user.email);
+        await sendNewDocumentNotification({
+          userEmail: emailsUsers,
+          senderEmail: currentUser?.email,
+          senderName: currentUser?.firstName ?? "somme one",
+          reference: saveTitle.project.title,
+          link: `${getServerUrl()}/p/${props.projectID}/documents`,
+        });
         router.push(pathname + "?doc=" + saveTitle.id);
       }
     } else {

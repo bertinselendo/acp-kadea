@@ -53,7 +53,7 @@ client.defineJob({
   },
 });
 
-export const sendNewFeedbackNotification = ({
+export const sendNewFeedbackNotification = async ({
   userEmail,
   senderEmail,
   senderName,
@@ -78,7 +78,7 @@ export const sendNewFeedbackNotification = ({
     });
   });
 
-  client.sendEvent({
+  await client.sendEvent({
     name: "send.new-feedback-notification",
     payload: {
       userEmail: userEmail,

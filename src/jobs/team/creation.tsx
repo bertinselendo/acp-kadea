@@ -53,7 +53,7 @@ client.defineJob({
   },
 });
 
-export const sendTeamCreationNotification = ({
+export const sendTeamCreationNotification = async ({
   userEmail,
   senderEmail,
   senderName,
@@ -80,7 +80,7 @@ export const sendTeamCreationNotification = ({
     });
   });
 
-  client.sendEvent({
+  await client.sendEvent({
     name: "send.team-creation-notification",
     payload: {
       userEmail: userEmail,

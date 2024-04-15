@@ -109,7 +109,7 @@ export default function CreateClientForm() {
     },
     onSuccess: async (data: Client & { user: User }) => {
       if (data) {
-        sendClientCreationNotification({
+        await sendClientCreationNotification({
           userEmail: [data.user.email] ?? [""],
           senderEmail: currentUser?.email,
           senderName: currentUser?.firstName ?? "somme one",

@@ -75,9 +75,9 @@ export default function AddMemberForm() {
 
       return member;
     },
-    onSuccess(data: User) {
+    onSuccess: async (data: User) => {
       if (data) {
-        sendTeamCreationNotification({
+        await sendTeamCreationNotification({
           userEmail: [data.email],
           senderEmail: currentUser?.email,
           senderName: currentUser?.firstName ?? "somme one",

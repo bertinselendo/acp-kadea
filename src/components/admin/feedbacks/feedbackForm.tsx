@@ -81,7 +81,7 @@ export default function FeedbackForm(props: FeedbackFormProps) {
           );
           const emailsUsers = usersToNotify.map((user) => user.email);
 
-          sendNewFeedbackNotification({
+          await sendNewFeedbackNotification({
             userEmail: emailsUsers,
             senderEmail: currentUser?.email,
             senderName: currentUser?.firstName ?? "somme one",

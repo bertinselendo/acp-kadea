@@ -57,7 +57,7 @@ export default function DocumentForm(props: DocumentFormProps) {
         const usersToNotify = users.filter((user) => user.id != data.createdBy);
         const emailsUsers = usersToNotify.map((user) => user.email);
 
-        sendNewDocumentNotification({
+        await sendNewDocumentNotification({
           userEmail: emailsUsers,
           senderEmail: currentUser?.email,
           senderName: currentUser?.firstName ?? "somme one",

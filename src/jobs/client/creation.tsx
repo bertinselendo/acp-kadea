@@ -4,7 +4,7 @@ import { notificationRef } from "@/components/notifications/notifications-ref";
 import { notificationType } from "@/components/notifications/notifications-types";
 import { resend } from "@/lib/resend-trigger";
 import { client } from "@/trigger";
-import ActivityLinkMail from "@email/activityButtonMail";
+import ActivityMail from "@email/activityMail";
 
 import { eventTrigger } from "@trigger.dev/sdk";
 import { addDoc, serverTimestamp } from "firebase/firestore";
@@ -36,10 +36,9 @@ client.defineJob({
       to: payload.userEmail,
       subject: payload.heading,
       react: (
-        <ActivityLinkMail
+        <ActivityMail
           heading={payload.heading}
           body={payload.body}
-          link={payload.link}
           footer={payload.footer}
         />
       ),
@@ -53,7 +52,7 @@ client.defineJob({
   },
 });
 
-export const sendClientCreationNotification = ({
+export const sendClientCreationNotification = async ({
   userEmail,
   senderEmail,
   senderName,
@@ -73,13 +72,13 @@ export const sendClientCreationNotification = ({
       senderName: senderName,
       type: "client-creation",
       reference: reference,
-      text: body,
+      text: "",
       link: link,
       isRead: false,
     });
   });
 
-  client.sendEvent({
+  await client.sendEvent({
     name: "send.client-creation-notification",
     payload: {
       userEmail: userEmail,

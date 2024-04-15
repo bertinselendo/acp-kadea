@@ -53,7 +53,7 @@ client.defineJob({
   },
 });
 
-export const sendNewInvoiceNotification = ({
+export const sendNewInvoiceNotification = async ({
   userEmail,
   senderEmail,
   senderName,
@@ -78,7 +78,7 @@ export const sendNewInvoiceNotification = ({
     });
   });
 
-  client.sendEvent({
+  await client.sendEvent({
     name: "send.new-invoice-notification",
     payload: {
       userEmail: userEmail,

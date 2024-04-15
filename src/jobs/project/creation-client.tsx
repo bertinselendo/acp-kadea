@@ -55,7 +55,7 @@ client.defineJob({
   },
 });
 
-export const sendProjectCreationClientNotification = ({
+export const sendProjectCreationClientNotification = async ({
   userEmail,
   senderEmail,
   senderName,
@@ -75,13 +75,13 @@ export const sendProjectCreationClientNotification = ({
       senderName: senderName,
       type: "project-client-creation",
       reference: reference,
-      text: body,
+      text: `A new project ${reference} has been created for ${reference2}`,
       link: link,
       isRead: false,
     });
   });
 
-  client.sendEvent({
+  await client.sendEvent({
     name: "send.project-creation-client-notification",
     payload: {
       userEmail: userEmail,

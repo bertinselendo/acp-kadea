@@ -80,7 +80,7 @@ export default function InvoiceForm(props: InvoiceFormProps) {
           // send notification
           const client = await getProjectClient(invoice.project.clientID);
           let emailsClient = client.users.map((client) => client.email);
-          sendNewInvoiceNotification({
+          await sendNewInvoiceNotification({
             userEmail: emailsClient,
             senderEmail: currentUser?.email,
             senderName: currentUser?.firstName ?? "somme one",
@@ -91,7 +91,7 @@ export default function InvoiceForm(props: InvoiceFormProps) {
       }
     },
     onSuccess(data) {
-      // window.location.reload();
+      window.location.reload();
     },
   });
 

@@ -144,7 +144,7 @@ export default function AddProjectForm(props: AddProjectModalProps) {
         // send email to client users
         const client = await getProjectClient(data.clientID);
         let emailsClient = client.users.map((client) => client.email);
-        sendProjectCreationClientNotification({
+        await sendProjectCreationClientNotification({
           userEmail: emailsClient,
           senderEmail: currentUser?.email,
           senderName: currentUser?.firstName ?? "somme one",
@@ -156,7 +156,7 @@ export default function AddProjectForm(props: AddProjectModalProps) {
         // send email to team members
         const teams = await getProjectTeamMembers(data.clientID);
         let emailsTeam = teams.map((team) => team.email);
-        sendProjectCreationTeamNotification({
+        await sendProjectCreationTeamNotification({
           userEmail: emailsTeam,
           senderEmail: currentUser?.email,
           senderName: currentUser?.firstName ?? "somme one",
