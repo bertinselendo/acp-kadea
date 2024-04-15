@@ -13,7 +13,9 @@ export const getEventTypeString = (type: string) => {
     return "assigned you";
   } else if (type == "team-creation") {
     return "added you";
-  } else if (type == "client-creation") {
+  } else if (type == "team-creation") {
+    return "added you";
+  } else if (type == "client-add") {
     return "added you";
   } else {
     return "perform a action";
