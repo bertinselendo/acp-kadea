@@ -1,6 +1,7 @@
 // export all your job files here
 
 export * from "./client/creation";
+export * from "./client/add-client";
 export * from "./team/creation";
 
 // Project

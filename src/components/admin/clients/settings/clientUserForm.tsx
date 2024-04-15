@@ -18,8 +18,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { User } from "@prisma/client";
+import { Client, User } from "@prisma/client";
 import { createClientUser } from "../clients.action";
+import { sendClientAddNotification } from "@/jobs/client/add-client";
+import { useSession } from "next-auth/react";
+import { getServerUrl } from "@/lib/server-url";
 
 const formSchema = z.object({
   firstName: z.string().min(2, {
@@ -32,12 +35,24 @@ const formSchema = z.object({
 });
 
 export default function ClientUserForm({ clientID }: { clientID: string }) {
+  const session = useSession();
+  const currentUser = session?.data?.user as User;
+
   const userMutation = useMutation({
     mutationFn: async (values: User) => {
       return await createClientUser(values, clientID);
     },
-    onSuccess(data) {
-      window.location.reload();
+    onSuccess: async (data: User & { client: Client }) => {
+      if (data) {
+        await sendClientAddNotification({
+          userEmail: [data.email],
+          senderEmail: currentUser?.email,
+          senderName: currentUser?.firstName ?? "somme one",
+          reference: data.client.companyName,
+          link: `${getServerUrl()}/admin/clients/${data.clientId}`,
+        });
+        window.location.reload();
+      }
     },
   });
 
