@@ -19,9 +19,11 @@ import DashCredentials from "@/components/admin/projects/single/dashboard/creden
 import AddcredentialsModal from "@/components/admin/credentials/addcredentialsModal";
 import DashDocuments from "@/components/admin/projects/single/dashboard/documents";
 import AddDocumentModal from "@/components/admin/documents/addDocumentModal";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import AddInvoiceModal from "@/components/admin/invoices/addInvoicesModal";
 import DashInvoices from "@/components/admin/projects/single/dashboard/invoices";
+import { auth } from "@/lib/auth/helper";
+import { getServerUrl } from "@/lib/server-url";
 
 type Props = {
   params: { projectID: string };
@@ -33,6 +35,11 @@ export const metadata: Metadata = {
 };
 
 export default async function ProjectSinglePage({ params }: Props) {
+  const user = await auth();
+
+  if (!user)
+    redirect(`/login?callbackUrl=${getServerUrl()}/p/${params?.projectID}`);
+
   const project = await getClientSingleProject(params.projectID);
 
   if (!project) {

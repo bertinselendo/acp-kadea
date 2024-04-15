@@ -10,15 +10,11 @@ import { ReactNode } from "react";
 export default async function RouteLayout(props: { children: ReactNode }) {
   const user = await auth();
 
-  if (!user) {
-    redirect("/login");
-  }
-
   if (isGuest(user)) {
     redirect("/no-access");
   }
 
-  const client = await getClientByUser(user.id);
+  const client = await getClientByUser(user?.id);
 
   return (
     <main className="bg-gradient-to-r from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90%">
@@ -29,7 +25,7 @@ export default async function RouteLayout(props: { children: ReactNode }) {
             id="main-header"
             className="flex justify-between items-center p-3 h-14 --border border-b sticky top-0 z-50 overflow-hidden"
           >
-            <Header user={user} clientID={`${client?.id}`} />
+            {user && <Header user={user} clientID={`${client?.id}`} />}
           </div>
           <div className="h-[100vh] -mt-14 pt-14">
             <div className="bg-background/80 h-full overflow-y-scroll">
