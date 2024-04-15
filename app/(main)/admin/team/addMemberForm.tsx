@@ -8,14 +8,13 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { ReactNode, useState } from "react";
+import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import useUpload from "@/hooks/useUpload";
 import { useMutation } from "@tanstack/react-query";
@@ -28,9 +27,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { useRouter } from "next/navigation";
 import { teamCreationAction } from "./create.action";
+import { useSession } from "next-auth/react";
+import { User } from "@prisma/client";
+import { sendTeamCreationNotification } from "@/jobs/team/creation";
+import { getServerUrl } from "@/lib/server-url";
 
 const formSchema = z.object({
   firstName: z.string().min(2, {
@@ -57,7 +58,8 @@ export default function AddMemberForm() {
   const { onUpload, progresspercent, uploadImage } = useUpload();
   const [logo, setFile] = useState<File>();
   const [logoPreview, setLogoPreview] = useState("");
-  const router = useRouter();
+  const session = useSession();
+  const currentUser = session?.data?.user as User;
 
   const creationMutation = useMutation({
     mutationFn: async (values) => {
@@ -73,17 +75,19 @@ export default function AddMemberForm() {
 
       return member;
     },
-    onSuccess(data) {
+    onSuccess: async (data: User) => {
       if (data) {
-        toast.dismiss();
-        toast.success("Member was add", {
-          description: "A notification will be sent to " + data.firstName,
+        await sendTeamCreationNotification({
+          userEmail: [data.email],
+          senderEmail: currentUser?.email,
+          senderName: currentUser?.firstName ?? "somme one",
+          reference: "Team Member",
+          link: `${getServerUrl()}/admin`,
         });
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       }
-
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
     },
   });
 
@@ -112,12 +116,29 @@ export default function AddMemberForm() {
   async function onSubmit(values: z.infer<typeof formSchema>, event: any) {
     event.preventDefault();
 
-    toast.loading("Creating...");
-    if (logo) {
-      const companyLogo = await uploadImage(logo, "company/logo");
-      values.avatar = companyLogo as string;
-    }
-    creationMutation.mutateAsync(values as any);
+    toast.promise(
+      new Promise(async (resolve) => {
+        if (logo) {
+          if (logo) {
+            const companyLogo = await uploadImage(logo, "company/logo");
+            values.avatar = companyLogo as string;
+          }
+        }
+        const creation = creationMutation.mutateAsync(values as any);
+        if (creation) {
+          resolve(creation);
+          return creation;
+        }
+      }),
+      {
+        loading: "Creating...",
+        success:
+          "Setup succesfull<br>Team will recieve email to access resources",
+        error: (error) => {
+          return error;
+        },
+      }
+    );
   }
 
   return (

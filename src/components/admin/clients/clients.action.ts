@@ -3,7 +3,6 @@
 import { auth } from "@/lib/auth/helper";
 import { prisma } from "@/lib/prisma";
 import { User } from "@prisma/client";
-import { where } from "firebase/firestore";
 
 // CREATE
 
@@ -22,8 +21,6 @@ export async function createClientUser(values: User, clientID: string) {
     });
 
     if (findUser) {
-      console.log(findUser);
-
       if (findUser.role == "GUEST") {
         const user = await prisma.user.update({
           where: {
@@ -34,6 +31,9 @@ export async function createClientUser(values: User, clientID: string) {
             lastName: values.lastName,
             role: "CLIENT",
             clientId: clientID,
+          },
+          include: {
+            client: true,
           },
         });
         return user;
@@ -47,6 +47,9 @@ export async function createClientUser(values: User, clientID: string) {
         email: values.email,
         role: "CLIENT",
         clientId: clientID,
+      },
+      include: {
+        client: true,
       },
     });
     return user;
@@ -149,6 +152,26 @@ export async function getClientUsers(clientID: string) {
     return users;
   } catch (error) {
     throw new Error("Error getting client users");
+  }
+}
+
+export async function getUser(userEmail: string) {
+  const user = await auth();
+
+  if (!user) {
+    return;
+  }
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        email: userEmail, // Inclure les posts associés
+      },
+    });
+
+    return user;
+  } catch (error) {
+    throw new Error("Error getting user");
   }
 }
 

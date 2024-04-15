@@ -35,8 +35,11 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
-import { resolve } from "path";
 import { getRandomColor } from "@/lib/utils";
+import { sendClientCreationNotification } from "@/jobs";
+import { useSession } from "next-auth/react";
+import { Client, User } from "@prisma/client";
+import { getServerUrl } from "@/lib/server-url";
 
 const urlRegex =
   /^(?:(?:https?|ftp):\/\/)?(?:www\.)?[a-zA-Z0-9-]+(\.[a-z]{2,})+(?:\/[\w-]*)*$/;
@@ -82,6 +85,8 @@ export default function CreateClientForm() {
   const [logoPreview, setLogoPreview] = useState("");
   const router = useRouter();
   const [generatedColor, setGeneratedColor] = useState(getRandomColor());
+  const session = useSession();
+  const currentUser = session?.data?.user as User;
 
   const creationMutation = useMutation({
     mutationFn: async (values) => {
@@ -90,7 +95,9 @@ export default function CreateClientForm() {
       if (client) {
         // then add user
         const user = await userCreationAction(values as any, client.id);
-        return user && client;
+        const data = client;
+        data.user = user;
+        return data;
       }
 
       // error if nothing perform
@@ -100,8 +107,15 @@ export default function CreateClientForm() {
         duration: 10000,
       });
     },
-    onSuccess(data) {
+    onSuccess: async (data: Client & { user: User }) => {
       if (data) {
+        await sendClientCreationNotification({
+          userEmail: [data.user.email] ?? [""],
+          senderEmail: currentUser?.email,
+          senderName: currentUser?.firstName ?? "somme one",
+          reference: data.companyName,
+          link: `${getServerUrl()}/admin/clients/${data.id}`,
+        });
         setTimeout(() => {
           router.push(`/admin/clients/${data.id}`);
         }, 1000);

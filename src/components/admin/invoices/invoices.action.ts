@@ -26,6 +26,9 @@ export async function invoiceCreationAction(
         link: values.link,
         projectId: projectID,
       },
+      include: {
+        project: true,
+      },
     });
     return newInvoice;
   } catch (error) {
@@ -79,6 +82,30 @@ export async function getProjectInvoice(invoiceID: string) {
     return invoice;
   } catch (error) {
     throw new Error("Error getting invoice");
+  }
+}
+
+export async function getAllInvoices() {
+  const user = await auth();
+
+  if (!user) {
+    return;
+  }
+
+  try {
+    const invoices = await prisma.invoice.findMany({
+      include: {
+        project: {
+          include: {
+            client: true,
+          },
+        },
+      },
+    });
+
+    return invoices;
+  } catch (error) {
+    throw new Error("Error getting invoices");
   }
 }
 

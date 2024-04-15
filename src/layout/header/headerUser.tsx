@@ -22,12 +22,12 @@ export default function HeaderUserPoper(props: {
   return (
     <Popover>
       <PopoverTrigger>
-        <UserAvatar src={props.user.avatar} />
+        <UserAvatar src={props.user?.avatar} />
       </PopoverTrigger>
       <PopoverContent className="mr-3">
         <div className="border-b pb-3 mb-3">
-          <h4 className="font-medium">{`${user.firstName} ${user.lastName}`}</h4>
-          <p className="text-sm">{user.email}</p>
+          <h4 className="font-medium">{`${user?.firstName} ${user?.lastName}`}</h4>
+          <p className="text-sm">{user?.email}</p>
         </div>
         <div className="border-b pb-3 mb-3">
           <HeaderMainMenu clientID={props.clientID} />

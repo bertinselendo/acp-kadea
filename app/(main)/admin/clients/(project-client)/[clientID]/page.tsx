@@ -2,9 +2,10 @@ import { getSingleClient } from "@/components/admin/clients/clients.action";
 import ListProjects from "@/components/admin/projects/listProjects";
 import { isTeamMember } from "@/lib/auth/auth-utils";
 import { auth } from "@/lib/auth/helper";
+import { getServerUrl } from "@/lib/server-url";
 import { PageParams } from "@/types/next";
 import { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 export async function generateMetadata({
   params,
@@ -30,7 +31,10 @@ export default async function ProjectPage({
 }) {
   const user = await auth();
 
-  if (!user) return;
+  if (!user)
+    redirect(
+      `/login?callbackUrl=${getServerUrl()}/admin/clients/${params?.clientID}`
+    );
 
   const client: { companyName: string } | null = await getSingleClient(
     params.clientID

@@ -45,9 +45,13 @@ import {
   getProjectDocument,
 } from "../admin/documents/documents.action";
 import { usePathname, useRouter } from "next/navigation";
-import { Document } from "@prisma/client";
+import { Document, User } from "@prisma/client";
 import { toast } from "sonner";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { getProjectAllUsers } from "../admin/projects/project.action";
+import { sendNewDocumentNotification } from "@/jobs";
+import { useSession } from "next-auth/react";
+import { getServerUrl } from "@/lib/server-url";
 
 const extensions = [...defaultExtensions, slashCommand];
 
@@ -79,6 +83,9 @@ const TailwindAdvancedEditor = (props: {
   const [openLink, setOpenLink] = useState(false);
   const [openAI, setOpenAI] = useState(false);
 
+  const session = useSession();
+  const currentUser = session?.data?.user as User;
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -103,6 +110,21 @@ const TailwindAdvancedEditor = (props: {
         if (saveTitle) {
           toast.success("Document created");
           setDocumentTitle(saveTitle.title);
+
+          // send notification
+          const users = await getProjectAllUsers(props.projectID);
+          const usersToNotify = users.filter(
+            (user) => user.id != saveTitle.createdBy
+          );
+          const emailsUsers = usersToNotify.map((user) => user.email);
+          await sendNewDocumentNotification({
+            userEmail: emailsUsers,
+            senderEmail: currentUser?.email,
+            senderName: currentUser?.firstName ?? "somme one",
+            reference: saveTitle.project.title,
+            link: `${getServerUrl()}/p/${props.projectID}/documents`,
+          });
+
           router.push(pathname + "?doc=" + saveTitle.id);
         } else {
           toast.error("Error creating document");
@@ -159,6 +181,19 @@ const TailwindAdvancedEditor = (props: {
       const saveTitle = await documentCreationAction(values, props.projectID);
       if (saveTitle) {
         toast.success("Document created");
+        // send notification
+        const users = await getProjectAllUsers(props.projectID);
+        const usersToNotify = users.filter(
+          (user) => user.id != saveTitle.createdBy
+        );
+        const emailsUsers = usersToNotify.map((user) => user.email);
+        await sendNewDocumentNotification({
+          userEmail: emailsUsers,
+          senderEmail: currentUser?.email,
+          senderName: currentUser?.firstName ?? "somme one",
+          reference: saveTitle.project.title,
+          link: `${getServerUrl()}/p/${props.projectID}/documents`,
+        });
         router.push(pathname + "?doc=" + saveTitle.id);
       }
     } else {

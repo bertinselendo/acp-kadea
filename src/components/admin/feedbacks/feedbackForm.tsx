@@ -27,7 +27,11 @@ import {
   feedbackCreationAction,
   feedbackUpdatetAction,
 } from "./feedback.action";
-import { Feedback } from "@prisma/client";
+import { Feedback, Project, User } from "@prisma/client";
+import { getProjectAllUsers } from "../projects/project.action";
+import { sendNewFeedbackNotification } from "@/jobs/feedback/new";
+import { useSession } from "next-auth/react";
+import { getServerUrl } from "@/lib/server-url";
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -44,6 +48,8 @@ export type FeedbackFormProps = {
 
 export default function FeedbackForm(props: FeedbackFormProps) {
   const router = useRouter();
+  const session = useSession();
+  const currentUser = session?.data?.user as User;
 
   const feedbackMutation = useMutation({
     mutationFn: async (values) => {
@@ -66,21 +72,32 @@ export default function FeedbackForm(props: FeedbackFormProps) {
 
       return feedback;
     },
-    onSuccess(data) {
+    onSuccess: async (data: Feedback & { project: Project }) => {
       if (data) {
-        toast.dismiss();
-        toast.success("Action successuff", {
-          description: "You will be redirect ",
-        });
-      }
-
-      setTimeout(() => {
         if (props.projectID) {
-          router.push(`/p/${props.projectID}/feedbacks`);
-        } else {
-          window.location.reload();
+          const users = await getProjectAllUsers(props.projectID);
+          const usersToNotify = users.filter(
+            (user) => user.id != data.createdBy
+          );
+          const emailsUsers = usersToNotify.map((user) => user.email);
+
+          await sendNewFeedbackNotification({
+            userEmail: emailsUsers,
+            senderEmail: currentUser?.email,
+            senderName: currentUser?.firstName ?? "somme one",
+            reference: data.project.title,
+            link: `${getServerUrl()}/p/${props.projectID}/feedbacks`,
+          });
         }
-      }, 1000);
+
+        setTimeout(() => {
+          if (props.projectID) {
+            router.push(`/p/${props.projectID}/feedbacks`);
+          } else {
+            window.location.reload();
+          }
+        }, 1000);
+      }
     },
   });
 
@@ -107,9 +124,22 @@ export default function FeedbackForm(props: FeedbackFormProps) {
   async function onSubmit(values: z.infer<typeof formSchema>, event: any) {
     event.preventDefault();
 
-    toast.loading("PLease wait...");
-
-    feedbackMutation.mutateAsync(values as any);
+    toast.promise(
+      new Promise(async (resolve) => {
+        const feedback = feedbackMutation.mutateAsync(values as any);
+        if (feedback) {
+          resolve(feedback);
+          return feedback;
+        }
+      }),
+      {
+        loading: "Please wait...",
+        success: "Action successfull<br>You will be redirect",
+        error: (error) => {
+          return error;
+        },
+      }
+    );
   }
 
   return (
