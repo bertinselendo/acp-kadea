@@ -14,7 +14,14 @@ import { User } from "@prisma/client";
 import { UserDiceAvater } from "../auth/userDiceAvater";
 import { Skeleton } from "../ui/skeleton";
 import Link from "next/link";
-import { doc, onSnapshot, orderBy, query, updateDoc } from "firebase/firestore";
+import {
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { Badge } from "../ui/badge";
 import { getEventTypeString } from "./event-type";
 import { getUser } from "../admin/clients/clients.action";
@@ -33,7 +40,11 @@ export default function NotificationsList({ user }: PropsType) {
 
   useEffect(() => {
     onSnapshot(
-      query(notificationRef, orderBy("date", "desc")),
+      query(
+        notificationRef,
+        where("userEmail", "==", `${user.email}`),
+        orderBy("date", "desc")
+      ),
       (querySnapshot) => {
         const noti: any = [];
         querySnapshot.forEach((doc) => {
@@ -83,6 +94,12 @@ export default function NotificationsList({ user }: PropsType) {
           <Skeleton className="h-20 w-full" />
         </div>
       </>
+    );
+  }
+
+  if (!notifications.length) {
+    return (
+      <div className="p-6 flex justify-center items-center">No activity</div>
     );
   }
 
