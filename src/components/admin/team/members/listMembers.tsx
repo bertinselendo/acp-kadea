@@ -56,10 +56,9 @@ export default function TeamListMembers() {
 
   if (!members) {
     return (
-      <div className="flex flex-col gap-4">
-        <Skeleton className="h-10 w-full" />
-        <Skeleton className="h-32 w-full delay-250" />
-        <Skeleton className="h-32 w-full delay-500" />
+      <div className="grid grid-cols-2 gap-4 *:h-60 *:w-full">
+        <Skeleton />
+        <Skeleton className="delay-250" />
       </div>
     );
   }

@@ -6,6 +6,9 @@ import type { Metadata } from "next";
 import { AdminHomeCarousel } from "@/components/admin/home/projectCarousel";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
+import dayjs from "dayjs";
+import { UserStats } from "@/components/admin/home/userStats";
+import { ActivityStats } from "@/components/admin/home/activityStats";
 
 export const metadata: Metadata = {
   title: "Home",
@@ -17,21 +20,27 @@ export default async function AdminHomePage(props: PageParams) {
     redirect("/login");
   }
 
+  const nameGreet = user.firstName ?? "";
+  const dateGreet = dayjs().format("MMMM, DD YYYY - HH:mm").toString();
+
   return (
     <div className="p-3">
-      <div className="w-full px-24 border-b pb-4">
-        <AdminHomeCarousel />
+      <div className="w-full px-24 pt-6">
+        <h2 className="text-4xl font-bold">Welcome back {nameGreet} 👋🏼</h2>
+        <p>It&apos;s {dateGreet}</p>
       </div>
-      <div className="py-6 px-20 flex flex-wrap gap-6 justify-center">
-        {Array.from({ length: 4 }).map((_, index) => (
-          <div key={index} className="w-[48%]">
-            <Card>
-              <CardContent className="flex items-center justify-center p-6 h-80">
-                <span className="text-2xl font-semibold">{index + 1}</span>
-              </CardContent>
-            </Card>
-          </div>
-        ))}
+      <div className="w-full px-24 border-b py-6">
+        <AdminHomeCarousel user={user} />
+      </div>
+      <div className="py-6 px-24 w-full grid grid-cols-2 gap-4 *:h-72">
+        <Card>
+          <CardContent className="p-6">
+            <UserStats user={user} />
+          </CardContent>
+        </Card>
+        <div className="grid grid-cols-2 grid-rows-2 gap-4">
+          <ActivityStats user={user} />
+        </div>
       </div>
     </div>
   );

@@ -58,3 +58,23 @@ export async function accountData(email: string) {
     throw new Error("Error databse");
   }
 }
+
+export async function getUserAllDatas(userID: string) {
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userID,
+      },
+      include: {
+        feedbacks: true,
+        documents: true,
+        credentials: true,
+        invoices: true,
+      },
+    });
+
+    return user;
+  } catch (error) {
+    throw error("Error getting all datas");
+  }
+}
