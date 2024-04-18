@@ -216,6 +216,65 @@ export async function getProjectTeamMembers(clientID: string) {
   }
 }
 
+export async function getCurrentUserProjects() {
+  const user = await auth();
+
+  if (!user) {
+    return;
+  }
+
+  try {
+    if (user.role == "ADMIN" || user.role == "MANAGER") {
+      const projects = await prisma.project.findMany({
+        include: {
+          client: true,
+        },
+      });
+      return projects;
+    } else if (user.role == "WORKER") {
+      const projects = await prisma.teamMember
+        .findFirst({
+          where: {
+            user: {
+              id: user.id,
+            },
+          },
+          include: {
+            projects: {
+              include: {
+                client: true,
+              },
+            },
+          },
+        })
+        .then((result) => result.projects);
+      return projects;
+    } else if (user.role == "CLIENT") {
+      const projects = await prisma.client
+        .findFirst({
+          where: {
+            users: {
+              some: {
+                id: user.id,
+              },
+            },
+          },
+          include: {
+            projects: {
+              include: {
+                client: true,
+              },
+            },
+          },
+        })
+        .then((result) => result.projects);
+      return projects;
+    }
+  } catch (error) {
+    throw new Error("Error getting projects");
+  }
+}
+
 // UPDATE
 
 export async function projectUpdateAction(

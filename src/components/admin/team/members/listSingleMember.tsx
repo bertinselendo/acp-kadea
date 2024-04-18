@@ -25,6 +25,7 @@ import { useSession } from "next-auth/react";
 import { User } from "@prisma/client";
 import Image from "next/image";
 import { dicebearAvatar } from "@/lib/auth/auth-utils";
+import { UserDiceAvater } from "@/components/auth/userDiceAvater";
 
 export function TeamListSingleMember(props: any) {
   const { data } = useSession();
@@ -32,72 +33,60 @@ export function TeamListSingleMember(props: any) {
   const currentRole = user?.role;
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="grid grid-cols-2 gap-4">
       {props.members.map((member: any) => (
-        <Card key={member.id} className="w-full flex flex-col p-2 gap-0">
-          <CardHeader className="p-2 pb-0">
-            <div className="flex gap-4 justify-between items-start">
-              <div className="w-4/5 flex gap-4">
-                <Avatar>
-                  {member.avatar ? (
-                    <AvatarImage src={member.avatar} alt={member.email} />
-                  ) : (
-                    <Image
-                      src={dicebearAvatar(member.email)}
-                      alt={member.email}
-                      width="40"
-                      height="40"
-                    />
-                  )}
-                  <AvatarFallback></AvatarFallback>
-                </Avatar>
-                <div>
-                  <div className="flex gap-2 items-center">
-                    <CardTitle className="text-xl capitalize">
-                      {member.firstName && member.firstName}{" "}
-                      {member.lastName && member.lastName}
-                    </CardTitle>
-                    <div className="text-sm flex gap-1 items-center">
-                      <IoEllipse className="fill-green-700" />
-                      <span>last online</span>
-                    </div>
-                  </div>
-                  <CardDescription>{member.email}</CardDescription>
-                </div>
-              </div>
-              <div className="w-1/5 flex justify-end text-right">
-                {member.id != data?.user.id ? (
-                  <DropdownMenu>
-                    <DropdownMenuTrigger className="focus:hidden">
-                      <IoEllipsisHorizontal onClick={clickAnimation} />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      {/* <DropdownMenuLabel>Filter by</DropdownMenuLabel> */}
-                      {(currentRole == "ADMIN" || currentRole == "MANAGER") && (
-                        <EditMemberModal member={member} />
-                      )}
+        <Card
+          key={member.id}
+          className="w-full flex flex-col justify-center p-0 gap-1 relative"
+        >
+          <CardHeader className="justify-center items-center">
+            <div className="absolute top-2 right-4">
+              {member.id != data?.user.id ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger className="focus:hidden">
+                    <IoEllipsisHorizontal onClick={clickAnimation} />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    {/* <DropdownMenuLabel>Filter by</DropdownMenuLabel> */}
+                    {(currentRole == "ADMIN" || currentRole == "MANAGER") && (
+                      <EditMemberModal member={member} />
+                    )}
 
-                      <DropdownMenuItem>Make a call</DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Link href={`tel:${member.teamMembers?.phone}`}>
+                        Make a call
+                      </Link>
+                    </DropdownMenuItem>
 
-                      {currentRole == "ADMIN" && (
-                        <>
-                          <DropdownMenuSeparator />
-                          <DeleteMemberAlert member={member} />
-                        </>
-                      )}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                ) : (
-                  <Badge>Me</Badge>
-                )}
-              </div>
+                    {currentRole == "ADMIN" && (
+                      <>
+                        <DropdownMenuSeparator />
+                        <DeleteMemberAlert member={member} />
+                      </>
+                    )}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <Badge>Me</Badge>
+              )}
             </div>
+            <Avatar className="w-28 h-28">
+              <AvatarImage src={member.avatar} alt={member.email} />
+              <AvatarFallback>
+                <UserDiceAvater email={member.email} />
+              </AvatarFallback>
+            </Avatar>
           </CardHeader>
-          <CardContent className="p-2 pl-16 text-sm">
+          <CardContent className="text-sm text-center">
+            <CardTitle className="text-xl capitalize">
+              {member.firstName && member.firstName}{" "}
+              {member.lastName && member.lastName}
+            </CardTitle>
+            <CardDescription>{member.email}</CardDescription>
             {member.teamMembers && (
               <div
                 key={member.teamMembers?.id}
-                className="flex gap-2 uppercase mb-2"
+                className="flex flex-wrap justify-center gap-2 uppercase my-2"
               >
                 <Badge variant="outline" className="bg-light-blue border-none">
                   <Link href={`tel:${member.teamMembers?.phone}`}>
@@ -117,10 +106,6 @@ export function TeamListSingleMember(props: any) {
                 )}
               </div>
             )}
-            <div>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </div>
           </CardContent>
         </Card>
       ))}
