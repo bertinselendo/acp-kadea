@@ -61,7 +61,7 @@ export async function accountData(email: string) {
 
 export async function getUserAllDatas(userID: string) {
   try {
-    const user = prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
         id: userID,
       },
