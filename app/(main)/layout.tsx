@@ -1,7 +1,7 @@
 import { getClientByUser } from "@/components/admin/clients/clients.action";
 import Header from "@/layout/header";
 import SidebarGlobal from "@/layout/sidebar";
-import { isAdmin, isGuest } from "@/lib/auth/auth-utils";
+import { hasOrganization, isAdmin, isGuest } from "@/lib/auth/auth-utils";
 import { auth } from "@/lib/auth/helper";
 import type { LayoutParams } from "@/types/next";
 import { redirect } from "next/navigation";
@@ -12,6 +12,19 @@ export default async function RouteLayout(props: { children: ReactNode }) {
 
   if (isGuest(user)) {
     redirect("/no-access");
+  }
+
+  if (isAdmin(user)) {
+    // redirect the admin who has no organization.
+    // this means that the onboarding is not completed
+    if (!hasOrganization(user)) {
+      redirect("/auth/onboarding?step=organization");
+    }
+  } else {
+    // there's no chance that this will happen but redirect anyway
+    if (!hasOrganization(user)) {
+      redirect("/no-access");
+    }
   }
 
   const client = await getClientByUser(user?.id);
