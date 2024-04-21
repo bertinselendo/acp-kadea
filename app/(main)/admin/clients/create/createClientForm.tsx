@@ -35,7 +35,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
-import { getRandomColor } from "@/lib/utils";
+import { countryList, getRandomColor } from "@/lib/utils";
 import { sendClientCreationNotification } from "@/jobs";
 import { useSession } from "next-auth/react";
 import { Client, User } from "@prisma/client";
@@ -110,7 +110,7 @@ export default function CreateClientForm() {
     onSuccess: async (data: Client & { user: User }) => {
       if (data) {
         await sendClientCreationNotification({
-          userEmail: [data.user.email] ?? [""],
+          userEmail: [data.user?.email] ?? [""],
           senderEmail: currentUser?.email,
           senderName: currentUser?.firstName ?? "somme one",
           reference: data.companyName,
@@ -303,9 +303,11 @@ export default function CreateClientForm() {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="belgique">Belgique</SelectItem>
-                      <SelectItem value="france">France</SelectItem>
-                      <SelectItem value="other">other</SelectItem>
+                      {countryList().map((country, index) => (
+                        <SelectItem key={index} value={country}>
+                          {country}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                   <FormMessage />
