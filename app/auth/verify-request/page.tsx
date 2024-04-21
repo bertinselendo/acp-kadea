@@ -10,7 +10,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 
 export default function AuthVerifiyPage() {
   return (

@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { getServerUrl } from "@/lib/server-url";
-import { redirect, useRouter, useSearchParams } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { createOnboardUser } from "./onboarding.action";
@@ -49,8 +49,6 @@ export function OnboardUserStepForm() {
       lastName: "",
     },
   });
-
-  const searchParams = useSearchParams();
 
   const { mutateAsync, status } = useMutation({
     mutationFn: async (values: any) => {
