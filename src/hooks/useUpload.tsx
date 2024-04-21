@@ -9,14 +9,8 @@ export default function useUpload() {
   const [progresspercent, setProgresspercent] = useState(0);
   const [onUpload, setOnUpload] = useState(false);
 
-  const uploadImage = async (file: File, type: string) => {
-    let folder = "images";
-
+  const uploadImage = async (file: File, folder: string) => {
     setOnUpload(true);
-
-    if (type === "avatar") {
-      folder = "images/avatar";
-    }
 
     const timestamp = Date.now();
 
