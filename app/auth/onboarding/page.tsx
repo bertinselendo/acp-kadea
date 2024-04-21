@@ -25,13 +25,13 @@ export default function Onboarding() {
   return (
     <main className="bg-gradient-to-r from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90% h-screen w-screen">
       <div className="flex justify-center items-center transition-all bg-blend-overlay bg-noise bg-white/80 h-screen w-screen">
-        <div
-          className={cn(
-            step === "subscription" ? "w-[700px]" : "w-[500px]",
-            "flex flex-col gap-4"
-          )}
-        >
-          <Suspense>
+        <Suspense fallback={<Loader />}>
+          <div
+            className={cn(
+              step === "subscription" ? "w-[700px]" : "w-[500px]",
+              "flex flex-col gap-4"
+            )}
+          >
             <Tabs defaultValue={step}>
               <TabsList className="w-full hidden grid-rows-1 grid-flow-col bg-transparent *:py-2 *:pointer-events-none">
                 <TabsTrigger value="user">User</TabsTrigger>
@@ -71,16 +71,16 @@ export default function Onboarding() {
                 )}
               </Card>
             </Tabs>
-          </Suspense>
 
-          <div className="w-full">
-            <div className="flex justify-center gap-4 transition-all *:text-sm *:opacity-75 *:hover:opacity-100">
-              <Link href="/">Home</Link>
-              <Link href="#">Privacy</Link>
-              <Link href="#">Term</Link>
+            <div className="w-full">
+              <div className="flex justify-center gap-4 transition-all *:text-sm *:opacity-75 *:hover:opacity-100">
+                <Link href="/">Home</Link>
+                <Link href="#">Privacy</Link>
+                <Link href="#">Term</Link>
+              </div>
             </div>
           </div>
-        </div>
+        </Suspense>
       </div>
     </main>
   );
