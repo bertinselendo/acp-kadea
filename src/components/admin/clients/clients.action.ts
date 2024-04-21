@@ -68,12 +68,15 @@ export async function createClientUser(values: User, clientID: string) {
 export async function getClients() {
   const user = await auth();
 
-  if (!user) {
-    return;
-  }
+  if (!user) return;
+
+  if (!user.organizationId) return;
 
   try {
     const client = await prisma.client.findMany({
+      where: {
+        organizationId: user.organizationId,
+      },
       include: {
         users: true, // Inclure les posts associés
       },
