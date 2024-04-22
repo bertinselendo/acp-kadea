@@ -19,7 +19,7 @@ type ProjectTypes = Project & {
 };
 
 export default function ProjectHeader(props: ProjectHeaderProps) {
-  const [teams, setTeams] = useState<[User]>([] as any);
+  const [teams, setTeams] = useState<User[]>([]);
   const project = props.project as ProjectTypes;
 
   useQuery({
@@ -30,7 +30,7 @@ export default function ProjectHeader(props: ProjectHeaderProps) {
         const teamArray: any = [];
         project.teamMembers.map((team) => {
           const sme = members.find((member) => member.id == team.userId);
-          teamArray.push(sme);
+          if (sme) teamArray.push(sme);
           setTeams(teamArray);
         });
 
@@ -57,9 +57,9 @@ export default function ProjectHeader(props: ProjectHeaderProps) {
           <div className="flex justify-end px-2 gap-2">
             {teams.map((team, index) => (
               <Avatar key={index}>
-                <AvatarImage src={team.avatar as string} />
+                <AvatarImage src={team?.avatar as string} />
                 <AvatarFallback>
-                  <UserDiceAvater email={team.email} />
+                  <UserDiceAvater email={team?.email} />
                 </AvatarFallback>
               </Avatar>
             ))}

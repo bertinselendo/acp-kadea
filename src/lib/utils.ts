@@ -111,3 +111,22 @@ export function corsUrl(url: string | null | undefined) {
   const corsUrl = "https://corsproxy.io/?" + encodeURIComponent(url);
   return corsUrl;
 }
+
+export function countryList() {
+  const countries = [
+    "Australia",
+    "Belgium",
+    "Canada",
+    "France",
+    "Luxembourg",
+    "Monaco",
+    "New Zealand",
+    "South Africa",
+    "Switzerland",
+    "United Kingdom",
+    "United States",
+    "Other",
+  ];
+
+  return countries;
+}

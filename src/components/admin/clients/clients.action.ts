@@ -9,9 +9,9 @@ import { User } from "@prisma/client";
 export async function createClientUser(values: User, clientID: string) {
   const user = await auth();
 
-  if (!user) {
-    return;
-  }
+  if (!user) return;
+
+  if (!user.organizationId) return;
 
   try {
     const findUser = await prisma.user.findUnique({
@@ -40,19 +40,20 @@ export async function createClientUser(values: User, clientID: string) {
       }
     }
 
-    const user = await prisma.user.create({
+    const newUser = await prisma.user.create({
       data: {
         firstName: values.firstName,
         lastName: values.lastName,
         email: values.email,
         role: "CLIENT",
         clientId: clientID,
+        organizationId: user.organizationId,
       },
       include: {
         client: true,
       },
     });
-    return user;
+    return newUser;
   } catch (error) {
     if (error.meta?.target[0] == "email") {
       throw new Error("User already exist");
@@ -67,12 +68,15 @@ export async function createClientUser(values: User, clientID: string) {
 export async function getClients() {
   const user = await auth();
 
-  if (!user) {
-    return;
-  }
+  if (!user) return;
+
+  if (!user.organizationId) return;
 
   try {
     const client = await prisma.client.findMany({
+      where: {
+        organizationId: user.organizationId,
+      },
       include: {
         users: true, // Inclure les posts associés
       },

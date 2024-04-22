@@ -1,27 +1,36 @@
 "use server";
 
+import { auth } from "@/lib/auth/helper";
+
 // CREATE
 
 // READ
 
-export async function getAllOrgDatas() {
-  try {
-    // const user = prisma.user.findUnique({
-    //   where: {
-    //     id: userID,
-    //   },
-    //   include: {
-    //     feedbacks: true,
-    //     documents: true,
-    //     credentials: true,
-    //     invoices: true,
-    //   },
-    // });
+export async function getAllOrgDatas(organizationId: string) {
+  const user = await auth();
 
-    const feedbacks = await prisma.feedback.count();
-    const documents = await prisma.document.count();
-    const credentials = await prisma.credential.count();
-    const invoices = await prisma.invoice.count();
+  if (!user) return;
+
+  try {
+    const order = {
+      user: {
+        organizationId: organizationId,
+      },
+    };
+
+    const feedbacks = await prisma.feedback.count({
+      where: order,
+    });
+
+    const documents = await prisma.document.count({
+      where: order,
+    });
+    const credentials = await prisma.credential.count({
+      where: order,
+    });
+    const invoices = await prisma.invoice.count({
+      where: order,
+    });
 
     const stats = {
       feedbacks: feedbacks,
@@ -36,10 +45,15 @@ export async function getAllOrgDatas() {
   }
 }
 
-export async function getAllOrgProjects() {
+export async function getAllOrgProjects(organizationId) {
   try {
-    const projects = await prisma.project.count();
-
+    const projects = await prisma.project.count({
+      where: {
+        client: {
+          organizationId: organizationId,
+        },
+      },
+    });
     return projects;
   } catch (error) {
     throw error("Error getting all projects");

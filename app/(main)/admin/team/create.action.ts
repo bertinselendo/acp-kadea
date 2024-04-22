@@ -24,9 +24,9 @@ type newMemberActionType = {
 export async function teamCreationAction(values: newMemberActionType) {
   const user = await auth();
 
-  if (!user) {
-    return;
-  }
+  if (!user) return;
+
+  if (!user.organizationId) return;
 
   try {
     const newUserMember = await prisma.user.create({
@@ -36,6 +36,7 @@ export async function teamCreationAction(values: newMemberActionType) {
         email: values.email,
         role: values.role,
         avatar: values.avatar,
+        organizationId: user.organizationId,
       },
     });
 

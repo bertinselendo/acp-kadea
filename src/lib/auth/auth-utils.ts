@@ -56,3 +56,11 @@ export const isGuest = (user: User | undefined | null) => {
 
   return false;
 };
+
+export const hasOrganization = (user: User | undefined | null) => {
+  if (user?.organizationId) {
+    return true;
+  }
+
+  return false;
+};

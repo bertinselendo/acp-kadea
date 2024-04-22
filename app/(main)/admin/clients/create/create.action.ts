@@ -24,32 +24,35 @@ type newClientActionType = {
   internalNote: string;
 };
 
+// CREATE
+
 export async function userCreationAction(
   values: newUserActionType,
   clientID: string
 ) {
   const user = await auth();
 
-  if (!user) {
-    return;
-  }
+  if (!user) return;
+
+  if (!user.organizationId) return;
 
   values.role = "CLIENT";
 
   try {
-    const user = await prisma.user.findUnique({
+    const findUser = await prisma.user.findUnique({
       where: {
         email: values.contactEmail,
       },
     });
 
-    if (!user) {
+    if (!findUser) {
       const newUser = await prisma.user.create({
         data: {
           firstName: values.contactFistName,
           email: values.contactEmail,
           role: values.role as Role,
           clientId: clientID,
+          organizationId: user.organizationId,
         },
       });
 
@@ -66,9 +69,9 @@ export async function userCreationAction(
 export async function clientCreationAction(values: newClientActionType) {
   const user = await auth();
 
-  if (!user) {
-    return;
-  }
+  if (!user) return;
+
+  if (!user.organizationId) return;
 
   const data = {
     companyName: values.companyName,
@@ -81,6 +84,7 @@ export async function clientCreationAction(values: newClientActionType) {
     size: values.companySize,
     website: values.companyWebsite,
     internalNote: values.internalNote,
+    organizationId: user.organizationId,
   };
 
   try {
@@ -93,6 +97,8 @@ export async function clientCreationAction(values: newClientActionType) {
     throw new Error("Error databse");
   }
 }
+
+// READ
 
 export async function isClientData(values: any) {
   const user = await auth();

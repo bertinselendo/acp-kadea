@@ -3,7 +3,7 @@
 import { BarList } from "@tremor/react";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { User } from "@prisma/client";
+import { Organization, User } from "@prisma/client";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   FileCheck,
@@ -15,7 +15,9 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { getAllOrgDatas, getAllOrgProjects } from "./organisation.action";
 
-export function OrgGeneraleStats({ org }: { org: User }) {
+type OrgGeneraleStatsType = { org: Organization };
+
+export function OrgGeneraleStats({ org }: OrgGeneraleStatsType) {
   const [projectsNumber, setProjectsNumber] = useState(null);
   const [feedbacksNumber, setFeedbacksNumber] = useState(null);
   const [documentsNumber, setDocumentsNumber] = useState(null);
@@ -25,8 +27,8 @@ export function OrgGeneraleStats({ org }: { org: User }) {
   useQuery({
     queryKey: ["all-org-datas"],
     queryFn: async () => {
-      const projects = await getAllOrgProjects();
-      const orgDatas = await getAllOrgDatas();
+      const projects = await getAllOrgProjects(org.id);
+      const orgDatas = await getAllOrgDatas(org.id);
 
       setProjectsNumber(projects);
       setFeedbacksNumber(orgDatas.feedbacks);
@@ -38,7 +40,7 @@ export function OrgGeneraleStats({ org }: { org: User }) {
     },
   });
 
-  if (!projectsNumber) {
+  if (projectsNumber == null) {
     return (
       <Card className="min-h-60">
         <CardContent className="p-4">

@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useParams, useRouter } from "next/navigation";
-import { getRandomColor } from "@/lib/utils";
+import { countryList, getRandomColor } from "@/lib/utils";
 
 const formSchema = z.object({
   companyName: z.string().min(2, {
@@ -287,9 +287,11 @@ export default function UpdateClientForm({ clientID, client }: any) {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="belgique">Belgique</SelectItem>
-                      <SelectItem value="france">France</SelectItem>
-                      <SelectItem value="other">other</SelectItem>
+                      {countryList().map((country, index) => (
+                        <SelectItem key={index} value={country}>
+                          {country}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                   <FormMessage />

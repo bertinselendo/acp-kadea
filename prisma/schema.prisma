@@ -42,12 +42,15 @@ model User {
   lastName         String?
   emailVerified    DateTime?
   avatar           String?
-  role    Role     @default(GUEST)   // team-member | client
+  role             Role     @default(GUEST)   // team-member | client
 
   accounts         Account[]
   sessions         Session[]
 
-  client           Client?      @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  organization     Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId   String?
+
+  client           Client?       @relation(fields: [clientId], references: [id], onDelete: SetNull)
   clientId         String?
 
   teamMembers      TeamMember?
@@ -72,6 +75,24 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Organization {
+  id             String    @id @default(cuid())
+  createdAt      DateTime  @default(now())
+  email          String    @unique
+  name           String
+  phone          String?
+  address        String?
+  city           String
+  country        String
+  logo           String?
+  cover          String?
+  sector         String?    // Business sector
+  website        String?
+
+  users          User[]
+  clients        Client[]
 }
 
 model TeamMember {
@@ -101,6 +122,9 @@ model Client {
   website        String?
   internalNote   String?
 
+  organization    Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId  String?
+
   users          User[]
   projects       Project[]
 }
@@ -117,7 +141,7 @@ model Project {
   status        String?
   tags          String?
 
-  client        Client      @relation(fields: [clientID], references: [id])
+  client        Client      @relation(fields: [clientID], references: [id], onDelete: Cascade)
   clientID      String
 
   teamMembers   TeamMember[] @relation("TeamMemberProjects")
@@ -187,6 +211,6 @@ model Credential {
   password      String
   adminUrl      String
   
-  project       Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  project       Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId     String
 }

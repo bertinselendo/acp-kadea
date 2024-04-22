@@ -39,7 +39,7 @@ export function DeleteClientAlert({ client }: { client: Client }) {
     },
     onSuccess(data) {
       setTimeout(() => {
-        router.push("/admin/clients");
+        window.location.assign("/admin/clients");
       }, 1000);
     },
   });
