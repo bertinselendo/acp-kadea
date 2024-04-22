@@ -170,7 +170,7 @@ export default function EditProjectForm(props: AddProjectModalProps) {
           const teamArray: any = [];
           data.teamMembers.map((team) => {
             const sme = members.find((member) => member.id == team.userId);
-            teamArray.push(sme);
+            if (sme) teamArray.push(sme);
             setSMembers(teamArray);
           });
 
@@ -480,7 +480,7 @@ export default function EditProjectForm(props: AddProjectModalProps) {
                       {sMembers.map((sMember, index) => (
                         <Badge
                           key={index}
-                          className="capitalize text-sm w-[48%] bg-light-blue"
+                          className="capitalize text-sm w-max bg-light-blue"
                         >
                           <div className="flex gap-1 items-center">
                             {memberAvatar(sMember)} {sMember.firstName}{" "}
@@ -536,7 +536,7 @@ export default function EditProjectForm(props: AddProjectModalProps) {
                                     form.setValue("teamMembers", "");
                                     addBadge(member, "sMembers");
                                   }}
-                                  className="flex gap-2"
+                                  className="flex gap-2 data-[disabled]:pointer-events-auto data-[disabled]:opacity-100"
                                 >
                                   {memberAvatar(member)}
                                   {`${member.firstName} ${member.lastName}`}

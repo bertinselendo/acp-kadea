@@ -21,16 +21,19 @@ type updateMemberActionType = {
   ];
 };
 
+// READ
+
 export async function getTeamMembers() {
   const user = await auth();
 
-  if (!user) {
-    return;
-  }
+  if (!user) return;
+
+  if (!user.organizationId) return;
 
   try {
     const members = await prisma.user.findMany({
       where: {
+        organizationId: user.organizationId,
         role: {
           in: ["ADMIN", "MANAGER", "WORKER"],
         },
@@ -65,6 +68,31 @@ export async function getUser(userID: string) {
     throw new Error("Error databse");
   }
 }
+
+export async function getOrganization(organizationID: string) {
+  const user = await auth();
+
+  if (!user) {
+    return;
+  }
+
+  try {
+    const organization = await prisma.organization.findUnique({
+      where: {
+        id: organizationID,
+      },
+      include: {
+        clients: true,
+      },
+    });
+
+    return organization;
+  } catch (error) {
+    throw new Error("Error getting organization");
+  }
+}
+
+// UPDATE
 
 export async function teamUpdateAction(
   values: updateMemberActionType,
@@ -115,6 +143,8 @@ export async function teamUpdateAction(
     throw new Error("Error Will Create Entries");
   }
 }
+
+// DELETE
 
 export async function teamDeleteAction(userID: string) {
   const user = await auth();
