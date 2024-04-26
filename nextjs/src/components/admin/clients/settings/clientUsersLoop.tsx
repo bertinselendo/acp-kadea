@@ -39,14 +39,14 @@ export function ClientUsersLoop({
   const currentRole = user?.role;
 
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
       {users.map((user) => (
         <Card
           key={user.id}
-          className="w-full flex flex-col justify-center p-0 gap-1 relative"
+          className="relative flex w-full flex-col justify-center gap-1 p-0"
         >
-          <CardHeader className="justify-center items-center">
-            <div className="absolute top-2 right-4">
+          <CardHeader className="items-center justify-center">
+            <div className="absolute right-4 top-2">
               {user.id != data?.user.id ? (
                 <div>
                   {users.length > 1 && (
@@ -67,14 +67,14 @@ export function ClientUsersLoop({
                 <Badge>Me</Badge>
               )}
             </div>
-            <Avatar className="w-28 h-28">
+            <Avatar className="h-24 w-24 md:h-28 md:w-28">
               <AvatarImage src={user.avatar} alt={user.email} />
               <AvatarFallback>
                 <UserDiceAvater email={user.email} />
               </AvatarFallback>
             </Avatar>
           </CardHeader>
-          <CardContent className="text-sm text-center">
+          <CardContent className="text-center text-sm">
             <CardTitle className="text-xl capitalize">
               {user.firstName && user.firstName}{" "}
               {user.lastName && user.lastName}
@@ -85,9 +85,9 @@ export function ClientUsersLoop({
       ))}
       <Card
         key={user.id}
-        className="w-full flex flex-col justify-center p-2 gap-0 relative"
+        className="relative flex w-full flex-col justify-center gap-0 p-2"
       >
-        <CardContent className="text-sm text-center min-h-32 p-0 flex justify-center items-center">
+        <CardContent className="flex min-h-32 items-center justify-center p-0 text-center text-sm">
           <AddClientUserModal client={client} />
         </CardContent>
       </Card>

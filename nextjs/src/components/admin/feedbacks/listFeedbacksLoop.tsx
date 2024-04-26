@@ -31,7 +31,7 @@ export type ListFeedbacksLoopProps = {
   feedbacks: [
     Feedback & {
       user: User;
-    }
+    },
   ];
 };
 
@@ -44,11 +44,11 @@ export default function ListFeedbacksLoop(props: ListFeedbacksLoopProps) {
 
   if (!feedbacks) {
     return (
-      <li className="w-[49%] animate-pulse border bg-transparent rounded-lg p-4 flex flex-col gap-4">
-        <Skeleton className="h-40 w-full delay-250" />
+      <li className="flex w-full animate-pulse flex-col gap-4 rounded-lg border bg-transparent p-4 md:w-[49%]">
+        <Skeleton className="delay-250 h-40 w-full" />
         <div className="flex gap-10">
           <Skeleton className="h-10 w-2/3 delay-500" />
-          <Skeleton className="h-10 w-1/3 delay-750" />
+          <Skeleton className="delay-750 h-10 w-1/3" />
         </div>
       </li>
     );
@@ -56,7 +56,7 @@ export default function ListFeedbacksLoop(props: ListFeedbacksLoopProps) {
 
   if (!feedbacks.length) {
     return (
-      <li className="w-[49%] border bg-transparent rounded-lg flex flex-col gap-4 text-sm items-center justify-center text-center p-8">
+      <li className="flex w-full flex-col items-center justify-center gap-4 rounded-lg border bg-transparent p-8 text-center text-sm md:w-[49%]">
         <p className="text-2xl">😔</p>
         <p>Looks like a client is on a diet - zero feedbacks detected!</p>
       </li>
@@ -66,10 +66,10 @@ export default function ListFeedbacksLoop(props: ListFeedbacksLoopProps) {
   return (
     <>
       {feedbacks?.map((feedback) => (
-        <li key={feedback.id} className="w-[49%]">
+        <li key={feedback.id} className="w-full md:w-[49%]">
           <Card className="p-1">
             <CardContent
-              className="rounded-lg p-4 flex flex-col gap-4 bg-light-green"
+              className="flex flex-col gap-4 rounded-lg bg-light-green p-4"
               // style={{ background: project.cover }}
             >
               <div className="flex justify-between">
@@ -95,12 +95,12 @@ export default function ListFeedbacksLoop(props: ListFeedbacksLoopProps) {
                 </DropdownMenu>
               </div>
               <div>
-                <h3 className="font-semibold text-xl w-1/2">
+                <h3 className="w-1/2 text-xl font-semibold">
                   {feedback.title}
                 </h3>
               </div>
             </CardContent>
-            <CardFooter className="flex gap-4 justify-between mt-4 mb-2 p-0 px-2 items-center">
+            <CardFooter className="mb-2 mt-4 flex items-center justify-between gap-4 p-0 px-2">
               <div>
                 <Avatar className="h-8 w-8">
                   <AvatarImage src={feedback.user?.avatar as string} />
@@ -114,7 +114,7 @@ export default function ListFeedbacksLoop(props: ListFeedbacksLoopProps) {
                 target="_blank"
                 onClick={clickAnimation}
               >
-                <Button className="bg-black text-white rounded-full transition hover:bg-gray-800">
+                <Button className="rounded-full bg-black text-white transition hover:bg-gray-800">
                   Consulter
                 </Button>
               </Link>

@@ -10,14 +10,14 @@ export default async function Page({ params }: any) {
 
   if (!user)
     redirect(
-      `/login?callbackUrl=${getServerUrl()}/p/${params?.projectID}/feedbacks`
+      `/login?callbackUrl=${getServerUrl()}/p/${params?.projectID}/feedbacks`,
     );
 
   if (!params.projectID) {
     return;
   }
   return (
-    <div className="w-[600px]">
+    <div className="w-full p-4 md:p-0 xl:w-[600px]">
       <div className="text-xl font-bold">Feedbacks</div>
       <div>
         <ListFeedbacks projectID={params.projectID} />

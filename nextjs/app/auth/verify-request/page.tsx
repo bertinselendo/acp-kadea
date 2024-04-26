@@ -1,6 +1,3 @@
-"use client";
-
-import { LoginForm } from "@/components/auth/LoginForm";
 import {
   Card,
   CardContent,
@@ -9,19 +6,25 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import WebsiteFooter from "@/components/website/website-footer";
+import WebsiteLogo from "@/components/website/website-logo";
+import { bgGradient } from "@/lib/utils";
 import Link from "next/link";
 
 export default function AuthVerifiyPage() {
   return (
-    <main className="bg-gradient-to-r from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90% h-screen w-screen">
-      <div className="flex justify-center items-center transition-all bg-blend-overlay bg-noise bg-white/80 h-screen w-screen">
-        <div className="flex flex-col gap-4 w-[400px]">
+    <main className={`h-screen w-screen ${bgGradient().gradient}`}>
+      <div
+        className={`flex justify-center items-center transition-all h-screen w-screen,
+        ${bgGradient().noise}`}
+      >
+        <div className="flex flex-col gap-4 w-full p-6 md:w-[400px] md:p-0">
           <div className="w-full flex justify-center">
-            <div className="w-10 h-10 mb-4 bg-primary rounded-full shadow-lg"></div>
+            <WebsiteLogo />
           </div>
           <Card className="w-full">
             <CardHeader>
-              <CardTitle className="text-3xl">
+              <CardTitle className="text-2xl sm:text-3xl">
                 Check your email for a link
               </CardTitle>
               <CardDescription>
@@ -93,11 +96,7 @@ export default function AuthVerifiyPage() {
             </CardFooter>
           </Card>
           <div className="w-full">
-            <div className="flex justify-center gap-4 transition-all *:text-sm *:opacity-75 *:hover:opacity-100">
-              <Link href="/">Home</Link>
-              <Link href="#">Privacy</Link>
-              <Link href="#">Term</Link>
-            </div>
+            <WebsiteFooter />
           </div>
         </div>
       </div>

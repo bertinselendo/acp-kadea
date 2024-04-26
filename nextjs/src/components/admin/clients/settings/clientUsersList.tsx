@@ -23,15 +23,15 @@ export default function ClientUsersList({ client }: { client: Client }) {
 
   if (!users) {
     return (
-      <div className="grid grid-cols-2 gap-4 *:animate-pulse">
-        <div className="flex flex-col gap-4 justify-center items-center rounded-lg border p-6">
+      <div className="grid grid-cols-1 gap-4 *:animate-pulse md:grid-cols-2">
+        <div className="flex flex-col items-center justify-center gap-4 rounded-lg border p-6">
           <Skeleton className="h-28 w-28 rounded-full" />
-          <Skeleton className="h-8 w-[80%] delay-250" />
+          <Skeleton className="delay-250 h-8 w-[80%]" />
           <Skeleton className="h-6 w-[60%] delay-500" />
         </div>
-        <div className="flex flex-col gap-4 justify-center items-center rounded-lg border p-6">
+        <div className="flex flex-col items-center justify-center gap-4 rounded-lg border p-6">
           <Skeleton className="h-28 w-28 rounded-full" />
-          <Skeleton className="h-8 w-[80%] delay-250" />
+          <Skeleton className="delay-250 h-8 w-[80%]" />
           <Skeleton className="h-6 w-[60%] delay-500" />
         </div>
       </div>

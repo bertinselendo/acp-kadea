@@ -65,6 +65,7 @@
     "next-safe-action": "^6.2.0",
     "next-themes": "^0.2.1",
     "novel": "^0.3.1",
+    "prettier-plugin-tailwindcss": "^0.5.14",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-day-picker": "^8.10.1",
@@ -82,6 +83,7 @@
     "tailwindcss-animate": "^1.0.7",
     "tippy.js": "^6.3.7",
     "use-debounce": "^10.0.0",
+    "vaul": "^0.9.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {

@@ -16,7 +16,7 @@ export default async function SidebarGlobal(props: PropsWithChildren) {
 
   return (
     <>
-      <div className="flex flex-col justify-between p-2 --border border-r sticky top-0 h-screen">
+      <div className="--border absolute bottom-0 z-50 flex h-max w-full flex-none flex-row justify-between border border-r bg-white p-2 md:sticky md:top-0 md:h-screen md:w-max md:flex-col md:border-none md:bg-transparent">
         <div>
           <MainLogo />
         </div>

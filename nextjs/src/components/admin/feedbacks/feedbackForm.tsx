@@ -32,6 +32,7 @@ import { getProjectAllUsers } from "../projects/project.action";
 import { sendNewFeedbackNotification } from "@/jobs/feedback/new";
 import { useSession } from "next-auth/react";
 import { getServerUrl } from "@/lib/server-url";
+import { cn } from "@/lib/utils";
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -59,8 +60,8 @@ export default function FeedbackForm(props: FeedbackFormProps) {
       const feedback = props.projectID
         ? await feedbackCreationAction(values as any, props.projectID)
         : props.feedback
-        ? await feedbackUpdatetAction(values as any, props.feedback.id)
-        : false;
+          ? await feedbackUpdatetAction(values as any, props.feedback.id)
+          : false;
 
       if (!feedback) {
         toast.dismiss();
@@ -77,7 +78,7 @@ export default function FeedbackForm(props: FeedbackFormProps) {
         if (props.projectID) {
           const users = await getProjectAllUsers(props.projectID);
           const usersToNotify = users.filter(
-            (user) => user.id != data.createdBy
+            (user) => user.id != data.createdBy,
           );
           const emailsUsers = usersToNotify.map((user) => user.email);
 
@@ -138,7 +139,7 @@ export default function FeedbackForm(props: FeedbackFormProps) {
         error: (error) => {
           return error;
         },
-      }
+      },
     );
   }
 
@@ -146,15 +147,16 @@ export default function FeedbackForm(props: FeedbackFormProps) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className={
+        className={cn(
+          "px-4 md:px-0",
           feedbackMutation.isPending
-            ? "space-y-8 animate-pulse cursor-wait pointer-events-none"
-            : "space-y-8"
-        }
+            ? "pointer-events-none animate-pulse cursor-wait space-y-8"
+            : "space-y-8",
+        )}
       >
-        <div className="flex gap-4 w-full">
+        <div className="flex w-full gap-4">
           <Card className="mt-4 w-full shadow-none">
-            <CardContent className="p-6 flex flex-col gap-4">
+            <CardContent className="flex flex-col gap-4 p-6">
               <FormField
                 control={form.control}
                 name="title"
@@ -200,7 +202,7 @@ export default function FeedbackForm(props: FeedbackFormProps) {
             </CardContent>
           </Card>
         </div>
-        <Button type="submit" className="w-full mt-4">
+        <Button type="submit" className="mt-4 w-full">
           {props.projectID ? "Create feedback" : "Update details"}
         </Button>
       </form>

@@ -37,7 +37,7 @@ export type ListInvoicesLoopProps = {
   invoices: [
     Invoice & {
       user: User;
-    }
+    },
   ];
 };
 
@@ -58,11 +58,11 @@ export default function ListInvoicesLoop(props: ListInvoicesLoopProps) {
 
   if (!invoices) {
     return (
-      <li className="animate-pulse border bg-transparent rounded-lg p-4 flex flex-col gap-4">
-        <Skeleton className="h-40 w-full delay-250" />
+      <li className="flex animate-pulse flex-col gap-4 rounded-lg border bg-transparent p-4">
+        <Skeleton className="delay-250 h-40 w-full" />
         <div className="flex gap-10">
           <Skeleton className="h-10 w-2/3 delay-500" />
-          <Skeleton className="h-10 w-1/3 delay-750" />
+          <Skeleton className="delay-750 h-10 w-1/3" />
         </div>
       </li>
     );
@@ -70,7 +70,7 @@ export default function ListInvoicesLoop(props: ListInvoicesLoopProps) {
 
   if (!invoices.length) {
     return (
-      <li className="border bg-transparent rounded-lg flex flex-col gap-4 text-sm items-center justify-center text-center p-8">
+      <li className="flex flex-col items-center justify-center gap-4 rounded-lg border bg-transparent p-8 text-center text-sm">
         <p className="text-2xl">😔</p>
         <p>Looks like a client is on a diet - zero invoices detected!</p>
       </li>
@@ -78,19 +78,19 @@ export default function ListInvoicesLoop(props: ListInvoicesLoopProps) {
   }
 
   const docIcon = (
-    <IoDocumentText className="w-20 h-20 text-primary bg-transparent" />
+    <IoDocumentText className="h-20 w-20 bg-transparent text-primary" />
   );
 
   return (
     <>
       {invoices?.map((invoice) => (
         <li key={invoice.id} className="">
-          <Card className="p-1 bg-secondary">
+          <Card className="bg-secondary p-1">
             <CardContent
               ref={docRef}
-              className="aspect-[3/4] p-0 overflow-hidden flex items-center justify-center relative rounded-lg flex-col gap-4 bg-background"
+              className="relative flex aspect-[3/4] flex-col items-center justify-center gap-4 overflow-hidden rounded-lg bg-background p-0"
             >
-              <div className="flex justify-between absolute w-full top-0 p-4 z-10">
+              <div className="absolute top-0 z-10 flex w-full justify-between p-2 md:p-4">
                 <Badge variant="outline" className="bg-white py-1">
                   {parseDate(invoice.createdAt)}
                 </Badge>
@@ -109,8 +109,8 @@ export default function ListInvoicesLoop(props: ListInvoicesLoopProps) {
                   </DropdownMenu>
                 )}
               </div>
-              <div className="w-full h-40 flex items-end text absolute bottom-0 left-0 p-4 z-10 bg-gradient-to-t from-background to-transparent">
-                <h3 className="font-semibold text-xl truncate">
+              <div className="text absolute bottom-0 left-0 z-10 flex h-40 w-full items-end bg-gradient-to-t from-background to-transparent p-4">
+                <h3 className="truncate text-sm font-semibold md:text-xl">
                   {invoice.reference}
                 </h3>
               </div>
@@ -134,9 +134,9 @@ export default function ListInvoicesLoop(props: ListInvoicesLoopProps) {
                 />
               </Document>
             </CardContent>
-            <CardFooter className="flex gap-4 justify-between mt-4 mb-2 p-0 px-2 items-center">
+            <CardFooter className="mb-2 mt-4 flex items-center justify-between gap-4 p-0 px-1 md:px-2">
               <div>
-                <Avatar className="h-8 w-8">
+                <Avatar className="h-8 w-8 md:h-8 md:w-8">
                   <AvatarImage src={invoice.user?.avatar as string} />
                   <AvatarFallback>
                     <UserDiceAvater email={invoice.user?.email} />
@@ -146,17 +146,17 @@ export default function ListInvoicesLoop(props: ListInvoicesLoopProps) {
               {invoice.file ? (
                 <Link
                   href={`${pathname}/view?url=${encodeURIComponent(
-                    invoice.file
+                    invoice.file,
                   )}`}
                   onClick={clickAnimation}
                 >
-                  <Button className="bg-black text-white rounded-full transition hover:bg-gray-800">
+                  <Button className="rounded-full bg-black text-xs text-white transition hover:bg-gray-800 xl:text-sm">
                     Open
                   </Button>
                 </Link>
               ) : invoice.link ? (
                 <Link href={invoice.link} onClick={clickAnimation}>
-                  <Button className="bg-black text-white rounded-full transition hover:bg-gray-800">
+                  <Button className="rounded-full bg-black text-white transition hover:bg-gray-800">
                     Open
                   </Button>
                 </Link>

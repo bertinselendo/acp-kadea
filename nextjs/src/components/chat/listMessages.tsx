@@ -60,7 +60,7 @@ export default function ChatList({
 
   const getUserData = (userID: string) => {
     const user = projectUsers?.filter(
-      (teamUser: User) => teamUser.id === userID
+      (teamUser: User) => teamUser.id === userID,
     );
     if (user) return user[0];
   };
@@ -68,19 +68,19 @@ export default function ChatList({
   // if projectUsers or chats null, show skeleton
   if (!projectUsers || !chats) {
     return (
-      <div className="space-y-4 sticky top-12">
-        <div className="flex gap-3 items-top w-full">
-          <div className="w-full flex flex-col gap-1 items-end">
-            <Skeleton className="w-20 h-3" />
-            <Skeleton className="w-full h-16" />
+      <div className="sticky top-12 space-y-4 px-2 md:px-0">
+        <div className="items-top flex w-full gap-3">
+          <div className="flex w-full flex-col items-end gap-1">
+            <Skeleton className="h-3 w-20" />
+            <Skeleton className="h-16 w-full" />
           </div>
-          <Skeleton className="w-10 h-10 aspect-square rounded-full" />
+          <Skeleton className="aspect-square h-10 w-10 rounded-full" />
         </div>
-        <div className="flex gap-3 items-top w-full">
-          <Skeleton className="w-10 h-10 aspect-square rounded-full" />
-          <div className="w-full flex flex-col gap-1">
-            <Skeleton className="w-20 h-3" />
-            <Skeleton className="w-full h-12" />
+        <div className="items-top flex w-full gap-3">
+          <Skeleton className="aspect-square h-10 w-10 rounded-full" />
+          <div className="flex w-full flex-col gap-1">
+            <Skeleton className="h-3 w-20" />
+            <Skeleton className="h-12 w-full" />
           </div>
         </div>
       </div>
@@ -91,7 +91,7 @@ export default function ChatList({
     <>
       <div
         ref={messagesContainerRef}
-        className="w-full overflow-y-auto overflow-x-hidden h-full flex flex-col relative scroll-smooth"
+        className="relative flex h-full w-full flex-col overflow-y-auto overflow-x-hidden scroll-smooth"
         style={
           chatFormHeight ? { paddingBottom: `${chatFormHeight + 50}px` } : {}
         }
@@ -117,15 +117,15 @@ export default function ChatList({
                 originY: 0.5,
               }}
               className={cn(
-                "flex flex-col gap-2 px-4 py-2 whitespace-pre-wrap",
+                "flex flex-col gap-2 whitespace-pre-wrap px-2 py-2 md:px-4",
                 getUserData(message.userID)?.role !== "CLIENT"
                   ? "items-end"
-                  : "items-start"
+                  : "items-start",
               )}
             >
-              <div className="flex gap-3 items-top w-full">
+              <div className="items-top flex w-full gap-3">
                 {getUserData(message.userID)?.role === "CLIENT" && (
-                  <Avatar className="flex justify-center items-center shadow-lg">
+                  <Avatar className="flex items-center justify-center shadow-lg">
                     <AvatarImage src={getUserData(message?.userID)?.avatar} />
                     <AvatarFallback>
                       <UserDiceAvater
@@ -136,10 +136,10 @@ export default function ChatList({
                 )}
                 <span
                   className={cn(
-                    "flex flex-col w-full",
+                    "flex w-full flex-col",
                     getUserData(message.userID)?.role !== "CLIENT"
                       ? "items-end"
-                      : "items-start"
+                      : "items-start",
                   )}
                 >
                   <h6 className="text-xs">
@@ -149,10 +149,10 @@ export default function ChatList({
                   {message.message && (
                     <p
                       className={cn(
-                        "p-3 rounded-md max-w-xs text-sm ",
+                        "max-w-xs rounded-md p-3 text-sm ",
                         getUserData(message.userID)?.role !== "CLIENT"
                           ? "rounded-tr-none bg-primary"
-                          : "rounded-tl-none bg-accent"
+                          : "rounded-tl-none bg-accent",
                       )}
                     >
                       {message.message}
@@ -160,17 +160,17 @@ export default function ChatList({
                   )}
                   <div
                     className={cn(
-                      "flex flex-wrap w-8/12 *:w-[49%] gap-x-[1%] gap-y-1 mt-2",
+                      "mt-2 flex w-8/12 flex-wrap gap-x-[1%] gap-y-1 *:w-[49%]",
                       getUserData(message.userID)?.role !== "CLIENT"
                         ? "justify-end"
-                        : "justify-start"
+                        : "justify-start",
                     )}
                   >
                     {message?.images &&
                       message?.images.map((media, index) => (
                         <div key={index}>
                           <Link href={media} className="relative w-full">
-                            <div className="absolute top-0 bottom-0 right-0 left-0 z-10 rounded-lg transition-all hover:bg-black/20 flex justify-center items-center group">
+                            <div className="group absolute bottom-0 left-0 right-0 top-0 z-10 flex items-center justify-center rounded-lg transition-all hover:bg-black/20">
                               <ExternalLink className="w-5 text-white opacity-0 transition-all group-hover:opacity-95" />
                             </div>
                             <Image
@@ -178,7 +178,7 @@ export default function ChatList({
                               alt={message.name}
                               width="100"
                               height="100"
-                              className="aspect-video rounded-lg object-cover border relative w-full"
+                              className="relative aspect-video w-full rounded-lg border object-cover"
                             />
                           </Link>
                         </div>
@@ -187,16 +187,16 @@ export default function ChatList({
                       message?.documents.map((document, index) => (
                         <div
                           key={index}
-                          className="aspect-video border rounded-lg"
+                          className="aspect-video rounded-lg border"
                         >
                           <TooltipProvider delayDuration={200}>
                             <Tooltip>
                               <TooltipTrigger
                                 asChild
-                                className="w-full h-full flex items-center justify-center"
+                                className="flex h-full w-full items-center justify-center"
                               >
                                 <Link href={document}>
-                                  <IoDocumentText className="w-8 h-8 text-primary" />
+                                  <IoDocumentText className="h-8 w-8 text-primary" />
                                 </Link>
                               </TooltipTrigger>
                               <TooltipContent className="w-80">
@@ -209,7 +209,7 @@ export default function ChatList({
                   </div>
                 </span>
                 {getUserData(message.userID)?.role !== "CLIENT" && (
-                  <Avatar className="flex justify-center items-center shadow-lg">
+                  <Avatar className="flex items-center justify-center shadow-lg">
                     <AvatarImage src={getUserData(message?.userID)?.avatar} />
                     <AvatarFallback>
                       <UserDiceAvater
@@ -223,7 +223,7 @@ export default function ChatList({
           ))}
         </AnimatePresence>
         {!chats?.length && (
-          <div className="h-full w-full flex flex-col gap-1 justify-center items-center">
+          <div className="flex h-full w-full flex-col items-center justify-center gap-1">
             <p className="text-2xl">🤗</p>
             <p>Be first to write</p>
           </div>
@@ -231,7 +231,7 @@ export default function ChatList({
       </div>
       <div
         ref={chatFormRef}
-        className="w-full bg-secondary mr-2 rounded-lg z-20 absolute bottom-0"
+        className="absolute bottom-8 z-20 mr-2 w-full rounded-lg bg-secondary md:bottom-0"
       >
         <ChatForm
           projectID={`${projectID}`}

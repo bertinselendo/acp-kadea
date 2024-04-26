@@ -15,8 +15,8 @@ export default async function Page(props: PageProps) {
   if (!user) redirect("/admin");
 
   return (
-    <div className="w-[500px] mx-auto">
-      <div className="py-4 border-b">
+    <div className="mx-auto w-full px-4 pb-20 md:w-[500px] md:px-0">
+      <div className="border-b py-4 md:px-0">
         <h2 className="h2">Activity</h2>
       </div>
       <NotificationsList user={user} />

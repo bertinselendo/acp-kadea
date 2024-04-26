@@ -3,7 +3,7 @@ import Header from "@/layout/header";
 import SidebarGlobal from "@/layout/sidebar";
 import { hasOrganization, isAdmin, isGuest } from "@/lib/auth/auth-utils";
 import { auth } from "@/lib/auth/helper";
-import type { LayoutParams } from "@/types/next";
+import { bgGradient } from "@/lib/utils";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 
@@ -30,18 +30,22 @@ export default async function RouteLayout(props: { children: ReactNode }) {
   const client = await getClientByUser(user?.id);
 
   return (
-    <main className="bg-gradient-to-r from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90%">
-      <div className="flex h-vh relative bg-blend-overlay bg-noise bg-white/80">
+    <main className={`${bgGradient().gradient}`}>
+      <div
+        className={`relative flex h-screen w-screen flex-col overflow-hidden md:flex-row ${
+          bgGradient().noise
+        }`}
+      >
         <SidebarGlobal />
-        <div className="w-full ">
+        <div className="flex-auto overflow-hidden">
           <div
             id="main-header"
-            className="flex justify-between items-center p-3 h-14 --border border-b sticky top-0 z-50 overflow-hidden"
+            className="--border sticky top-0 z-50 flex h-12 items-center justify-between overflow-hidden border-b p-3 md:h-14"
           >
             {user && <Header user={user} clientID={`${client?.id}`} />}
           </div>
-          <div className="h-[100vh] -mt-14 pt-14">
-            <div className="bg-background/80 h-full overflow-y-scroll">
+          <div className="-mt-12 h-[100vh] pt-12 md:-mt-14 md:pt-14">
+            <div className="h-full overflow-y-scroll bg-background/80">
               {props.children}
             </div>
           </div>

@@ -25,8 +25,8 @@ export default async function AccountUserPage(props: PageParams<{}>) {
   }
 
   return (
-    <div className="flex flex-col justify-center align-middle items-center">
-      <div className="w-[400px] my-4 text-left">
+    <div className="flex flex-col items-center justify-center px-4 align-middle sm:px-0">
+      <div className="my-4 w-full text-left sm:w-[400px]">
         <h2 className="text-2xl font-bold">Edit page</h2>
       </div>
       <AccountTabs />

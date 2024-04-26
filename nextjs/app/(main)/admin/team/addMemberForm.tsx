@@ -32,6 +32,7 @@ import { useSession } from "next-auth/react";
 import { User } from "@prisma/client";
 import { sendTeamCreationNotification } from "@/jobs/team/creation";
 import { getServerUrl } from "@/lib/server-url";
+import { cn } from "@/lib/utils";
 
 const formSchema = z.object({
   firstName: z.string().min(2, {
@@ -49,7 +50,7 @@ const formSchema = z.object({
     .string()
     .regex(
       /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/,
-      "Numéro invalide !"
+      "Numéro invalide !",
     )
     .optional(),
 });
@@ -137,7 +138,7 @@ export default function AddMemberForm() {
         error: (error) => {
           return error;
         },
-      }
+      },
     );
   }
 
@@ -145,161 +146,164 @@ export default function AddMemberForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className={
+        className={cn(
+          "px-4 md:px-0",
           creationMutation.isPending || onUpload
-            ? "space-y-8 animate-pulse cursor-wait pointer-events-none"
-            : "space-y-8"
-        }
+            ? "pointer-events-none animate-pulse cursor-wait space-y-8"
+            : "space-y-8",
+        )}
       >
-        <Card className="mt-10 w-1/2">
-          <CardContent className="p-6 flex flex-col gap-4">
-            <FormField
-              control={form.control}
-              name="avatar"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    <Avatar className="w-32 h-32 -mt-16 ml-4 cursor-pointer transition bg-secondary">
-                      <AvatarImage src={logoPreview} />
-                      <AvatarFallback className="hover:scale-105">
-                        AVATAR
-                      </AvatarFallback>
-                    </Avatar>
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      type="file"
-                      placeholder="Logo"
-                      onChange={(e) => setFile(e.target.files?.[0])}
-                      // {...field}
-                      className="hidden"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </CardContent>
-        </Card>
-        <Card className="mt-4">
-          <CardContent className="p-6 flex flex-col gap-4">
-            <FormField
-              control={form.control}
-              name="firstName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input placeholder="First Name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="lastName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input placeholder="Last Name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input placeholder="Email" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </CardContent>
-        </Card>
-        <Card className="mt-4">
-          <CardContent className="p-6 flex flex-col gap-4">
-            <FormField
-              control={form.control}
-              name="type"
-              render={({ field }) => (
-                <FormItem>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Member is ?" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="Internal">Internal</SelectItem>
-                      <SelectItem value="External">External</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {form.watch("type") == "Internal" &&
-              (form.setValue("companyName", "") as any)}
-            {form.watch("type") == "External" && (
+        <div className="custom-sroll h-[50vh] overflow-y-scroll p-1">
+          <Card className="mt-10 w-full md:w-1/2">
+            <CardContent className="flex flex-col gap-4 p-6">
               <FormField
                 control={form.control}
-                name="companyName"
+                name="avatar"
                 render={({ field }) => (
                   <FormItem>
+                    <FormLabel>
+                      <Avatar className="-mt-16 ml-4 h-28 w-28 cursor-pointer bg-secondary transition md:h-32 md:w-32">
+                        <AvatarImage src={logoPreview} />
+                        <AvatarFallback className="hover:scale-105">
+                          AVATAR
+                        </AvatarFallback>
+                      </Avatar>
+                    </FormLabel>
                     <FormControl>
-                      <Input placeholder="Company Name" {...field} />
+                      <Input
+                        type="file"
+                        placeholder="Logo"
+                        onChange={(e) => setFile(e.target.files?.[0])}
+                        // {...field}
+                        className="hidden"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-            )}
-            <FormField
-              control={form.control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input placeholder="Phone" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="role"
-              render={({ field }) => (
-                <FormItem>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
+            </CardContent>
+          </Card>
+          <Card className="mt-4">
+            <CardContent className="flex flex-col gap-4 p-6">
+              <FormField
+                control={form.control}
+                name="firstName"
+                render={({ field }) => (
+                  <FormItem>
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Member role ?" />
-                      </SelectTrigger>
+                      <Input placeholder="First Name" {...field} />
                     </FormControl>
-                    <SelectContent>
-                      <SelectItem value="WORKER">WORKER</SelectItem>
-                      <SelectItem value="MANAGER">MANAGER</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="lastName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input placeholder="Last Name" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input placeholder="Email" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </CardContent>
+          </Card>
+          <Card className="mt-4">
+            <CardContent className="flex flex-col gap-4 p-6">
+              <FormField
+                control={form.control}
+                name="type"
+                render={({ field }) => (
+                  <FormItem>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Member is ?" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="Internal">Internal</SelectItem>
+                        <SelectItem value="External">External</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {form.watch("type") == "Internal" &&
+                (form.setValue("companyName", "") as any)}
+              {form.watch("type") == "External" && (
+                <FormField
+                  control={form.control}
+                  name="companyName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input placeholder="Company Name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               )}
-            />
-          </CardContent>
-        </Card>
-        <Button type="submit" className="w-full mt-4">
+              <FormField
+                control={form.control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input placeholder="Phone" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="role"
+                render={({ field }) => (
+                  <FormItem>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Member role ?" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="WORKER">WORKER</SelectItem>
+                        <SelectItem value="MANAGER">MANAGER</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </CardContent>
+          </Card>
+        </div>
+        <Button type="submit" className="mt-4 w-full">
           Create Member
         </Button>
       </form>

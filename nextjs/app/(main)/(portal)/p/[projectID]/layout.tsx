@@ -33,7 +33,7 @@ export default async function RouteLayout({
   if (user) {
     const projectUsers = await getProjectAllUsers(params.projectID);
     const projectUser = projectUsers?.filter(
-      (projectUser) => projectUser.id == user?.id
+      (projectUser) => projectUser.id == user?.id,
     );
 
     if (projectUser?.length == 0) {
@@ -47,15 +47,17 @@ export default async function RouteLayout({
   }
 
   return (
-    <div className="h-full relative">
-      <div className="px-4 border-b h-14 sticky top-0">
+    <div className="relative h-full">
+      <div className="sticky top-0 z-20 h-14 border-b bg-background px-4">
         {user && <ProjectNavMenu user={user} />}
       </div>
-      <div className="flex h-full -mt-14 pt-14 overflow-hidden">
-        <div className="py-3 px-6 2xl:w-9/12 md:w-8/12 flex justify-center overflow-y-scroll">
-          <div className="w-full flex flex-col items-center">{children}</div>
+      <div className="-mt-14 flex h-max flex-col overflow-hidden pt-14 md:h-full md:flex-row">
+        <div className="flex justify-center overflow-y-scroll px-0 py-0 md:w-8/12 md:px-6 md:py-3 2xl:w-9/12">
+          <div className="flex w-full flex-col items-center pb-24 md:pb-0">
+            {children}
+          </div>
         </div>
-        <div className="px-3 2xl:w-3/12 md:w-4/12 border-l">
+        <div className="border-l px-3 md:w-4/12 2xl:w-3/12">
           {user && <MessagePanel user={user} />}
         </div>
       </div>

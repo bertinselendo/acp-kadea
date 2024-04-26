@@ -14,7 +14,7 @@ export default function WelcomeStep({ user }: { user: User }) {
         Please don&apos;t hesitate to contact us if you have any questions or
         need help getting started.
       </p>
-      <div className="h-72"></div>
+      <div className="h-44 md:h-72"></div>
       <Button className="absolute bottom-12 left-6 z-20">
         <Link href="/admin">Go to Admin</Link>
       </Button>

@@ -7,7 +7,7 @@ export default function Page({ params }: any) {
     return;
   }
   return (
-    <div className="w-[600px]">
+    <div className="w-full p-4 md:p-0 xl:w-[600px]">
       <div className="text-xl font-bold">Invoices</div>
       <div>
         <ListInvoices projectID={params.projectID} />

@@ -145,7 +145,7 @@ export default function InvoiceForm(props: InvoiceFormProps) {
         error: (error) => {
           return error;
         },
-      }
+      },
     );
   }
 
@@ -154,25 +154,26 @@ export default function InvoiceForm(props: InvoiceFormProps) {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className={
+          className={cn(
+            "px-4 md:px-0",
             invoiceMutation.isPending
-              ? "space-y-8 animate-pulse cursor-wait pointer-events-none"
-              : "space-y-8"
-          }
+              ? "pointer-events-none animate-pulse cursor-wait space-y-8"
+              : "space-y-8",
+          )}
         >
           <div className="grid grid-cols-12 gap-2">
-            <Card className="shadow-none border-none bg-transparent col-span-4">
-              <CardContent className="p-0 flex flex-col gap-4 font-semibold h-full">
+            <Card className="col-span-4 border-none bg-transparent shadow-none">
+              <CardContent className="flex h-full flex-col gap-4 p-0 font-semibold">
                 <FormField
                   control={form.control}
                   name="file"
                   render={({ field }) => (
-                    <FormItem className="flex flex-col items-center justify-center w-full h-full border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                    <FormItem className="dark:hover:bg-bray-800 flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600">
                       <FormLabel>
                         {file.length ? (
-                          <div className="flex flex-col items-center justify-center p-4">
-                            <LucideBadgeCheck className="w-8 h-8 mb-4 text-green-500 dark:text-gray-400" />
-                            <p className="mb-2 text-sm w-[90%] overflow-hidden text-center font-semibold text-gray-500 dark:text-gray-400">
+                          <div className="flex flex-col items-center justify-center p-2 md:p-4">
+                            <LucideBadgeCheck className="mb-4 h-8 w-8 text-green-500 dark:text-gray-400" />
+                            <p className="mb-2 w-[90%] overflow-hidden text-center text-xs font-semibold text-gray-500 dark:text-gray-400 md:text-sm">
                               {file[0]?.name}
                             </p>
                             <p className="text-xs text-gray-500 dark:text-gray-400">
@@ -180,16 +181,16 @@ export default function InvoiceForm(props: InvoiceFormProps) {
                             </p>
                           </div>
                         ) : field.value ? (
-                          <div className="flex flex-col items-center justify-center p-4">
-                            <LucideBadgeCheck className="w-8 h-8 mb-4 text-green-500 dark:text-gray-400" />
-                            <p className="mb-2 text-sm text-center font-semibold text-gray-500 dark:text-gray-400">
+                          <div className="flex flex-col items-center justify-center p-2 md:p-4">
+                            <LucideBadgeCheck className="mb-4 h-8 w-8 text-green-500 dark:text-gray-400" />
+                            <p className="mb-2 text-center text-xs font-semibold text-gray-500 dark:text-gray-400 md:text-sm">
                               Click to replace
                             </p>
                           </div>
                         ) : (
-                          <div className="flex flex-col items-center justify-center p-4">
-                            <LucideUploadCloud className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" />
-                            <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                          <div className="flex flex-col items-center justify-center p-2 md:p-4">
+                            <LucideUploadCloud className="mb-4 h-8 w-8 text-gray-500 dark:text-gray-400" />
+                            <p className="mb-2 text-center text-xs text-gray-500 dark:text-gray-400 md:text-sm">
                               <span className="font-semibold">
                                 Click to upload
                               </span>
@@ -216,8 +217,8 @@ export default function InvoiceForm(props: InvoiceFormProps) {
                 />
               </CardContent>
             </Card>
-            <Card className="shadow-none col-span-8">
-              <CardContent className="p-6 flex flex-col gap-4">
+            <Card className="col-span-8 shadow-none">
+              <CardContent className="flex flex-col gap-2 p-3 md:gap-4 md:p-6">
                 <FormField
                   control={form.control}
                   name="reference"
@@ -243,8 +244,8 @@ export default function InvoiceForm(props: InvoiceFormProps) {
                             <Button
                               variant={"outline"}
                               className={cn(
-                                "w-full pl-3 text-left font-normal rounded-lg",
-                                !field.value && "text-muted-foreground"
+                                "w-full rounded-lg pl-3 text-left font-normal",
+                                !field.value && "text-muted-foreground",
                               )}
                             >
                               {field.value ? (

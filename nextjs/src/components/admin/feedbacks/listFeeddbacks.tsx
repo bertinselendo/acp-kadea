@@ -23,13 +23,13 @@ export default function ListFeedbacks(params: { projectID: string }) {
 
   return (
     <div>
-      <ul className="flex gap-x-[2%] gap-y-4 flex-wrap pt-4 mt-4 border-t">
+      <ul className="mt-4 flex flex-col flex-wrap gap-x-[2%] gap-y-4 border-t pt-4 md:flex-row">
         <ListFeedbacksLoop feedbacks={feedbacks} />
 
-        <li className="w-[49%]">
-          <Card className="p-1 h-[100%] min-h-40 w-full">
-            <CardContent className="rounded-lg p-4 flex flex-col gap-4 text-center items-center h-[100%] justify-center">
-              {/* <h3 className="font-semibold text-xl">New project ?</h3> */}
+        <li className="w-full md:w-[49%]">
+          <Card className="flex h-[100%] min-h-40 w-full flex-col items-center justify-center p-1">
+            <CardContent className="w-full space-y-2 rounded-lg p-4 text-center">
+              {/* <h3 className="text-xl font-semibold">New project ?</h3> */}
               <AddFeedbackModal projectID={params.projectID} />
             </CardContent>
           </Card>

@@ -34,7 +34,7 @@ type PropsType = {
 
 export default function NotificationsList({ user }: PropsType) {
   const [notifications, setNotifications] = useState<notificationType[] | null>(
-    null
+    null,
   );
   const [senderDatas, setSenderDatas] = useState({});
 
@@ -43,7 +43,7 @@ export default function NotificationsList({ user }: PropsType) {
       query(
         notificationRef,
         where("userEmail", "==", `${user.email}`),
-        orderBy("date", "desc")
+        orderBy("date", "desc"),
       ),
       (querySnapshot) => {
         const noti: any = [];
@@ -54,7 +54,7 @@ export default function NotificationsList({ user }: PropsType) {
         });
         setNotifications(noti);
         return noti;
-      }
+      },
     );
   }, []); //eslint-disable-line
 
@@ -66,7 +66,7 @@ export default function NotificationsList({ user }: PropsType) {
           notifications.map(async (notification) => {
             const user = await getUser(notification.senderEmail);
             avatar[notification.senderEmail] = user;
-          })
+          }),
         );
         setSenderDatas(avatar);
       }
@@ -99,7 +99,7 @@ export default function NotificationsList({ user }: PropsType) {
 
   if (!notifications.length) {
     return (
-      <div className="p-6 flex justify-center items-center">No activity</div>
+      <div className="flex items-center justify-center p-6">No activity</div>
     );
   }
 
@@ -108,21 +108,21 @@ export default function NotificationsList({ user }: PropsType) {
       {notifications.map((notification) => (
         <div
           key={notification.id}
-          className="p-4 border-b relative group cursor-pointer hover:bg-secondary transition-all"
+          className="group relative cursor-pointer border-b p-4 transition-all hover:bg-secondary"
         >
           <Badge
             variant="outline"
-            className="absolute top-2 right-2 rounded-sm text-sm group-hover:opacity-100 opacity-100 transition-all"
+            className="absolute right-1 top-2 z-10 rounded-sm bg-background text-sm opacity-100 transition-all group-hover:opacity-100 md:right-2"
           >
             <TooltipProvider delayDuration={100}>
               <Tooltip>
-                <TooltipTrigger className="p-1 aspect-square rounded-sm text-foreground/50 hover:bg-secondary hover:text-foreground/100 transition-all">
+                <TooltipTrigger className="p-0.2 aspect-square rounded-sm text-foreground/50 transition-all hover:bg-secondary hover:text-foreground/100 md:p-1">
                   <BookmarkCheck
-                    className="w-5 h-5"
+                    className="h-4 w-4 md:h-5 md:w-5"
                     onClick={() => onMarkRead(notification.id)}
                   />
                 </TooltipTrigger>
-                <TooltipContent className="text-sm text-foreground/80 py-1">
+                <TooltipContent className="py-1 text-sm text-foreground/80">
                   <p>Mark as read</p>
                 </TooltipContent>
               </Tooltip>
@@ -131,7 +131,7 @@ export default function NotificationsList({ user }: PropsType) {
           <Link href={notification?.link ?? "#"} className="flex gap-2">
             <div className="relative">
               {!notification?.isRead && (
-                <div className="w-2 h-2 rounded-full bg-red-700 absolute top-2 -left-3"></div>
+                <div className="absolute -left-3 top-2 h-2 w-2 rounded-full bg-red-700"></div>
               )}
               <Avatar className="h-6 w-6">
                 <AvatarImage
@@ -142,13 +142,13 @@ export default function NotificationsList({ user }: PropsType) {
                 </AvatarFallback>
               </Avatar>
             </div>
-            <div className="text-sm flex flex-col gap-1">
+            <div className="flex flex-col gap-1 text-sm">
               <p>
                 <b>{notification?.senderName}</b>{" "}
                 {getEventTypeString(notification?.type)} ·{" "}
                 {dayjs(notification?.date?.toMillis()).fromNow()}
               </p>
-              <div className="px-2 py-[2px] border-l-4 border-yellow-500 font-semibold bg-yellow-500/5 w-max">
+              <div className="w-max border-l-4 border-yellow-500 bg-yellow-500/5 px-2 py-[2px] font-semibold">
                 {notification?.reference}
               </div>
               <p>{notification?.text}</p>

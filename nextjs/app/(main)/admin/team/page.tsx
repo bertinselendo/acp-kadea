@@ -31,15 +31,15 @@ export default async function TeamPage(props: TeamPageProps) {
   if (!organization) return;
 
   return (
-    <div className="flex h-full">
-      <div className="md:w-7/12 p-4 flex flex-col gap-4">
+    <div className="flex h-max flex-col md:h-full md:flex-row">
+      <div className="flex flex-col gap-4 p-4 md:w-8/12 xl:w-7/12">
         <OrgDashtHeader org={organization} />
-        <div className="grid grid-cols-2">
+        <div className="grid grid-cols-1 md:grid-cols-2">
           <OrgGeneraleStats org={organization} />
         </div>
       </div>
-      <div className="md:w-5/12 p-4 border-l flex flex-col gap-2 h-full overflow-y-scroll">
-        <div className="flex justify-between items-center">
+      <div className="flex h-full flex-col gap-2 overflow-y-scroll border-l p-4 md:w-4/12 xl:w-5/12">
+        <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold">Members</h2>
           {role == "ADMIN" && <AddMemberModal />}
         </div>

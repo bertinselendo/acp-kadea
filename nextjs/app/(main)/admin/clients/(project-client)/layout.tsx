@@ -15,18 +15,18 @@ export const metadata: Metadata = {
 export default async function RouteLayout(props: { children: ReactNode }) {
   const user = await auth();
   return (
-    <div className="flex h-full overflow-y-scroll justify-center">
+    <div className="flex h-max flex-col-reverse justify-center overflow-y-scroll md:h-full md:flex-row">
       {isTeamMember(user) && (
-        <div className="sticky top-0 overflow-y-scroll scroll custom-scrollbar 2xl:w-3/12 md:w-4/12 p-3 border-r pb-20">
+        <div className="scroll custom-scrollbar sticky top-0 w-full overflow-y-scroll border-r-0 p-3 pb-20 md:w-4/12 md:border-r 2xl:w-3/12">
           <ListClients />
 
           <Link href="/admin/clients/create">
-            <Button className="w-full mt-4">Create new client</Button>
+            <Button className="mt-4 w-full">Create new client</Button>
           </Link>
         </div>
       )}
-      <div className="p-3 2xl:w-9/12 md:w-8/12 flex justify-center">
-        <div className="md:w-2/3 2xl:1/2">{props.children}</div>
+      <div className="flex w-full justify-center p-3 md:w-8/12 2xl:w-9/12">
+        <div className="2xl:1/2 w-full md:w-4/5 xl:w-2/3">{props.children}</div>
       </div>
     </div>
   );

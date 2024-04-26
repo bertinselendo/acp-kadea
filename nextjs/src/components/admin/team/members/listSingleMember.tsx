@@ -33,14 +33,14 @@ export function TeamListSingleMember(props: any) {
   const currentRole = user?.role;
 
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-1 xl:grid-cols-2">
       {props.members.map((member: any) => (
         <Card
           key={member.id}
-          className="w-full flex flex-col justify-center p-0 gap-1 relative"
+          className="relative flex w-full flex-col justify-center gap-1 p-0"
         >
-          <CardHeader className="justify-center items-center">
-            <div className="absolute top-2 right-4">
+          <CardHeader className="items-center justify-center">
+            <div className="absolute right-4 top-2">
               {member.id != data?.user.id ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger className="focus:hidden">
@@ -70,14 +70,14 @@ export function TeamListSingleMember(props: any) {
                 <Badge>Me</Badge>
               )}
             </div>
-            <Avatar className="w-28 h-28">
+            <Avatar className="h-24 w-24 md:h-28 md:w-28">
               <AvatarImage src={member.avatar} alt={member.email} />
               <AvatarFallback>
                 <UserDiceAvater email={member.email} />
               </AvatarFallback>
             </Avatar>
           </CardHeader>
-          <CardContent className="text-sm text-center">
+          <CardContent className="text-center text-sm">
             <CardTitle className="text-xl capitalize">
               {member.firstName && member.firstName}{" "}
               {member.lastName && member.lastName}
@@ -86,17 +86,17 @@ export function TeamListSingleMember(props: any) {
             {member.teamMembers && (
               <div
                 key={member.teamMembers?.id}
-                className="flex flex-wrap justify-center gap-2 uppercase my-2"
+                className="my-2 flex flex-wrap justify-center gap-2 uppercase"
               >
-                <Badge variant="outline" className="bg-light-blue border-none">
+                <Badge variant="outline" className="border-none bg-light-blue">
                   <Link href={`tel:${member.teamMembers?.phone}`}>
                     {member.teamMembers?.phone}
                   </Link>
                 </Badge>
-                <Badge variant="outline" className="bg-light-red border-none">
+                <Badge variant="outline" className="border-none bg-light-red">
                   {member.teamMembers?.type}
                 </Badge>
-                <Badge variant="outline" className="bg-light-green border-none">
+                <Badge variant="outline" className="border-none bg-light-green">
                   {member.role}
                 </Badge>
                 {member.teamMembers?.companyName && (

@@ -37,7 +37,7 @@ export type ListDocumentsLoopProps = {
   documents: [
     Document & {
       user: User;
-    }
+    },
   ];
 };
 
@@ -51,11 +51,11 @@ export default function ListDocumentsLoop(props: ListDocumentsLoopProps) {
 
   if (!documents) {
     return (
-      <li className="w-[49%] animate-pulse border bg-transparent rounded-lg p-4 flex flex-col gap-4">
-        <Skeleton className="h-40 w-full delay-250" />
+      <li className="flex w-full animate-pulse flex-col gap-4 rounded-lg border bg-transparent p-4 md:w-[49%]">
+        <Skeleton className="delay-250 h-40 w-full" />
         <div className="flex gap-10">
           <Skeleton className="h-10 w-2/3 delay-500" />
-          <Skeleton className="h-10 w-1/3 delay-750" />
+          <Skeleton className="delay-750 h-10 w-1/3" />
         </div>
       </li>
     );
@@ -63,7 +63,7 @@ export default function ListDocumentsLoop(props: ListDocumentsLoopProps) {
 
   if (!documents.length) {
     return (
-      <li className="w-[49%] border bg-transparent rounded-lg flex flex-col gap-4 text-sm items-center justify-center text-center p-8">
+      <li className="flex w-full flex-col items-center justify-center gap-4 rounded-lg border bg-transparent p-8 text-center text-sm md:w-[49%]">
         <p className="text-2xl">😔</p>
         <p>Looks like a client is on a diet - zero documents detected!</p>
       </li>
@@ -73,13 +73,13 @@ export default function ListDocumentsLoop(props: ListDocumentsLoopProps) {
   return (
     <>
       {documents?.map((document) => (
-        <li key={document.id} className="w-[49%]">
-          <Card className="p-1 bg-secondary">
-            <CardContent className="relative rounded-lg p-3 flex flex-col gap-4 bg-white">
+        <li key={document.id} className="w-full md:w-[49%]">
+          <Card className="bg-secondary p-1">
+            <CardContent className="relative flex flex-col gap-4 rounded-lg bg-white p-3">
               {document.type == "internal" ? (
-                <IoDocumentText className="absolute w-[20%] left-[40%] right-[40%] top-[25%] h-20 text-primary" />
+                <IoDocumentText className="absolute left-[40%] right-[40%] top-[25%] h-20 w-[20%] text-primary" />
               ) : (
-                <IoDocumentAttach className="absolute w-[20%] left-[40%] right-[40%] top-[25%] h-20 text-light-orange" />
+                <IoDocumentAttach className="absolute left-[40%] right-[40%] top-[25%] h-20 w-[20%] text-light-orange" />
               )}
 
               <div className="flex justify-between">
@@ -110,15 +110,15 @@ export default function ListDocumentsLoop(props: ListDocumentsLoopProps) {
                   </DropdownMenu>
                 )}
               </div>
-              <div className="w-2/3 h-20 flex items-end text">
-                <h3 className="font-semibold text-xl truncate">
+              <div className="text flex h-20 w-2/3 items-end">
+                <h3 className="truncate text-lg font-semibold md:text-xl">
                   {document.title}
                 </h3>
               </div>
             </CardContent>
-            <CardFooter className="flex gap-4 justify-between mt-4 mb-2 p-0 px-2 items-center">
+            <CardFooter className="mb-2 mt-4 flex items-center justify-between gap-4 p-0 px-2">
               <div>
-                <Avatar className="h-8 w-8">
+                <Avatar className="h-8 w-8 md:h-8 md:w-8">
                   <AvatarImage src={document.user?.avatar as string} />
                   <AvatarFallback>
                     <UserDiceAvater email={document.user?.email} />
@@ -134,7 +134,7 @@ export default function ListDocumentsLoop(props: ListDocumentsLoopProps) {
                 target={document.type == "external" ? "_blank" : "_top"}
                 onClick={clickAnimation}
               >
-                <Button className="bg-black text-white rounded-full transition hover:bg-gray-800">
+                <Button className="rounded-full bg-black text-white transition hover:bg-gray-800">
                   {document.type == "external" ? `View link` : `Open editor`}
                 </Button>
               </Link>

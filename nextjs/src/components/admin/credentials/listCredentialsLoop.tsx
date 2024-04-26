@@ -43,7 +43,7 @@ type ListCredentialsLoopProps = {
   credentials: [
     Credential & {
       user: User;
-    }
+    },
   ];
 };
 
@@ -70,18 +70,18 @@ export default function ListCredentialsLoop(props: ListCredentialsLoopProps) {
 
   if (!credentials) {
     return (
-      <li className="w-full animate-pulse border bg-transparent rounded-lg p-2 flex gap-4 *:h-10">
-        <Skeleton className="w-1/12 delay-250" />
-        <Skeleton className="w-3/12 delay-250" />
-        <Skeleton className="w-6/12 delay-250" />
-        <Skeleton className="w-2/12 delay-250" />
+      <li className="flex w-full animate-pulse gap-4 rounded-lg border bg-transparent p-2 *:h-10">
+        <Skeleton className="delay-250 w-1/12" />
+        <Skeleton className="delay-250 w-3/12" />
+        <Skeleton className="delay-250 w-6/12" />
+        <Skeleton className="delay-250 w-2/12" />
       </li>
     );
   }
 
   if (!credentials.length) {
     return (
-      <li className="w-[49%] border bg-transparent rounded-lg flex flex-col gap-4 text-sm items-center justify-center text-center p-8">
+      <li className="flex w-full flex-col items-center justify-center gap-4 rounded-lg border bg-transparent p-8 text-center text-sm md:w-[49%]">
         <p className="text-2xl">😔</p>
         <p>Looks like a client is on a diet - zero credentials detected!</p>
       </li>
@@ -93,8 +93,8 @@ export default function ListCredentialsLoop(props: ListCredentialsLoopProps) {
       {credentials?.map((credential) => (
         <li key={credential.id} className="w-full">
           <Card className="p-1">
-            <CardContent className="rounded-lg px-4 py-1 flex gap-2 justify-between items-center">
-              <div className="w-1/12">
+            <CardContent className="flex flex-wrap items-center justify-start gap-0 rounded-lg px-2 py-1 md:flex-nowrap md:justify-between md:gap-2 md:px-4">
+              <div className="mr-2 w-1/12 md:mr-0">
                 {credential.service == "Website" ? (
                   <Globe2 />
                 ) : credential.service == "Hosting" ? (
@@ -107,17 +107,17 @@ export default function ListCredentialsLoop(props: ListCredentialsLoopProps) {
               </div>
               <div
                 data-clipboard-text={credential.username}
-                className="btn usename w-4/12 select-all truncate cursor-copy"
+                className="btn usename w-10/12 cursor-copy select-all truncate md:w-4/12"
               >
                 {credential.username}
               </div>
-              <div className="w-5/12 text-nowrap overflow-hidden relative">
-                <div className="absolute bg-gradient-to-r from-transparent to-white top-0 bottom-0 left-0 right-0 pointer-events-none"></div>
+              <div className="relative w-10/12 overflow-hidden text-nowrap md:w-5/12">
+                <div className="pointer-events-none absolute bottom-0 left-0 right-0 top-0 bg-gradient-to-r from-transparent to-white"></div>
                 <Link href={credential.adminUrl} target="_blank">
                   {credential.adminUrl}
                 </Link>
               </div>
-              <div className="w-2/12 flex items-center justify-end">
+              <div className="flex w-2/12 items-center justify-end">
                 <TooltipProvider delayDuration={100}>
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -125,7 +125,7 @@ export default function ListCredentialsLoop(props: ListCredentialsLoopProps) {
                         data-clipboard-text={credential.password}
                         size="icon"
                         variant="outline"
-                        className="btn border-none p-0 m-0"
+                        className="btn m-0 border-none p-0"
                         onClick={clickAnimation}
                       >
                         <LockKeyhole size="20" />
@@ -138,13 +138,13 @@ export default function ListCredentialsLoop(props: ListCredentialsLoopProps) {
                 </TooltipProvider>
 
                 <DropdownMenu>
-                  <DropdownMenuTrigger className="focus:hidden p-0">
+                  <DropdownMenuTrigger className="p-0 focus:hidden">
                     <IoEllipsisVertical size="20" />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <div className="text-sm w-full text-center py-2">
-                      <div className="px-2 mb-1">
-                        <Avatar className="h-8 w-8">
+                    <div className="w-full p-2 text-sm">
+                      <div className="mb-1">
+                        <Avatar className="h-8 w-8 md:h-8 md:w-8">
                           <AvatarImage
                             src={credential.user?.avatar as string}
                           />

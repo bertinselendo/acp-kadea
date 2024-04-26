@@ -76,7 +76,7 @@ const formSchema = z.object({
 
 function memberAvatar(member: any) {
   return (
-    <Avatar className="max-w-6 max-h-6">
+    <Avatar className="max-h-6 max-w-6">
       <AvatarImage
         src={member.avatar}
         alt={`${member.firstName} ${member.lastName}`}
@@ -107,7 +107,7 @@ export default function EditProjectForm(props: AddProjectModalProps) {
       const project = await projectUpdateAction(
         values as any,
         projectID as string,
-        sMembers
+        sMembers,
       );
 
       if (!project) {
@@ -221,7 +221,7 @@ export default function EditProjectForm(props: AddProjectModalProps) {
     setSMembers(newTags as any);
     const member = await projectRemoveTeamMemberAction(
       projectID as string,
-      sMember
+      sMember,
     );
     if (member) {
       toast.success("User removed form this project");
@@ -231,11 +231,11 @@ export default function EditProjectForm(props: AddProjectModalProps) {
   if (projectData.isPending) {
     return (
       <div className="grid grid-cols-2 gap-2">
-        <div className="flex flex-col *:w-full gap-2">
+        <div className="flex flex-col gap-2 *:w-full">
           <Skeleton className="h-40" />
           <Skeleton className="h-20" />
         </div>
-        <div className="flex flex-col *:w-full gap-2">
+        <div className="flex flex-col gap-2 *:w-full">
           <Skeleton className="h-20" />
           <Skeleton className="h-40" />
         </div>
@@ -247,15 +247,16 @@ export default function EditProjectForm(props: AddProjectModalProps) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className={
+        className={cn(
+          "px-4 md:px-0",
           updateMutation.isPending
-            ? "space-y-8 animate-pulse cursor-wait pointer-events-none"
-            : "space-y-8"
-        }
+            ? "pointer-events-none animate-pulse cursor-wait space-y-8"
+            : "space-y-8",
+        )}
       >
-        <div className="flex gap-4 w-full">
-          <Card className="mt-4 lg:w-7/12 shadow-none">
-            <CardContent className="p-6 flex flex-col gap-4">
+        <div className="flex h-[60vh] w-full flex-col gap-2 overflow-y-scroll md:flex-row md:gap-4">
+          <Card className="mt-0 shadow-none md:mt-4 lg:w-7/12">
+            <CardContent className="flex flex-col gap-4 p-4 md:p-6">
               <FormField
                 control={form.control}
                 name="title"
@@ -285,12 +286,12 @@ export default function EditProjectForm(props: AddProjectModalProps) {
                   </FormItem>
                 )}
               />
-              <div className="flex w-full gap-4">
+              <div className="flex w-full gap-1 md:gap-4">
                 <FormField
                   control={form.control}
                   name="startDate"
                   render={({ field }) => (
-                    <FormItem className="flex flex-col">
+                    <FormItem className="flex w-full flex-col">
                       <FormLabel>Start Date</FormLabel>
                       <Popover>
                         <PopoverTrigger asChild>
@@ -298,8 +299,8 @@ export default function EditProjectForm(props: AddProjectModalProps) {
                             <Button
                               variant={"outline"}
                               className={cn(
-                                "w-[240px] pl-3 text-left font-normal",
-                                !field.value && "text-muted-foreground"
+                                "w-full pl-3 text-left font-normal",
+                                !field.value && "text-muted-foreground",
                               )}
                             >
                               {field.value ? (
@@ -329,7 +330,7 @@ export default function EditProjectForm(props: AddProjectModalProps) {
                   control={form.control}
                   name="endDate"
                   render={({ field }) => (
-                    <FormItem className="flex flex-col">
+                    <FormItem className="flex w-full flex-col">
                       <FormLabel>End Date</FormLabel>
                       <Popover>
                         <PopoverTrigger asChild>
@@ -337,8 +338,8 @@ export default function EditProjectForm(props: AddProjectModalProps) {
                             <Button
                               variant={"outline"}
                               className={cn(
-                                "w-[240px] pl-3 text-left font-normal",
-                                !field.value && "text-muted-foreground"
+                                "w-full pl-3 text-left font-normal",
+                                !field.value && "text-muted-foreground",
                               )}
                             >
                               {field.value ? (
@@ -367,8 +368,8 @@ export default function EditProjectForm(props: AddProjectModalProps) {
               </div>
             </CardContent>
           </Card>
-          <Card className="mt-4 lg:w-5/12 shadow-none">
-            <CardContent className="p-6 flex flex-col gap-4">
+          <Card className="mt-0 h-max shadow-none md:mt-4 lg:w-5/12">
+            <CardContent className="flex flex-col gap-4 p-4 md:p-6">
               <FormField
                 control={form.control}
                 name="status"
@@ -456,12 +457,12 @@ export default function EditProjectForm(props: AddProjectModalProps) {
                     </FormControl>
                     <div className="flex flex-wrap gap-2 transition">
                       {tags.map((tag, index) => (
-                        <Badge key={index} className="capitalize text-sm">
+                        <Badge key={index} className="text-sm capitalize">
                           {tag}
                           <XCircleIcon
                             size="14"
                             onClick={() => removeBadge(index, "tags")}
-                            className="hover:cursor-pointer ml-1"
+                            className="ml-1 hover:cursor-pointer"
                           />
                         </Badge>
                       ))}
@@ -480,16 +481,16 @@ export default function EditProjectForm(props: AddProjectModalProps) {
                       {sMembers.map((sMember, index) => (
                         <Badge
                           key={index}
-                          className="capitalize text-sm w-max bg-light-blue"
+                          className="w-max bg-light-blue text-sm capitalize"
                         >
-                          <div className="flex gap-1 items-center">
+                          <div className="flex items-center gap-1">
                             {memberAvatar(sMember)} {sMember.firstName}{" "}
                             {sMember.lastName}
                           </div>
                           <XCircleIcon
                             size="14"
                             onClick={() => removeTeamMember(index, sMember)}
-                            className="hover:cursor-pointer ml-1"
+                            className="ml-1 hover:cursor-pointer"
                           />
                         </Badge>
                       ))}
@@ -502,14 +503,14 @@ export default function EditProjectForm(props: AddProjectModalProps) {
                             role="combobox"
                             className={cn(
                               "w-[200px] justify-between",
-                              !field.value && "text-muted-foreground"
+                              !field.value && "text-muted-foreground",
                             )}
                           >
                             {field.value
                               ? members.find(
                                   (member) =>
                                     `${member.firstName} ${member.lastName}` ===
-                                    field.value
+                                    field.value,
                                 )?.firstName
                               : "Select a team member"}
                             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -521,7 +522,7 @@ export default function EditProjectForm(props: AddProjectModalProps) {
                           <CommandInput placeholder="Search team members..." />
                           <CommandList>
                             {!members.length ? (
-                              <div className="h-10 w-full p-2 flex justify-center items-center">
+                              <div className="flex h-10 w-full items-center justify-center p-2">
                                 <Loader />
                               </div>
                             ) : (
@@ -554,7 +555,7 @@ export default function EditProjectForm(props: AddProjectModalProps) {
             </CardContent>
           </Card>
         </div>
-        <Button type="submit" className="w-full mt-4">
+        <Button type="submit" className="mt-4 w-full">
           Update Project
         </Button>
       </form>

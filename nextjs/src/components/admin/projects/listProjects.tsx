@@ -65,14 +65,14 @@ export default function ListProjects({ clientID, user }: ListProjectsProps) {
         setFilter={setFilter}
       /> */}
 
-      <ul className="flex gap-x-[2%] gap-y-4 flex-wrap pt-4 mt-4 border-t">
+      <ul className="mt-4 flex flex-wrap gap-x-[2%] gap-y-4 border-t pt-4">
         <ListSingleProject projects={projects} />
 
         {isTeamManager(user) && (
-          <li className="w-[49%]">
-            <Card className="p-1 h-[100%] min-h-52 w-full">
-              <CardContent className="rounded-lg p-4 flex flex-col gap-4 text-center items-center h-[100%] justify-center">
-                <h3 className="font-semibold text-xl">New project ?</h3>
+          <li className="w-full md:w-[49%]">
+            <Card className="h-[100%] min-h-52 w-full p-1">
+              <CardContent className="flex h-[100%] flex-col items-center justify-center gap-4 rounded-lg p-4 text-center">
+                <h3 className="text-xl font-semibold">New project ?</h3>
                 <AddProjectModal clientID={clientID} />
               </CardContent>
             </Card>

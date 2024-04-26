@@ -94,7 +94,7 @@ export default function NewUserForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                <Avatar className="w-40 h-40 cursor-pointer transition">
+                <Avatar className="w-28 h-28 md:w-32 md:h-32 cursor-pointer transition border">
                   {/* <p>{filePreview}</p> */}
                   <AvatarImage src={filePreview} />
                   <AvatarFallback className="hover:scale-105">

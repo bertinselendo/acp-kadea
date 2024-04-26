@@ -42,7 +42,7 @@ export default function DashFeedbacks(params: { projectID: string }) {
   if (isPending) {
     return (
       <div className="flex flex-col gap-2">
-        <Skeleton className="w-full h-48" />
+        <Skeleton className="h-48 w-full" />
         <div className="flex gap-2 *:h-10">
           <Skeleton className="w-8/12 delay-500" />
           <Skeleton className="w-4/12 delay-1000" />
@@ -56,26 +56,26 @@ export default function DashFeedbacks(params: { projectID: string }) {
       <div>
         <Carousel
           setApi={setApi}
-          className="w-full h-60 flex flex-col gap-0 justify-between"
+          className="flex h-60 w-full flex-col justify-between gap-0"
         >
           <CarouselContent className="h-[190px] rounded-lg">
             {data.map((feedback: any, index: any) => (
               <CarouselItem key={index}>
-                <Card className="border-none shadow-none h-full">
-                  <CardContent className="rounded-lg p-4 flex flex-col justify-between gap-4 bg-primary h-full">
+                <Card className="h-full border-none shadow-none">
+                  <CardContent className="flex h-full flex-col justify-between gap-4 rounded-lg bg-primary p-4">
                     <div className="flex justify-between">
                       <Badge variant="outline" className="bg-white py-1">
                         {parseDate(feedback.createdAt)}
                       </Badge>
                     </div>
                     <div>
-                      <h3 className="font-semibold text-xl w-1/2">
+                      <h3 className="w-1/2 text-xl font-semibold">
                         {feedback.title}
                       </h3>
                     </div>
-                    <div className="flex gap-4 justify-between items-center">
+                    <div className="flex items-center justify-between gap-4">
                       <div>
-                        <Avatar className="h-8 w-8">
+                        <Avatar className="h-8 w-8 md:h-8 md:w-8">
                           <AvatarImage src={feedback.user?.avatar as string} />
                           <AvatarFallback>
                             <UserDiceAvater email={feedback.user?.email} />
@@ -87,7 +87,7 @@ export default function DashFeedbacks(params: { projectID: string }) {
                         target="_blank"
                         onClick={clickAnimation}
                       >
-                        <Button className="bg-black text-white rounded-full transition hover:bg-gray-800">
+                        <Button className="rounded-full bg-black text-white transition hover:bg-gray-800">
                           Consulter
                         </Button>
                       </Link>
@@ -97,9 +97,9 @@ export default function DashFeedbacks(params: { projectID: string }) {
               </CarouselItem>
             ))}
           </CarouselContent>
-          <div className="w-full h-12 flex gap-4 justify-between m-0 px-2 items-center">
+          <div className="m-0 flex h-12 w-full items-center justify-between gap-4 px-2">
             <div className="flex gap-2">
-              <CarouselPrevious className="left-0 top-0 translate-y-0 relative" />
+              <CarouselPrevious className="relative left-0 top-0 translate-y-0" />
               <CarouselNext className="relative right-0 top-0 translate-y-0" />
             </div>
             <div>
@@ -108,7 +108,7 @@ export default function DashFeedbacks(params: { projectID: string }) {
                   <DotButton
                     key={index}
                     onClick={() => onDotButtonClick(index)}
-                    className={"w-4 h-4 rounded-full border bg-secondary"}
+                    className={"h-4 w-4 rounded-full border bg-secondary"}
                     style={{
                       background: index === selectedIndex ? " #d5f6ee" : "",
                     }}
@@ -123,7 +123,7 @@ export default function DashFeedbacks(params: { projectID: string }) {
   }
 
   return (
-    <div className="flex flex-col gap-2 h-60 w-full items-center justify-center">
+    <div className="flex h-60 w-full flex-col items-center justify-center gap-2">
       <p>No feedbacks</p>
     </div>
   );

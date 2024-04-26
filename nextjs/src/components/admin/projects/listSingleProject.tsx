@@ -25,7 +25,7 @@ export type ListSingleProjectProps = {
           status: string;
           tags: string;
           teamMembers: [TeamMember & { user: User }];
-        }
+        },
       ]
     | null;
 };
@@ -35,11 +35,11 @@ export default function ListSingleProject(props: ListSingleProjectProps) {
 
   if (!projects) {
     return (
-      <li className="w-[49%] animate-pulse border bg-transparent rounded-lg p-4 flex flex-col gap-4">
-        <Skeleton className="h-40 w-full delay-250" />
+      <li className="flex w-full animate-pulse flex-col gap-4 rounded-lg border bg-transparent p-4 md:w-[49%]">
+        <Skeleton className="delay-250 h-40 w-full" />
         <div className="flex gap-10">
           <Skeleton className="h-10 w-2/3 delay-500" />
-          <Skeleton className="h-10 w-1/3 delay-750" />
+          <Skeleton className="delay-750 h-10 w-1/3" />
         </div>
       </li>
     );
@@ -47,7 +47,7 @@ export default function ListSingleProject(props: ListSingleProjectProps) {
 
   if (!projects.length) {
     return (
-      <li className="w-[49%] border bg-transparent rounded-lg flex flex-col gap-4 text-sm items-center justify-center text-center p-8">
+      <li className="flex w-full flex-col items-center justify-center gap-4 rounded-lg border bg-transparent p-8 text-center text-sm md:w-[49%]">
         <p className="text-2xl">😔</p>
         <p>Looks like a client is on a diet - zero project detected!</p>
       </li>
@@ -57,10 +57,10 @@ export default function ListSingleProject(props: ListSingleProjectProps) {
   return (
     <>
       {projects?.map((project) => (
-        <li key={project.id} className="w-[49%]">
+        <li key={project.id} className="w-full md:w-[49%]">
           <Card className="p-1">
             <CardContent
-              className="rounded-lg p-4 flex flex-col gap-4"
+              className="flex flex-col gap-4 rounded-lg p-4"
               style={{ background: project.cover }}
             >
               <div className="flex justify-between">
@@ -74,11 +74,11 @@ export default function ListSingleProject(props: ListSingleProjectProps) {
               </div>
               <div>
                 <div className="text-sm font-semibold">{project.priority}</div>
-                <div className="flex justify-between items-center">
-                  <h3 className="font-semibold text-xl">{project.title}</h3>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xl font-semibold">{project.title}</h3>
                   <div className="flex gap-2">
                     {project.teamMembers.map((team, index) => (
-                      <Avatar key={index} className="w-7 h-7">
+                      <Avatar key={index} className="h-7 w-7">
                         <AvatarImage src={team.user.avatar as string} />
                         <AvatarFallback>
                           <UserDiceAvater email={team.user.email} />
@@ -88,7 +88,7 @@ export default function ListSingleProject(props: ListSingleProjectProps) {
                   </div>
                 </div>
               </div>
-              <div className="flex gap-2 flex-wrap">
+              <div className="flex flex-wrap gap-2">
                 {project.tags.split(",").map((tag, index) => (
                   <Badge
                     key={index}
@@ -100,7 +100,7 @@ export default function ListSingleProject(props: ListSingleProjectProps) {
                 ))}
               </div>
             </CardContent>
-            <CardFooter className="flex gap-4 justify-between mt-4 mb-2 p-0 px-2 items-center">
+            <CardFooter className="mb-2 mt-4 flex items-center justify-between gap-4 p-0 px-2">
               <div>
                 <h6 className="text-lg font-semibold leading-none">
                   Due {relativeDate(project.endDate)}
@@ -108,7 +108,7 @@ export default function ListSingleProject(props: ListSingleProjectProps) {
                 <p className="text-sm">{parseDate(project.endDate)}</p>
               </div>
               <Link href={`/p/${project.id}`}>
-                <Button className="bg-black text-white rounded-full transition hover:bg-gray-800">
+                <Button className="rounded-full bg-black text-white transition hover:bg-gray-800">
                   Dashboard
                 </Button>
               </Link>

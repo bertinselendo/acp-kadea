@@ -47,13 +47,13 @@ export default async function ProjectSinglePage({ params }: Props) {
   }
 
   return (
-    <div className="w-full p-4 flex flex-col gap-6">
+    <div className="flex w-full flex-col gap-6 p-4">
       <ProjectHeader project={project as Project} />
 
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <Card className="h-80">
-          <CardContent className="flex flex-col h-full gap-4 p-4">
-            <div className="flex justify-between items-center">
+          <CardContent className="flex h-full flex-col gap-4 p-4">
+            <div className="flex items-center justify-between">
               <CardTitle>Feedbacks</CardTitle>
               <AddFeedbackModal projectID={params.projectID} variant="icon" />
             </div>
@@ -61,17 +61,17 @@ export default async function ProjectSinglePage({ params }: Props) {
           </CardContent>
         </Card>
         <Card className="h-80">
-          <CardContent className="flex flex-col w-full h-full gap-4 p-4">
-            <div className="flex justify-between items-center">
+          <CardContent className="flex h-full w-full flex-col gap-4 p-4">
+            <div className="flex items-center justify-between">
               <CardTitle>Documents</CardTitle>
               <AddDocumentModal projectID={params.projectID} variant="icon" />
             </div>
             <DashDocuments projectID={params.projectID} />
           </CardContent>
         </Card>
-        <Card className="h-80">
-          <CardContent className="flex flex-col h-full gap-4 p-4">
-            <div className="flex justify-between items-center">
+        <Card className="h-72 md:h-80 xl:h-72 2xl:h-80">
+          <CardContent className="flex h-full flex-col gap-4 p-4">
+            <div className="flex items-center justify-between">
               <CardTitle>Invoices</CardTitle>
               <AddInvoiceModal projectID={params.projectID} variant="icon" />
             </div>
@@ -79,8 +79,8 @@ export default async function ProjectSinglePage({ params }: Props) {
           </CardContent>
         </Card>
         <Card className="h-80">
-          <CardContent className="flex flex-col h-full gap-4 p-4">
-            <div className="flex justify-between items-center">
+          <CardContent className="flex h-full flex-col gap-4 p-4">
+            <div className="flex items-center justify-between">
               <CardTitle>Credentials</CardTitle>
               <AddcredentialsModal
                 projectID={params.projectID}

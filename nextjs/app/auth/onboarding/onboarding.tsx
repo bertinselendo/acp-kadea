@@ -25,7 +25,7 @@ export default function Onboarding() {
     <div
       className={cn(
         step === "subscription" ? "w-[700px]" : "w-[500px]",
-        "flex flex-col gap-4"
+        "flex flex-col gap-4 p-6 md:p-0"
       )}
     >
       <Tabs defaultValue={step}>

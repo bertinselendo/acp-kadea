@@ -3,11 +3,15 @@
 import { Suspense } from "react";
 import { Loader } from "@/components/ui/loader";
 import Onboarding from "./onboarding";
+import { bgGradient } from "@/lib/utils";
 
 export default function OnboardingPage() {
   return (
-    <main className="bg-gradient-to-r from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90% h-screen w-screen">
-      <div className="flex justify-center items-center transition-all bg-blend-overlay bg-noise bg-white/80 h-screen w-screen">
+    <main className={`h-screen w-screen ${bgGradient().gradient}`}>
+      <div
+        className={`flex justify-center items-center transition-all h-screen w-screen,
+        ${bgGradient().noise}`}
+      >
         <Suspense fallback={<Loader />}>
           <Onboarding />
         </Suspense>

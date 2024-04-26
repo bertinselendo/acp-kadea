@@ -28,7 +28,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { addDays, format } from "date-fns";
+import { format } from "date-fns";
 import { Calendar as CalendarIcon, XCircleIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { cn, getRandomColor } from "@/lib/utils";
@@ -81,7 +81,7 @@ const formSchema = z.object({
 
 function memberAvatar(member: any) {
   return (
-    <Avatar className="max-w-6 max-h-6">
+    <Avatar className="max-h-6 max-w-6">
       <AvatarImage
         src={member.avatar}
         alt={`${member.firstName} ${member.lastName}`}
@@ -126,7 +126,7 @@ export default function AddProjectForm(props: AddProjectModalProps) {
       const project = await projectCreationAction(
         values as any,
         props.clientID,
-        sMembers as any
+        sMembers as any,
       );
 
       if (!project) {
@@ -203,7 +203,7 @@ export default function AddProjectForm(props: AddProjectModalProps) {
         error: (error) => {
           return error;
         },
-      }
+      },
     );
   }
 
@@ -235,15 +235,16 @@ export default function AddProjectForm(props: AddProjectModalProps) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className={
+        className={cn(
+          "w-full px-4 md:px-0",
           creationMutation.isPending
-            ? "space-y-8 animate-pulse cursor-wait pointer-events-none"
-            : "space-y-8"
-        }
+            ? "pointer-events-none animate-pulse cursor-wait space-y-8"
+            : "space-y-8",
+        )}
       >
-        <div className="flex gap-4 w-full">
-          <Card className="mt-4 lg:w-7/12 shadow-none">
-            <CardContent className="p-6 flex flex-col gap-4">
+        <div className="flex h-[50vh] w-full flex-col gap-4 overflow-y-scroll md:h-max md:flex-row">
+          <Card className="mt-4 w-full shadow-none md:w-7/12">
+            <CardContent className="flex flex-col gap-4 p-6">
               <FormField
                 control={form.control}
                 name="title"
@@ -273,12 +274,12 @@ export default function AddProjectForm(props: AddProjectModalProps) {
                   </FormItem>
                 )}
               />
-              <div className="flex w-full gap-4">
+              <div className="flex w-full gap-2">
                 <FormField
                   control={form.control}
                   name="startDate"
                   render={({ field }) => (
-                    <FormItem className="flex flex-col">
+                    <FormItem className="flex w-full flex-col">
                       <FormLabel>Start Date</FormLabel>
                       <Popover>
                         <PopoverTrigger asChild>
@@ -286,8 +287,8 @@ export default function AddProjectForm(props: AddProjectModalProps) {
                             <Button
                               variant={"outline"}
                               className={cn(
-                                "w-[240px] pl-3 text-left font-normal",
-                                !field.value && "text-muted-foreground"
+                                "w-full pl-3 text-left font-normal",
+                                !field.value && "text-muted-foreground",
                               )}
                             >
                               {field.value ? (
@@ -317,7 +318,7 @@ export default function AddProjectForm(props: AddProjectModalProps) {
                   control={form.control}
                   name="endDate"
                   render={({ field }) => (
-                    <FormItem className="flex flex-col">
+                    <FormItem className="flex w-full flex-col">
                       <FormLabel>End Date</FormLabel>
                       <Popover>
                         <PopoverTrigger asChild>
@@ -325,8 +326,8 @@ export default function AddProjectForm(props: AddProjectModalProps) {
                             <Button
                               variant={"outline"}
                               className={cn(
-                                "w-[240px] pl-3 text-left font-normal",
-                                !field.value && "text-muted-foreground"
+                                "w-full pl-3 text-left font-normal",
+                                !field.value && "text-muted-foreground",
                               )}
                             >
                               {field.value ? (
@@ -355,8 +356,8 @@ export default function AddProjectForm(props: AddProjectModalProps) {
               </div>
             </CardContent>
           </Card>
-          <Card className="mt-4 lg:w-5/12 shadow-none">
-            <CardContent className="p-6 flex flex-col gap-4">
+          <Card className="mt-4 w-full shadow-none md:w-5/12">
+            <CardContent className="flex flex-col gap-4 p-6">
               <FormField
                 control={form.control}
                 name="status"
@@ -443,12 +444,12 @@ export default function AddProjectForm(props: AddProjectModalProps) {
                     </FormControl>
                     <div className="flex flex-wrap gap-2 transition">
                       {tags.map((tag, index) => (
-                        <Badge key={index} className="capitalize text-sm">
+                        <Badge key={index} className="text-sm capitalize">
                           {tag}
                           <XCircleIcon
                             size="14"
                             onClick={() => removeBadge(index, "tags")}
-                            className="hover:cursor-pointer ml-1"
+                            className="ml-1 hover:cursor-pointer"
                           />
                         </Badge>
                       ))}
@@ -467,16 +468,16 @@ export default function AddProjectForm(props: AddProjectModalProps) {
                       {sMembers.map((sMember, index) => (
                         <Badge
                           key={index}
-                          className="capitalize text-sm w-max bg-light-blue"
+                          className="w-max bg-light-blue text-sm capitalize"
                         >
-                          <div className="flex gap-1 items-center">
+                          <div className="flex items-center gap-1">
                             {memberAvatar(sMember)} {sMember.firstName}{" "}
                             {sMember.lastName}
                           </div>
                           <XCircleIcon
                             size="14"
                             onClick={() => removeBadge(index, "sMembers")}
-                            className="hover:cursor-pointer ml-1"
+                            className="ml-1 hover:cursor-pointer"
                           />
                         </Badge>
                       ))}
@@ -489,14 +490,14 @@ export default function AddProjectForm(props: AddProjectModalProps) {
                             role="combobox"
                             className={cn(
                               "w-[200px] justify-between",
-                              !field.value && "text-muted-foreground"
+                              !field.value && "text-muted-foreground",
                             )}
                           >
                             {field.value
                               ? members.find(
                                   (member) =>
                                     `${member.firstName} ${member.lastName}` ===
-                                    field.value
+                                    field.value,
                                 )?.firstName
                               : "Select a team member"}
                             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -508,7 +509,7 @@ export default function AddProjectForm(props: AddProjectModalProps) {
                           <CommandInput placeholder="Search team members..." />
                           <CommandList>
                             {!members.length ? (
-                              <div className="h-10 w-full p-2 flex justify-center items-center">
+                              <div className="flex h-10 w-full items-center justify-center p-2">
                                 <Loader />
                               </div>
                             ) : (
@@ -541,7 +542,7 @@ export default function AddProjectForm(props: AddProjectModalProps) {
             </CardContent>
           </Card>
         </div>
-        <Button type="submit" className="w-full mt-4">
+        <Button type="submit" className="mt-4 w-full">
           Create Project
         </Button>
       </form>

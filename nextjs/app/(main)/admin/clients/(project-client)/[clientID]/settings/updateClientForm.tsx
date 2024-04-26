@@ -42,7 +42,7 @@ const formSchema = z.object({
     .string()
     .regex(
       /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/,
-      "Numéro invalide !"
+      "Numéro invalide !",
     ),
   companyAdress: z.string().min(2, {
     message: "Must be at least 2 characters.",
@@ -77,9 +77,8 @@ export default function UpdateClientForm({ clientID, client }: any) {
     companyWebsite: client.website,
     internalNote: client.internalNote,
   });
-  const [generatedColor, setGeneratedColor] = useState<string>(
-    getRandomColor()
-  );
+  const [generatedColor, setGeneratedColor] =
+    useState<string>(getRandomColor());
   const router = useRouter();
 
   const updateMutation = useMutation({
@@ -164,7 +163,7 @@ export default function UpdateClientForm({ clientID, client }: any) {
         error: (error) => {
           return error;
         },
-      }
+      },
     );
   }
 
@@ -174,20 +173,20 @@ export default function UpdateClientForm({ clientID, client }: any) {
         onSubmit={form.handleSubmit(onSubmit)}
         className={
           updateMutation.isPending || onUpload
-            ? "space-y-8 animate-pulse cursor-wait pointer-events-none"
+            ? "pointer-events-none animate-pulse cursor-wait space-y-8"
             : "space-y-8"
         }
       >
         <Card>
-          <CardContent className="p-6 flex flex-col gap-4">
+          <CardContent className="flex flex-col gap-4 p-6">
             <div
-              className="w-full h-40 rounded relative"
+              className="relative h-20 w-full rounded md:h-32"
               style={{
                 background: `${generatedColor}`,
               }}
             >
               <div
-                className="p-2 text-xs bg-secondary rounded-lg shadow-sm cursor-pointer hover:bg-secondary hover:opacity-90 absolute bottom-2 right-2"
+                className="absolute bottom-2 right-2 cursor-pointer rounded-lg bg-secondary p-2 text-xs shadow-sm hover:bg-secondary hover:opacity-90"
                 onClick={() => setGeneratedColor(getRandomColor())}
               >
                 Generate color
@@ -199,7 +198,7 @@ export default function UpdateClientForm({ clientID, client }: any) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    <Avatar className="w-32 h-32 -mt-16 ml-4 cursor-pointer transition bg-secondary">
+                    <Avatar className="-mt-16 ml-4 h-28 w-28 cursor-pointer bg-secondary transition md:h-32 md:w-32">
                       <AvatarImage src={logoPreview} />
                       <AvatarFallback className="hover:scale-105">
                         LOGO
@@ -222,7 +221,7 @@ export default function UpdateClientForm({ clientID, client }: any) {
           </CardContent>
         </Card>
         <Card className="mt-4">
-          <CardContent className="p-6 flex flex-col gap-4">
+          <CardContent className="flex flex-col gap-4 p-6">
             <h3 className="text-xl font-semibold">Entreprise</h3>
             <FormField
               control={form.control}
@@ -374,7 +373,7 @@ export default function UpdateClientForm({ clientID, client }: any) {
           </CardContent>
         </Card>
         <Card className="mt-4">
-          <CardContent className="p-6 flex flex-col gap-4">
+          <CardContent className="flex flex-col gap-4 p-6">
             <FormField
               control={form.control}
               name="internalNote"
@@ -389,7 +388,7 @@ export default function UpdateClientForm({ clientID, client }: any) {
             />
           </CardContent>
         </Card>
-        <Button type="submit" className="w-full mt-4">
+        <Button type="submit" className="mt-4 w-full">
           Update
         </Button>
       </form>

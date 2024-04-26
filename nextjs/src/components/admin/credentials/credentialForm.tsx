@@ -35,6 +35,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 
 const formSchema = z.object({
   service: z.string(),
@@ -59,8 +60,8 @@ export default function CredentialForm(props: CredentialFormProps) {
       const credential = props.projectID
         ? await credentialsCreationAction(values as any, props.projectID)
         : props.credential
-        ? await credentialUpdatetAction(values as any, props.credential.id)
-        : false;
+          ? await credentialUpdatetAction(values as any, props.credential.id)
+          : false;
 
       if (!credential) {
         toast.dismiss();
@@ -118,15 +119,16 @@ export default function CredentialForm(props: CredentialFormProps) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className={
+        className={cn(
+          "px-4 md:px-0",
           credentialMutation.isPending
-            ? "space-y-8 animate-pulse cursor-wait pointer-events-none"
-            : "space-y-8"
-        }
+            ? "pointer-events-none animate-pulse cursor-wait space-y-8"
+            : "space-y-8",
+        )}
       >
-        <div className="flex gap-4 w-full">
+        <div className="flex w-full gap-4">
           <Card className="mt-4 w-full shadow-none">
-            <CardContent className="p-6 flex flex-col gap-4">
+            <CardContent className="flex flex-col gap-4 p-6">
               <FormField
                 control={form.control}
                 name="service"
@@ -203,7 +205,7 @@ export default function CredentialForm(props: CredentialFormProps) {
             </CardContent>
           </Card>
         </div>
-        <Button type="submit" className="w-full mt-4">
+        <Button type="submit" className="mt-4 w-full">
           {props.projectID ? "Add new credential" : "Update details"}
         </Button>
       </form>

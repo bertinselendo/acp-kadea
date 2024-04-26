@@ -17,7 +17,7 @@ import { getUser } from "../clients/clients.action";
 
 export function ActivityStats({ user }: { user: User }) {
   const [notifications, setNotifications] = useState<notificationType[] | null>(
-    null
+    null,
   );
   const [senderDatas, setSenderDatas] = useState({});
 
@@ -27,7 +27,7 @@ export function ActivityStats({ user }: { user: User }) {
         notificationRef,
         where("userEmail", "==", `${user.email}`),
         orderBy("date", "desc"),
-        limit(3)
+        limit(3),
       ),
       (querySnapshot) => {
         const noti: any = [];
@@ -38,7 +38,7 @@ export function ActivityStats({ user }: { user: User }) {
         });
         setNotifications(noti);
         return noti;
-      }
+      },
     );
   }, []); //eslint-disable-line
 
@@ -50,7 +50,7 @@ export function ActivityStats({ user }: { user: User }) {
           notifications.map(async (notification) => {
             const user = await getUser(notification.senderEmail);
             avatar[notification.senderEmail] = user;
-          })
+          }),
         );
         setSenderDatas(avatar);
       }
@@ -61,13 +61,16 @@ export function ActivityStats({ user }: { user: User }) {
   return (
     <>
       {notifications?.map((notification, index) => (
-        <Card key={index} className="transition opacity-80 hover:opacity-100">
-          <CardContent className="flex items-center justify-center p-4 w-full h-full">
+        <Card
+          key={index}
+          className="opacity-100 transition hover:opacity-100 sm:opacity-80"
+        >
+          <CardContent className="flex h-full w-full items-center justify-center p-4">
             <Link
               href={notification?.link ?? "#"}
-              className="flex flex-col gap-2 w-full h-full"
+              className="flex h-full w-full flex-col gap-2"
             >
-              <div className="flex gap-2 items-center">
+              <div className="flex items-center gap-2">
                 <Avatar className="h-6 w-6">
                   <AvatarImage
                     src={senderDatas[notification?.senderEmail]?.avatar}
@@ -85,7 +88,7 @@ export function ActivityStats({ user }: { user: User }) {
                 </div>
               </div>
               <div className="flex flex-col gap-2 text-xs">
-                <div className="px-2 py-[2px] border-l-4 border-yellow-500 font-semibold bg-yellow-500/5 truncate">
+                <div className="truncate border-l-4 border-yellow-500 bg-yellow-500/5 px-2 py-[2px] font-semibold">
                   {notification?.reference}
                 </div>
                 <p>{notification?.text}</p>
@@ -98,12 +101,12 @@ export function ActivityStats({ user }: { user: User }) {
         style={{
           background: `linear-gradient(#EDEFF5, #fff)`,
         }}
-        className="transition opacity-80 hover:opacity-100"
+        className="opacity-80 transition hover:opacity-100"
       >
-        <CardContent className="flex items-center justify-center p-4 w-full h-full">
+        <CardContent className="flex h-full w-full items-center justify-center p-4">
           <Link
             href="/admin/activity"
-            className="flex flex-col gap-2 w-full items-center justify-center h-full"
+            className="flex h-full w-full flex-col items-center justify-center gap-2"
           >
             <ArrowUpRightFromSquare />
             <div className="text-sm font-semibold">Show Activity</div>

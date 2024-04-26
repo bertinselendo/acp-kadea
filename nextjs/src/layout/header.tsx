@@ -20,6 +20,7 @@ import { useSession } from "next-auth/react";
 import { User } from "@prisma/client";
 import { onSnapshot, orderBy, query, where } from "firebase/firestore";
 import { notificationRef } from "@/components/notifications/notifications-ref";
+import { useMediaQuery } from "@/hooks/use-media-query";
 
 type HeaderProps = {
   user: any;
@@ -32,8 +33,9 @@ export default function Header(props: HeaderProps) {
   const router = useRouter();
   const session = useSession();
   const user = session?.data?.user as User;
-
   const [notiCount, setNotiCount] = useState(0);
+
+  const isSmallDevice = useMediaQuery("only screen and (max-width : 768px)");
 
   useEffect(() => {
     setPageTitle(document.title);
@@ -44,7 +46,7 @@ export default function Header(props: HeaderProps) {
       query(
         notificationRef,
         where("userEmail", "==", `${props.user?.email}`),
-        orderBy("date", "desc")
+        orderBy("date", "desc"),
       ),
       (querySnapshot) => {
         const noti: any = [];
@@ -56,15 +58,15 @@ export default function Header(props: HeaderProps) {
         const notiCount = noti.filter((item) => item.isRead === false);
         setNotiCount(notiCount.length);
         return noti;
-      }
+      },
     );
   }, []); //eslint-disable-line
 
   return (
     <>
-      <div className="w-4/12 flex gap-2 items-center">
+      <div className="flex w-8/12 items-center gap-2 md:w-4/12">
         <Link href="#" onClick={() => router.back()}>
-          <ChevronLeft />
+          <ChevronLeft size={isSmallDevice ? "1.6em" : "2em"} />
         </Link>
         <AnimatePresence>
           {pageTitle && (
@@ -74,34 +76,36 @@ export default function Header(props: HeaderProps) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ ease: "easeOut", duration: 0.2 }}
-              className="text-2xl font-bold truncate"
+              className="truncate text-lg font-bold md:text-2xl"
             >
               {pageTitle}
             </motion.h1>
           )}
         </AnimatePresence>
       </div>
-      <div className="w-4/12 flex justify-center">
-        <Skeleton className="w-[250px] h-10" />
+      <div className="hidden w-4/12 justify-center md:flex">
+        <Skeleton className="h-10 w-[250px]" />
       </div>
-      <div className="w-4/12 flex justify-end">
-        <ul className="flex items-center gap-4">
+      <div className="flex w-4/12 justify-end">
+        <ul className="flex items-center gap-2 md:gap-4">
           <li
             className={cn(
               navigationMenuTriggerStyle(),
-              "h-10 w-10 p-0 relative"
+              "relative h-8 w-8 p-0 md:h-10 md:w-10",
             )}
           >
             <Popover>
               <PopoverTrigger>
-                <div className="w-[16px] h-[16px] p-0 flex justify-center items-center absolute top-0 right-1 bg-[#eb5757] text-white rounded-full text-[9px]">
+                <div className="absolute right-1 top-0 flex h-[16px] w-[16px] items-center justify-center rounded-full bg-[#eb5757] p-0 text-[9px] text-white">
                   {notiCount}
                 </div>
-                <IoNotificationsOutline size="2em" />
+                <IoNotificationsOutline
+                  size={isSmallDevice ? "1.6em" : "2em"}
+                />
               </PopoverTrigger>
               <PopoverContent
                 align="end"
-                className="w-[400px] p-2 h-[600px] overflow-y-scroll"
+                className="mx-[2vw] h-[600px] w-[95vw] overflow-y-scroll p-2 md:mx-0 md:w-[400px]"
               >
                 <NotificationsList user={user} />
               </PopoverContent>

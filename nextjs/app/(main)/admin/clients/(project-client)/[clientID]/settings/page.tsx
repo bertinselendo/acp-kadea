@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ClientSettingPage(
-  props: PageParams<{ clientID: string }>
+  props: PageParams<{ clientID: string }>,
 ) {
   const user = await auth();
 
@@ -24,7 +24,7 @@ export default async function ClientSettingPage(
   if (!client) return;
 
   return (
-    <div className="flex flex-col w-[600px] mx-auto pb-20">
+    <div className="mx-auto flex w-full flex-col pb-20 md:w-[500px] xl:w-[600px]">
       <div className="my-4 text-left">
         <h2 className="text-2xl font-bold">
           {client?.companyName}&apos;s settings

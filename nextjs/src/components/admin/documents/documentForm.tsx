@@ -96,38 +96,38 @@ export default function DocumentForm(props: DocumentFormProps) {
         error: (error) => {
           return error;
         },
-      }
+      },
     );
   }
 
   return (
-    <div>
-      <div className="flex flex-col gap-4 w-full">
-        <div className="flex gap-4 w-full mt-4 *:w-full *:shadow-none *:transition-all *:duration-200 *:ease-in *:cursor-pointer">
+    <div className="px-4 md:px-0">
+      <div className="flex w-full flex-col gap-4">
+        <div className="mt-4 flex w-full gap-4 *:w-full *:cursor-pointer *:shadow-none *:transition-all *:duration-200 *:ease-in">
           <Card
             className={`hover:bg-primary ${
-              type == "internal" && "bg-primary border-primary"
+              type == "internal" && "border-primary bg-primary"
             }`}
             onClick={() => setType("internal")}
           >
-            <CardContent className="p-6 flex flex-col gap-4 font-semibold">
+            <CardContent className="flex flex-col gap-4 p-6 font-semibold">
               Internal Editor
             </CardContent>
           </Card>
           <Card
             className={`hover:bg-primary ${
-              type == "external" && "bg-primary border-primary"
+              type == "external" && "border-primary bg-primary"
             }`}
             onClick={() => setType("external")}
           >
-            <CardContent className="p-6 flex flex-col gap-4 font-semibold">
+            <CardContent className="flex flex-col gap-4 p-6 font-semibold">
               External Link
             </CardContent>
           </Card>
         </div>
       </div>
       <div
-        className={`transition-all overflow-hidden duration-300 ease-in`}
+        className={`overflow-hidden transition-all duration-300 ease-in`}
         style={
           type === "external" ? { display: "initial" } : { display: "none" }
         }
@@ -137,12 +137,12 @@ export default function DocumentForm(props: DocumentFormProps) {
             onSubmit={form.handleSubmit(onSubmit)}
             className={
               documentMutation.isPending
-                ? "space-y-8 animate-pulse cursor-wait pointer-events-none"
+                ? "pointer-events-none animate-pulse cursor-wait space-y-8"
                 : "space-y-8"
             }
           >
             <Card className="mt-4 w-full shadow-none">
-              <CardContent className="p-6 flex flex-col gap-4">
+              <CardContent className="flex flex-col gap-4 p-6">
                 <FormField
                   control={form.control}
                   name="title"
@@ -174,19 +174,19 @@ export default function DocumentForm(props: DocumentFormProps) {
                 />
               </CardContent>
             </Card>
-            <Button type="submit" className="w-full mt-4">
+            <Button type="submit" className="mt-4 w-full">
               Add document
             </Button>
           </form>
         </Form>
       </div>
       <div
-        className={`transition-all overflow-hidden delay-300 duration-300 ease-in`}
+        className={`overflow-hidden transition-all delay-300 duration-300 ease-in`}
         style={
           type === "internal" ? { display: "initial" } : { display: "none" }
         }
       >
-        <Button type="submit" className="w-full mt-4" asChild>
+        <Button type="submit" className="mt-4 w-full" asChild>
           <Link href={`/p/${props.projectID}/documents/editor`}>
             Open editor
           </Link>

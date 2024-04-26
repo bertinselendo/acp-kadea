@@ -55,7 +55,7 @@ export default function DashDocuments(params: { projectID: string }) {
 
   if (isPending) {
     return (
-      <div className="grid grid-rows-2 grid-flow-col gap-4 *:h-28">
+      <div className="grid grid-flow-col grid-rows-2 gap-4 *:h-28">
         <Skeleton />
         <Skeleton />
         <Skeleton />
@@ -66,10 +66,10 @@ export default function DashDocuments(params: { projectID: string }) {
 
   if (data?.length) {
     return (
-      <div className="grid grid-cols-2 grid-flow-row gap-2 overflow-y-scroll pr-2">
+      <div className="grid grid-flow-row grid-cols-1 gap-2 overflow-y-scroll pr-2 2xl:grid-cols-2">
         {data?.map((document) => (
           <div key={document.id} className="w-full">
-            <Card className="p-1 bg-secondary hover:bg-secondary/50 border-none">
+            <Card className="border-none bg-secondary p-1 hover:bg-secondary/50">
               <Link
                 href={
                   document.type == "external"
@@ -79,26 +79,26 @@ export default function DashDocuments(params: { projectID: string }) {
                 target="_blank"
                 onClick={clickAnimation}
               >
-                <CardContent className="relative rounded-lg p-2 flex flex-col gap-4 bg-white">
+                <CardContent className="relative flex flex-col gap-4 rounded-lg bg-white p-2">
                   {document.type == "internal" ? (
-                    <IoDocumentText className="absolute w-[16%] left-[42%] right-[42%] h-20 text-primary" />
+                    <IoDocumentText className="absolute left-[42%] right-[42%] h-20 w-[16%] text-primary" />
                   ) : (
-                    <IoDocumentAttach className="absolute w-[16%] left-[42%] right-[42%] h-20 text-light-orange" />
+                    <IoDocumentAttach className="absolute left-[42%] right-[42%] h-20 w-[16%] text-light-orange" />
                   )}
 
                   <div className="flex justify-between">
                     <Badge variant="outline" className="bg-white py-1">
                       {parseDate(document.createdAt)}
                     </Badge>
-                    <Avatar className="h-6 w-6">
+                    <Avatar className="h-6 w-6 md:h-6 md:w-6">
                       <AvatarImage src={document.user?.avatar as string} />
                       <AvatarFallback>
                         <UserDiceAvater email={document.user?.email} />
                       </AvatarFallback>
                     </Avatar>
                   </div>
-                  <div className="w-2/3 h-12 flex items-end text">
-                    <h3 className="font-semibold text-lg truncate">
+                  <div className="text flex h-12 w-2/3 items-end">
+                    <h3 className="truncate text-lg font-semibold">
                       {document.title}
                     </h3>
                   </div>
@@ -112,7 +112,7 @@ export default function DashDocuments(params: { projectID: string }) {
   }
 
   return (
-    <div className="flex flex-col gap-2 h-60 w-full items-center justify-center">
+    <div className="flex h-60 w-full flex-col items-center justify-center gap-2">
       <p>No documents</p>
     </div>
   );

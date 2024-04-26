@@ -1,6 +1,5 @@
 "use client";
 
-import { LoginForm } from "@/components/auth/LoginForm";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,18 +9,24 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import WebsiteFooter from "@/components/website/website-footer";
+import { bgGradient } from "@/lib/utils";
 import { Home, LogOut } from "lucide-react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 
 export default function AuthVerifiyPage() {
   return (
-    <main className="bg-gradient-to-r from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90% h-screen w-screen">
-      <div className="flex justify-center items-center transition-all bg-blend-overlay bg-noise bg-white/80 h-screen w-screen">
-        <div className="flex flex-col gap-4 w-[400px]">
+    <main className={`h-screen w-screen ${bgGradient().gradient}`}>
+      <div
+        className={`flex justify-center items-center transition-all h-screen w-screen,
+        ${bgGradient().noise}`}
+      >
+        <div className="flex flex-col gap-4 w-full p-6 md:w-[400px] md:p-0">
           <Card className="w-full bg-background/50 border-red-300">
             <CardHeader>
-              <CardTitle className="text-3xl">You have no access</CardTitle>
+              <CardTitle className="text-2xl md:text-3xl">
+                You have no access
+              </CardTitle>
               <CardDescription>
                 We&apos;re sorry, but you do not have access to any resources on
                 this website. Please check your permissions or contact the site
@@ -42,11 +47,7 @@ export default function AuthVerifiyPage() {
             </CardFooter>
           </Card>
           <div className="w-full">
-            <div className="flex justify-center gap-4 transition-all *:text-sm *:opacity-75 *:hover:opacity-100">
-              <Link href="/">Home</Link>
-              <Link href="#">Privacy</Link>
-              <Link href="#">Term</Link>
-            </div>
+            <WebsiteFooter />
           </div>
         </div>
       </div>

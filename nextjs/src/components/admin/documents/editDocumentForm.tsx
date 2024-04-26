@@ -20,6 +20,7 @@ import { Card, CardContent } from "@/components/ui/card";
 
 import { documentUpdatetAction } from "./documents.action";
 import { Document } from "@prisma/client";
+import { cn } from "@/lib/utils";
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -79,7 +80,7 @@ export default function EditDocumentForm(props: DocumentFormProps) {
         error: (error) => {
           return error;
         },
-      }
+      },
     );
   }
 
@@ -88,14 +89,15 @@ export default function EditDocumentForm(props: DocumentFormProps) {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className={
+          className={cn(
+            "px-4 sm:px-0",
             documentMutation.isPending
-              ? "space-y-8 animate-pulse cursor-wait pointer-events-none"
-              : "space-y-8"
-          }
+              ? "pointer-events-none animate-pulse cursor-wait space-y-8"
+              : "space-y-8",
+          )}
         >
           <Card className="mt-4 w-full shadow-none">
-            <CardContent className="p-6 flex flex-col gap-4">
+            <CardContent className="flex flex-col gap-4 p-6">
               <FormField
                 control={form.control}
                 name="title"
@@ -124,7 +126,7 @@ export default function EditDocumentForm(props: DocumentFormProps) {
               />
             </CardContent>
           </Card>
-          <Button type="submit" className="w-full mt-4">
+          <Button type="submit" className="mt-4 w-full">
             Save document
           </Button>
         </form>

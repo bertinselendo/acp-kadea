@@ -51,12 +51,12 @@ export default function DashInvoices(params: { projectID: string }) {
   });
 
   const docIcon = (
-    <IoDocumentText className="w-20 h-20 text-primary bg-transparent" />
+    <IoDocumentText className="h-20 w-20 bg-transparent text-primary" />
   );
 
   if (isPending) {
     return (
-      <div className="grid grid-rows-1 grid-flow-col gap-2 *:aspect-[3/4]">
+      <div className="grid grid-flow-col grid-rows-1 gap-2 *:aspect-[3/4]">
         <Skeleton />
         <Skeleton />
         <Skeleton />
@@ -66,31 +66,34 @@ export default function DashInvoices(params: { projectID: string }) {
 
   if (data?.length) {
     return (
-      <Carousel className="w-full h-60 flex flex-col gap-0 justify-between">
-        <CarouselContent className="rounded-lg m-0 w-full h-full">
+      <Carousel className="flex h-48 w-full flex-col justify-between gap-0 md:h-60">
+        <CarouselContent className="m-0 h-full w-full rounded-lg">
           {data.map((invoice: any, index: any) => (
-            <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3 p-0">
+            <CarouselItem
+              key={index}
+              className="basis-1/2 p-0 md:basis-full xl:basis-1/2 2xl:basis-1/3"
+            >
               <Card
-                className="p-1 mx-1 bg-secondary shadow-none aspect-[3/4] transition-all hover:bg-secondary/50 cursor-pointer"
+                className="mx-1 aspect-[3/4] cursor-pointer bg-secondary p-1 shadow-none transition-all hover:bg-secondary/50"
                 onClick={() => {
                   router.push(
                     pathname +
                       "/invoices/view?url=" +
-                      encodeURIComponent(invoice.file)
+                      encodeURIComponent(invoice.file),
                   );
                 }}
               >
                 <CardContent
                   ref={docRef}
-                  className="w-full h-full overflow-hidden p-0 flex items-center justify-center relative rounded-lg flex-col gap-4 bg-background"
+                  className="relative flex h-full w-full flex-col items-center justify-center gap-4 overflow-hidden rounded-lg bg-background p-0"
                 >
-                  <div className="flex justify-between absolute w-full top-0 p-2 z-10">
+                  <div className="absolute top-0 z-10 flex w-full justify-between p-2">
                     <Badge variant="outline" className="bg-white py-1">
                       {parseDate(invoice.createdAt)}
                     </Badge>
                   </div>
-                  <div className="w-full h-40 flex items-end text absolute bottom-0 left-0 p-2 z-10 bg-gradient-to-t from-background to-transparent">
-                    <h3 className="font-semibold truncate">
+                  <div className="absolute bottom-0 left-0 z-10 flex h-40 w-full items-end bg-gradient-to-t from-background to-transparent p-2">
+                    <h3 className="truncate text-sm font-semibold md:text-base">
                       {invoice.reference}
                     </h3>
                   </div>
@@ -99,7 +102,7 @@ export default function DashInvoices(params: { projectID: string }) {
                     loading={docIcon}
                     error={docIcon}
                     noData={docIcon}
-                    className="w-full h-full absolute top-0 flex justify-center items-center"
+                    className="absolute top-0 flex h-full w-full items-center justify-center"
                   >
                     <Page
                       key={1}
@@ -119,14 +122,14 @@ export default function DashInvoices(params: { projectID: string }) {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className="left-0 translate-y-0" />
-        <CarouselNext className="right-0 translate-y-0" />
+        <CarouselPrevious className="-left-3 translate-y-0 md:-left-1" />
+        <CarouselNext className="-right-3 translate-y-0 md:-right-1" />
       </Carousel>
     );
   }
 
   return (
-    <div className="flex flex-col gap-2 h-60 w-full items-center justify-center">
+    <div className="flex h-60 w-full flex-col items-center justify-center gap-2">
       <p>No invoices</p>
     </div>
   );

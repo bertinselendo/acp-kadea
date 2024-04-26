@@ -130,3 +130,13 @@ export function countryList() {
 
   return countries;
 }
+
+export function bgGradient() {
+  const bg = {
+    gradient:
+      "bg-gradient-to-r from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90%",
+    noise: "bg-blend-overlay bg-noise bg-white/80",
+  };
+
+  return bg;
+}

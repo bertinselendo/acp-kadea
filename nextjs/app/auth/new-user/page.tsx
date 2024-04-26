@@ -1,4 +1,3 @@
-import { LoginForm } from "@/components/auth/LoginForm";
 import { redirect } from "next/navigation";
 import {
   Card,
@@ -11,6 +10,7 @@ import {
 import { auth } from "@/lib/auth/helper";
 import type { PageParams } from "@/types/next";
 import NewUserForm from "./newUserForm";
+import { bgGradient } from "@/lib/utils";
 
 export default async function NewUserPage(props: PageParams<{}>) {
   const user = await auth();
@@ -20,17 +20,19 @@ export default async function NewUserPage(props: PageParams<{}>) {
   }
 
   return (
-    <div className="flex flex-col h-screen justify-center align-middle items-center">
-      <Card className="w-[400px]">
-        <CardHeader>
-          <CardTitle></CardTitle>
-          <CardDescription></CardDescription>
-        </CardHeader>
-        <CardContent>
-          <NewUserForm />
-        </CardContent>
-        <CardFooter></CardFooter>
-      </Card>
-    </div>
+    <main className={`h-screen w-screen ${bgGradient().gradient}`}>
+      <div
+        className={`flex justify-center items-center transition-all h-screen w-screen,
+        ${bgGradient().noise}`}
+      >
+        <div className="flex flex-col gap-4 w-full p-6 md:w-[400px] md:p-0">
+          <Card className="w-full bg-background/80">
+            <CardContent className="p-6">
+              <NewUserForm />
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </main>
   );
 }
