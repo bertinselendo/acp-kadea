@@ -13,8 +13,209 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  @db.Text
+  access_token       String?  @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?  @db.Text
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+  id               String     @id @default(cuid())
+  email            String?    @unique
+  firstName        String?
+  lastName         String?
+  emailVerified    DateTime?
+  avatar           String?
+  role             Role     @default(GUEST)   // team-member | client
+
+  accounts         Account[]
+  sessions         Session[]
+
+  organization     Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId   String?
+
+  client           Client?       @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  clientId         String?
+
+  teamMembers      TeamMember?
+
+  feedbacks        Feedback[]
+  documents        Document[]
+  invoices         Invoice[]
+  credentials      Credential[]
+}
+
+enum Role {
+  GUEST
+  CLIENT
+  WORKER
+  MANAGER
+  ADMIN
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Organization {
+  id             String    @id @default(cuid())
+  createdAt      DateTime  @default(now())
+  email          String    @unique
+  name           String
+  phone          String?
+  address        String?
+  city           String
+  country        String
+  logo           String?
+  cover          String?
+  sector         String?    // Business sector
+  website        String?
+
+  users          User[]
+  clients        Client[]
+}
+
+model TeamMember {
+  id          String     @id @default(cuid())
+  createdAt   DateTime   @default(now())
+  type        String    // internal | external
+  companyName String?   // if type is external
+  phone       String?
+
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String     @unique
+
+  projects    Project[]  @relation("TeamMemberProjects")
+}
+
+model Client {
+  id             String    @id @default(cuid())
+  createdAt      DateTime  @default(now())
+  companyEmail   String    @unique
+  phone          String?
+  address        String?
+  country        String
+  companyName    String
+  logo           String?
+  categorie      String?    // Business sector
+  size           String?    // Company size
+  website        String?
+  internalNote   String?
+
+  organization    Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId  String?
+
+  users          User[]
+  projects       Project[]
+}
+
+model Project {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @default(now())
+  cover         String?    // Link to project cover image
+  title         String
+  description   String?
+  priority      String?
+  startDate     DateTime?
+  endDate       DateTime?
+  status        String?
+  tags          String?
+
+  client        Client      @relation(fields: [clientID], references: [id], onDelete: Cascade)
+  clientID      String
+
+  teamMembers   TeamMember[] @relation("TeamMemberProjects")
+
+  feedbacks     Feedback[]
+  documents     Document[]
+  invoices      Invoice[]
+  accesses      Credential[]
+}
+
+model Feedback {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @default(now())
+
+  createdBy     String?
+  user          User?      @relation(fields: [createdBy], references: [id])
+
+  title         String
+  link          String    // Link to usepastel feedback
+  note          String?
+
+  project       Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId     String
+}
+
+model Document {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @default(now())
+
+  createdBy     String?
+  user          User?      @relation(fields: [createdBy], references: [id])
+
+  title         String
+  content       String?   // Rich text
+  type          String    // External | Internal
+  link          String?   // Link to the document
+  
+  project       Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId     String
+}
+
+model Invoice {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @default(now())
+
+  createdBy     String?
+  user          User?      @relation(fields: [createdBy], references: [id])
+
+  reference     String
+  dueDate       DateTime
+  file          String?   // File to upload
+  link          String?   // Link to the invoice or file upload
+  
+  project       Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId     String
+}
+
+model Credential {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @default(now())
+
+  createdBy     String?
+  user          User?      @relation(fields: [createdBy], references: [id])
+
+  service       String    // Website, Hosting, Domain, etc.
+  username      String
+  password      String
+  adminUrl      String
+  
+  project       Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId     String
 }
