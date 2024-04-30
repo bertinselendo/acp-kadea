@@ -3,8 +3,11 @@ import { getClientData, getProjects } from "../controllers/client/c-read";
 import {
   addClientUser,
   createClient,
+  createClientProject,
   createClientUser,
 } from "../controllers/client/c-create";
+import { deleteClient } from "../controllers/client/c-delete";
+import { updateClient } from "../controllers/client/c-update";
 
 const clientRoute = express.Router();
 
@@ -16,5 +19,12 @@ clientRoute.get("/:id/projects", getProjects);
 clientRoute.post("/", createClient);
 clientRoute.post("/:id/create-user", createClientUser);
 clientRoute.post("/:id/add-user", addClientUser);
+clientRoute.post("/:id/project", createClientProject);
+
+// UPDATE
+clientRoute.put("/:id", updateClient);
+
+// DELETE
+clientRoute.delete("/:id", deleteClient);
 
 export default clientRoute;

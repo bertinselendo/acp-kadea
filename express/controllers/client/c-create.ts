@@ -155,3 +155,56 @@ export const addClientUser = async (req: Request, res: Response) => {
     }
   }
 };
+
+export const createClientProject = async (req: Request, res: Response) => {
+  const clientID = req.params.id;
+  const values = req.body?.values;
+  const sMembers = req.body?.sMembers;
+
+  if (!clientID) {
+    return BadRequestError(res, "Bad Request: Missing client id");
+  }
+
+  if (!values) {
+    return BadRequestError(res, "Bad Request: Missing values");
+  }
+
+  if (!sMembers) {
+    return BadRequestError(res, "Bad Request: Missing member");
+  }
+
+  try {
+    const newProject = await prisma.project.create({
+      data: {
+        title: values.title,
+        description: values.description,
+        cover: values.cover,
+        priority: values.priority,
+        startDate: values.startDate,
+        endDate: values.endDate,
+        status: values.status,
+        tags: values.tags,
+        clientID: clientID,
+      },
+    });
+
+    if (newProject) {
+      for (const sMember of sMembers) {
+        await prisma.teamMember.update({
+          where: { id: sMember.teamMembers.id },
+          data: {
+            projects: {
+              connect: {
+                id: newProject.id,
+              },
+            },
+          },
+        });
+      }
+
+      res.status(201).json(newProject);
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Error create project" });
+  }
+};
