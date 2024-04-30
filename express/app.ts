@@ -7,6 +7,7 @@ import authRouter from "./routes/auth.route.js";
 import clientRoute from "./routes/client.js";
 import organizationRoute from "./routes/organization.js";
 import userRoute from "./routes/user.js";
+import projectRoute from "./routes/project.js";
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use(currentSession);
 app.use("/organization", authenticatedUser, organizationRoute);
 app.use("/client", authenticatedUser, clientRoute);
 app.use("/user", authenticatedUser, userRoute);
+app.use("/project", authenticatedUser, projectRoute);
 
 app.use("/", authRouter);
 
