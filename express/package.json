@@ -3,26 +3,28 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
-  "main": "app.js",
+  "main": "app.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tsx watch --env-file=.env app.ts"
+    "dev": "tsx watch --env-file=.env app.ts",
+    "start": "prisma generate && prisma migrate deploy && tsx app.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@types/express": "^4.17.21",
-    "@types/node": "^20.12.7",
+    "@types/node": "^20.12.9",
     "prisma": "^5.13.0",
     "ts-node": "^10.9.2",
-    "tsx": "^4.7.0",
+    "tsx": "^4.9.3",
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "@auth/express": "^0.5.3",
+    "@auth/express": "^0.5.4",
     "@auth/prisma-adapter": "^2.0.0",
     "@prisma/client": "5.13.0",
+    "@types/nodemailer": "^6.4.15",
     "express": "^4.19.2",
     "resend": "^3.2.0"
   }
