@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Agence Client Portal
 
-## Getting Started
+## Description
 
-First, run the development server:
+Agence Client Portal is a web application built with Next.js and expressjs for managing clients and their data.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Authentication using NextAuth.js
+- Client management
+- Data visualization with charts powered by Tremor
+- Integration with Firebase for real-time updates and cloud storage
+- Prisma used as ORM for database access
+- PostgreSQL database hosted on Vercel
+- Firestore used for notifications and chats
+- Express js for backend
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Installation
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+1. Clone the repository from the `dev` branch
+2. Switch folder `nextjs` for frontend or `express` for backend
+3. Install dependencies: `npm install`
+4. Check environment variables (see `.env`)
+5. Run prisma: `npx prisma generate`
+6. Run the development server: `npm run dev`
 
-## Learn More
+## Usage
 
-To learn more about Next.js, take a look at the following resources:
+1. Sign up or log in to access the client portal.
+2. Add, update, or delete clients and their information.
+3. View data visualizations to gain insights into client data.
+4. Receive real-time updates and notifications via Firebase.
+5. Utilize cloud storage for file uploads and management.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Technologies Used
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- Next.js as a React framework
+- Express.js as a Node backend framework
+- Tailwind CSS for styling
+- Prisma as ORM for database access
+- PostgreSQL database hosted on Vercel
+- Firebase Cloud Storage for file storage
+- Firestore for real-time updates, notifications, and chats
+- NextAuth.js for authentication
+- Tremor for data visualization
+- Vercel for nextjs deployment
+- Render for expressjs deployment
 
-## Deploy on Vercel
+## Contributing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+To contribute on the project, here is the procedure to follow:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+1. When there is a need to work on a task, please create a new branch from the `dev` branch.
+2. Make your changes and commit them to this new branch.
+3. Next, create a pull request to merge your changes with the `dev` branch.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
+## Contact
+
+For questions or support, please contact [contact@bertinselendo.com](mailto:contact@bertinselendo.com).
